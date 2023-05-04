@@ -13,7 +13,6 @@ def train(data_dir, mask_name, encoder_name, encoder_activation, bs, lr, save_di
         print('五折交叉验证 第{}次实验:'.format(i))
         fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/']
         mask_dir = data_dir.replace('ori/', mask_name)
-        data_dir = 'D:/MED_File/dataset/KidneyDataset/kfold-ori/'
         valid_path = [data_dir + fold_list[i]]
         valid_mask = [mask_dir + fold_list[i]]
         fold_list.remove(fold_list[i])
@@ -141,8 +140,7 @@ def train(data_dir, mask_name, encoder_name, encoder_activation, bs, lr, save_di
 def segment():
     os.environ['CUDA_VISIBLE_DEVICES'] = "1"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    data_dir = 'D:/MED_File/dataset/KidneyDataset/kfold-ori/'
-    # '/home/ai999/caoxu/dataset/KidneyDataset/kfold-ori/'
+    data_dir = '/home/ai999/caoxu/dataset/KidneyDataset/kfold-ori/'
     mask_name = 'cancer-mask/'   # 'kidney-mask/'
     """
     分割网络选择：
