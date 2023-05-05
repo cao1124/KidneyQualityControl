@@ -81,7 +81,7 @@ def train(data_dir, mask_name, encoder_name, encoder_activation, bs, lr, epochs,
 
         train_history = {'dice_loss + bce_loss': [], 'fscore': []}
         val_history = {'dice_loss + bce_loss': [], 'fscore': []}
-        for j in range(0, 3):
+        for j in range(epochs):
             if j - best_epoch > early_stops:
                 print(j - best_epoch, " epochs don't change, early stopping.")
                 break
@@ -152,7 +152,7 @@ def train(data_dir, mask_name, encoder_name, encoder_activation, bs, lr, epochs,
             dice_list.append(dice)
             print(test_dataset.images[i], "\tdice:", dice, "\tiou:", iou)
 
-            save_full_path = pred_dir + test_dataset.images[i].split('/'[-1])
+            save_full_path = pred_dir + test_dataset.images[i].split('/')[-1]
             cv2.imwrite(save_full_path, pred_mask)
 
         print("\tMean Dice:", np.average(dice_list))
