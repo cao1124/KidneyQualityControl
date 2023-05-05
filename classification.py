@@ -27,8 +27,12 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
         fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/']
         valid_path = [data_dir + fold_list[i]]
         fold_list.remove(fold_list[i])
-        test_path = [data_dir + fold_list[i]]
-        fold_list.remove(fold_list[i])
+        if i == 4:
+            test_path = [data_dir + fold_list[0]]
+            fold_list.remove(fold_list[0])
+        else:
+            test_path = [data_dir + fold_list[i]]
+            fold_list.remove(fold_list[i])
         train_path = [data_dir + fold_list[0], data_dir + fold_list[1], data_dir + fold_list[2]]
 
         train_dataset = ClassificationDataset(img_path=train_path, category_num=category_num, train=True,
@@ -173,10 +177,10 @@ def classification():
     model_name = 'resnext50'
     data_dir = '/home/ai999/caoxu/dataset/KidneyDataset/kfold-crop/'
     category_num = 2
-    bs = 32
+    bs = 64
     lr = 0.01
     num_epochs = 300
-    data = 'classification-model/0504-kidney-cancer-'
+    data = 'classification-model/0505-kidney-cancer-'
     save_path = data + str(category_num) + 'class-' + model_name + '-bs' + str(bs) + '-lr' + str(lr) + '/'
     pt_dir = 'classification_model/' + save_path
     if not os.path.exists(pt_dir):

@@ -5,10 +5,10 @@ import torch
 import numpy as np
 import segmentation_models_pytorch as smp
 from torch.utils.data import DataLoader
-from segment_util import SegmentDataset, training_augmentation, valid_augmentation, save_seg_history
+from segment_util import SegmentDataset, training_augmentation, valid_augmentation, save_seg_history, get_iou, get_f1
 
 
-def train(data_dir, mask_name, encoder_name, encoder_activation, bs, lr, save_dir, pred_dir, device):
+def train(data_dir, mask_name, encoder_name, encoder_activation, bs, lr, epochs, save_dir, pred_dir, device):
     for i in range(5):
         print('五折交叉验证 第{}次实验:'.format(i))
         fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/']
@@ -16,9 +16,14 @@ def train(data_dir, mask_name, encoder_name, encoder_activation, bs, lr, save_di
         valid_path = [data_dir + fold_list[i]]
         valid_mask = [mask_dir + fold_list[i]]
         fold_list.remove(fold_list[i])
-        test_path = [data_dir + fold_list[i]]
-        test_mask = [mask_dir + fold_list[i]]
-        fold_list.remove(fold_list[i])
+        if i == 4:
+            test_path = [data_dir + fold_list[0]]
+            test_mask = [mask_dir + fold_list[0]]
+            fold_list.remove(fold_list[0])
+        else:
+            test_path = [data_dir + fold_list[i]]
+            test_mask = [mask_dir + fold_list[i]]
+            fold_list.remove(fold_list[i])
         train_path = [data_dir + fold_list[0], data_dir + fold_list[1], data_dir + fold_list[2]]
         train_mask = [mask_dir + fold_list[0], mask_dir + fold_list[1], mask_dir + fold_list[2]]
 
@@ -108,33 +113,53 @@ def train(data_dir, mask_name, encoder_name, encoder_activation, bs, lr, save_di
                 print('Decrease decoder learning rate. lr:', optimizer.param_groups[0]['lr'])
 
         'test'
+        iou_list, dice_list = [], []
+        print('model_name:', [x for x in os.listdir(save_dir) if x.endswith('.pth')][-1])
         model = torch.load(save_dir + [x for x in os.listdir(save_dir) if x.endswith('.pth')][-1])
         model.eval()
         torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
-        for k, name in enumerate(test_dataset.images):
-            print(name)
-            image = cv2.imread(os.path.join(name), cv2.IMREAD_COLOR)
-            [orig_h, orig_w, _] = image.shape
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-            if image.shape[:2] != [512, 512]:
-                image = cv2.resize(image, (512, 512), interpolation=cv2.INTER_NEAREST)
-            image = image / 255.0
-            image = image.transpose(2, 0, 1).astype('float32')
+        for k in range(len(test_dataset)):
+            image, gt_mask = test_dataset[k]
+            # gt_mask = gt_mask.squeeze()
+            # gt_mask[gt_mask == 1] = 255
             x_tensor = torch.from_numpy(image).to(device).unsqueeze(0)
 
-            model.eval()
+            mask_ori = cv2.imread(os.path.join(test_dataset.masks[i]), cv2.IMREAD_GRAYSCALE)
+            _, mask_ori = cv2.threshold(mask_ori, 1, 255, cv2.THRESH_BINARY)
+            [orig_h, orig_w] = mask_ori.shape
+
             with torch.no_grad():
-                pr_mask = model(x_tensor)
-                pr_mask = (pr_mask.squeeze().cpu().numpy().round())
+                pred_mask = model(x_tensor)
+                pred_mask = (pred_mask.squeeze().cpu().numpy().round())
 
-            pr_mask[pr_mask < 0.5] = 0
-            pr_mask[pr_mask >= 0.5] = 255
+            pred_mask[pred_mask < 0.5] = 0
+            pred_mask[pred_mask >= 0.5] = 255
 
-            pr_mask = cv2.resize(pr_mask, (orig_w, orig_h), cv2.INTER_NEAREST)
-            _, pr_mask = cv2.threshold(pr_mask, 1, 255, cv2.THRESH_BINARY)
+            if pred_mask.shape != mask_ori.shape:
+                pred_mask = cv2.resize(pred_mask, (orig_w, orig_h), cv2.INTER_NEAREST)
+                _, pred_mask = cv2.threshold(pred_mask, 1, 255, cv2.THRESH_BINARY)
 
-            save_full_path = pred_dir + name.split('\\'[-1])
-            cv2.imwrite(save_full_path, pr_mask)
+            if np.sum(mask_ori) == 0 and np.sum(pred_mask) == 0:
+                iou = 1
+                dice = 1
+            else:
+                iou = get_iou(mask_ori, pred_mask)
+                dice = get_f1(mask_ori, pred_mask)
+
+            iou = np.round(iou, 4)
+            dice = np.round(dice, 4)
+            iou_list.append(iou)
+            dice_list.append(dice)
+            print(test_dataset.images[i], "\tdice:", dice, "\tiou:", iou)
+
+            save_full_path = pred_dir + test_dataset.images[i].split('/'[-1])
+            cv2.imwrite(save_full_path, pred_mask)
+
+        print("\tMean Dice:", np.average(dice_list))
+        print("\tMean IoU:", np.average(iou_list))
+        # hist, bins = np.histogram(dice_list, bins=np.arange(0.0, 1.05, 0.1))
+        # print(hist)
+        # print(hist / len(test_dataset))
 
 
 def segment():
@@ -168,11 +193,12 @@ def segment():
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
     bs = 16
     lr = 1e-4
-    save_dir = "segment_model/0504-" + encoder_name + '-' + mask_name
-    pred_dir = "segment_model/0504-" + encoder_name + '-pred/'
+    epochs = 10000
+    save_dir = "segment_model/0505-" + encoder_name + '-' + mask_name
+    pred_dir = "segment_model/0505-" + encoder_name + '-pred/'
     if not os.path.exists(save_dir):
         os.makedirs(save_dir, exist_ok=True)
-    train(data_dir, mask_name, encoder_name, encoder_activation, bs, lr, save_dir, pred_dir, device)
+    train(data_dir, mask_name, encoder_name, encoder_activation, bs, lr, epochs, save_dir, pred_dir, device)
 
 
 if __name__ == '__main__':

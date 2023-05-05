@@ -2,6 +2,7 @@ from torch.utils.data import Dataset as BaseDataset
 import cv2
 import os
 import albumentations as albu
+from sklearn.metrics import jaccard_score, f1_score
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
@@ -127,3 +128,24 @@ class SegmentDataset(BaseDataset):
     def __len__(self):
         return len(self.images)
 
+
+def get_f1(gt, pred):
+    gt = gt.ravel()
+    pred = pred.ravel()
+
+    f1 = f1_score(gt, pred, average=None)
+
+    if len(f1) == 1:
+        return f1[0]
+    return f1[1]
+
+
+def get_iou(gt, pred):
+    gt = gt.ravel()
+    pred = pred.ravel()
+
+    iou = jaccard_score(gt, pred, average=None)
+
+    if len(iou) == 1:
+        return iou[0]
+    return iou[1]
