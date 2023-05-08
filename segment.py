@@ -98,7 +98,7 @@ def train(data_dir, mask_name, encoder_name, encoder_activation, bs, lr, epochs,
             save_seg_history(train_history, val_history, save_dir)
 
             # do something (save model, change lr, etc.)
-            if max_score < valid_logs['iou_score']:  # fscore  iou_score
+            if max_score < np.round(valid_logs['iou_score'], 4):  # fscore  iou_score
                 if max_score != -1:
                     old_filepath = save_dir + "best_" + str(max_score) + ".pth"
                     os.remove(old_filepath)
