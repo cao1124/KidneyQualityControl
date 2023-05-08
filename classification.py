@@ -115,10 +115,7 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
                 best_epoch = epoch + 1
                 torch.save(model, pt_dir + 'fold' + str(i) + '-best-acc-model.pt')
             'best sensitivity save checkpoint'
-            if category_num == 4:
-                malign_recall = classification_report(valid_true, valid_pred, output_dict=True)['3'].get('recall')
-            elif category_num == 2:
-                malign_recall = classification_report(valid_true, valid_pred, output_dict=True)['1'].get('recall')
+            malign_recall = classification_report(valid_true, valid_pred, output_dict=True)['1'].get('recall')
             if malign_recall > best_valid_recall:
                 print(
                     'best malignant recall report:\n{}'.format(classification_report(valid_true, valid_pred, digits=4)))
@@ -146,7 +143,7 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
         plt.savefig(pt_dir + 'loss_curve' + str(i) + '.png')
 
         'test'
-        model = torch.load(pt_dir + 'fold' + str(i) + '-best-recall-model.pt')   # best-recall-model.pt
+        model = torch.load(pt_dir + 'fold' + str(i) + '-best-acc-model.pt')   # best-recall-model.pt
         num_correct = 0
         test_true, test_pred = [], []
         model.eval()

@@ -98,7 +98,7 @@ def train(data_dir, mask_name, encoder_name, encoder_activation, bs, lr, epochs,
             save_seg_history(train_history, val_history, save_dir)
 
             # do something (save model, change lr, etc.)
-            if max_dice < valid_logs['iou_score']:  # fscore
+            if max_dice < valid_logs['iou_score']:  # f score
                 if max_score != -1:
                     old_filepath = save_dir + "best_" + str(max_score) + ".pth"
                     os.remove(old_filepath)
@@ -187,17 +187,19 @@ def segment():
     timm-efficientnet-l2
     replknet-31b
     """
-    encoder_name = "resnext50_32x4d"
+    encoder_name = "efficientnet-b0"
     encoder_weights = "imagenet"
     encoder_activation = "sigmoid"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
     bs = 16
     lr = 1e-4
     epochs = 10000
-    save_dir = "segment_model/0505-" + encoder_name + '-' + mask_name
-    pred_dir = "segment_model/0505-" + encoder_name + '-pred/'
+    save_dir = "segment_model/0508-" + encoder_name + '-' + mask_name
+    pred_dir = "segment_model/0508-" + encoder_name + '-pred/'
     if not os.path.exists(save_dir):
         os.makedirs(save_dir, exist_ok=True)
+    if not os.path.exists(pred_dir):
+        os.makedirs(pred_dir, exist_ok=True)
     train(data_dir, mask_name, encoder_name, encoder_activation, bs, lr, epochs, save_dir, pred_dir, device)
 
 
