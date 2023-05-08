@@ -99,11 +99,11 @@ def train(data_dir, mask_name, encoder_name, encoder_activation, bs, lr, epochs,
 
             # do something (save model, change lr, etc.)
             if max_score < valid_logs['iou_score']:  # fscore  iou_score
-                max_score = np.round(valid_logs['iou_score'], 4)
-                max_dice = np.round(valid_logs['fscore'], 4)
                 if max_score != -1:
                     old_filepath = save_dir + "best_" + str(max_score) + ".pth"
                     os.remove(old_filepath)
+                max_score = np.round(valid_logs['iou_score'], 4)
+                max_dice = np.round(valid_logs['fscore'], 4)
                 torch.save(model, save_dir + "best_" + str(max_score) + ".pth")
                 print('best iou score={}, Model saved!'.format(max_score))
                 best_epoch = i
@@ -195,7 +195,7 @@ def segment():
     lr = 1e-4
     epochs = 10000
     save_dir = "segment_model/0508-" + encoder_name + '-' + mask_name
-    pred_dir = "segment_model/0508-" + encoder_name + '-pred/'
+    pred_dir = "segment_model/0508-" + encoder_name + '-pred' + mask_name
     if not os.path.exists(save_dir):
         os.makedirs(save_dir, exist_ok=True)
     if not os.path.exists(pred_dir):
