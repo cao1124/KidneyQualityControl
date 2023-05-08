@@ -10,6 +10,8 @@ from segment_util import SegmentDataset, training_augmentation, valid_augmentati
 
 def train(data_dir, mask_name, encoder_name, encoder_activation, bs, lr, epochs, save_dir, pred_dir, device):
     for i in range(5):
+        save_dir = save_dir + "fold" + str(i) + '/'
+        os.makedirs(save_dir, exist_ok=True)
         print('五折交叉验证 第{}次实验:'.format(i))
         fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/']
         mask_dir = data_dir.replace('ori/', mask_name)
@@ -106,7 +108,7 @@ def train(data_dir, mask_name, encoder_name, encoder_activation, bs, lr, epochs,
                 max_dice = np.round(valid_logs['fscore'], 4)
                 torch.save(model, save_dir + "best_" + str(max_score) + ".pth")
                 print('best iou score={}, Model saved!'.format(max_score))
-                best_epoch = i
+                best_epoch = j
 
             if j - best_epoch > 1000:
                 optimizer.param_groups[0]['lr'] = optimizer.param_groups[0]['lr'] / 2
@@ -163,7 +165,7 @@ def train(data_dir, mask_name, encoder_name, encoder_activation, bs, lr, epochs,
 
 
 def segment():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "1"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "0"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     data_dir = '/home/ai999/caoxu/dataset/KidneyDataset/kfold-ori/'
     mask_name = 'cancer-mask/'   # 'kidney-mask/'
@@ -194,8 +196,8 @@ def segment():
     bs = 20
     lr = 1e-4
     epochs = 10000
-    save_dir = "segment_model/0508-" + encoder_name + '-' + mask_name
-    pred_dir = "segment_model/0508-" + encoder_name + '-pred' + mask_name
+    save_dir = "segment_model/0508-train-" + encoder_name + '-' + mask_name
+    pred_dir = "segment_model/0508-pred-" + encoder_name + '-' + mask_name
     if not os.path.exists(save_dir):
         os.makedirs(save_dir, exist_ok=True)
     if not os.path.exists(pred_dir):
