@@ -98,14 +98,14 @@ def train(data_dir, mask_name, encoder_name, encoder_activation, bs, lr, epochs,
             save_seg_history(train_history, val_history, save_dir)
 
             # do something (save model, change lr, etc.)
-            if max_dice < valid_logs['iou_score']:  # f score
+            if max_score < valid_logs['iou_score']:  # fscore  iou_score
+                max_score = np.round(valid_logs['iou_score'], 4)
+                max_dice = np.round(valid_logs['fscore'], 4)
                 if max_score != -1:
                     old_filepath = save_dir + "best_" + str(max_score) + ".pth"
                     os.remove(old_filepath)
-                max_score = np.round(valid_logs['iou_score'], 4)
-                max_dice = np.round(valid_logs['fscore'], 4)
                 torch.save(model, save_dir + "best_" + str(max_score) + ".pth")
-                print('Model saved!')
+                print('best iou score={}, Model saved!'.format(max_score))
                 best_epoch = i
 
             if j - best_epoch > 1000:
@@ -114,8 +114,8 @@ def train(data_dir, mask_name, encoder_name, encoder_activation, bs, lr, epochs,
 
         'test'
         iou_list, dice_list = [], []
-        print('model_name:', [x for x in os.listdir(save_dir) if x.endswith('.pth')][-1])
-        model = torch.load(save_dir + [x for x in os.listdir(save_dir) if x.endswith('.pth')][-1])
+        print('model_name:', [x for x in os.listdir(save_dir) if x.endswith('.pth')])
+        model = torch.load(save_dir + [x for x in os.listdir(save_dir) if x.endswith('.pth')])
         model.eval()
         torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
         for k in range(len(test_dataset)):
@@ -150,9 +150,9 @@ def train(data_dir, mask_name, encoder_name, encoder_activation, bs, lr, epochs,
             dice = np.round(dice, 4)
             iou_list.append(iou)
             dice_list.append(dice)
-            print(test_dataset.images[i], "\tdice:", dice, "\tiou:", iou)
+            print(test_dataset.images[k], "\tdice:", dice, "\tiou:", iou)
 
-            save_full_path = pred_dir + test_dataset.images[i].split('/')[-1]
+            save_full_path = pred_dir + test_dataset.images[k].split('/')[-1]
             cv2.imwrite(save_full_path, pred_mask)
 
         print("\tMean Dice:", np.average(dice_list))
@@ -191,7 +191,7 @@ def segment():
     encoder_weights = "imagenet"
     encoder_activation = "sigmoid"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
-    bs = 16
+    bs = 20
     lr = 1e-4
     epochs = 10000
     save_dir = "segment_model/0508-" + encoder_name + '-' + mask_name
