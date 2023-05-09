@@ -86,7 +86,7 @@ class SegmentDataset(BaseDataset):
             for cla in os.listdir(images_dir[i]):
                 for img_name in [x for x in os.listdir(os.path.join(images_dir[i], cla)) if x.endswith('.jpg')]:
                     self.images.append(os.path.join(os.path.join(images_dir[i], cla), img_name))
-                    self.masks.append(os.path.join(os.path.join(masks_dir[i], cla), img_name))
+                    self.masks.append(os.path.join(os.path.join(masks_dir[i], cla), img_name.replace('.jpg', '.png')))
         self.augmentation = augmentation
         self.preprocessing = preprocessing
         self.muilt_scale = muilt_scale

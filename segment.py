@@ -8,13 +8,13 @@ from torch.utils.data import DataLoader
 from segment_util import SegmentDataset, training_augmentation, valid_augmentation, save_seg_history, get_iou, get_f1
 
 
-def train(data_dir, mask_name, encoder_name, encoder_activation, bs, lr, epochs, save_dir, pred_dir, device):
+def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, pred_dir, device):
     for i in range(5):
         save_dir = save_dir + "fold" + str(i) + '/'
         os.makedirs(save_dir, exist_ok=True)
         print('五折交叉验证 第{}次实验:'.format(i))
         fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/']
-        mask_dir = data_dir.replace('ori/', mask_name)
+        mask_dir = data_dir.replace('ori/', 'mask/')
         valid_path = [data_dir + fold_list[i]]
         valid_mask = [mask_dir + fold_list[i]]
         fold_list.remove(fold_list[i])
@@ -167,8 +167,7 @@ def train(data_dir, mask_name, encoder_name, encoder_activation, bs, lr, epochs,
 def segment():
     os.environ['CUDA_VISIBLE_DEVICES'] = "0"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    data_dir = '/home/ai999/caoxu/dataset/KidneyDataset/kfold-ori/'
-    mask_name = 'cancer-mask/'   # 'kidney-mask/'
+    data_dir = '/home/ai999/caoxu/dataset/KidneyDataset/kfold-cancer-ori/'   # kfold-kidney-ori
     """
     分割网络选择：
     Unet、Linknet、FPN、PSPNet、PAN、DeepLabV3、UnetPlusPlus
@@ -193,16 +192,16 @@ def segment():
     encoder_weights = "imagenet"
     encoder_activation = "sigmoid"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
-    bs = 20
+    bs = 1
     lr = 1e-4
     epochs = 10000
-    save_dir = "segment_model/0508-train-" + encoder_name + '-' + mask_name
-    pred_dir = "segment_model/0508-pred-" + encoder_name + '-' + mask_name
+    save_dir = "segment_model/0509-cancer-train-" + encoder_name
+    pred_dir = "segment_model/0509-cancer-pred-" + encoder_name
     if not os.path.exists(save_dir):
         os.makedirs(save_dir, exist_ok=True)
     if not os.path.exists(pred_dir):
         os.makedirs(pred_dir, exist_ok=True)
-    train(data_dir, mask_name, encoder_name, encoder_activation, bs, lr, epochs, save_dir, pred_dir, device)
+    train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, pred_dir, device)
 
 
 if __name__ == '__main__':
