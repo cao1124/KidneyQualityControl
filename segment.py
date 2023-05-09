@@ -117,7 +117,7 @@ def train(data_dir, mask_name, encoder_name, encoder_activation, bs, lr, epochs,
         'test'
         iou_list, dice_list = [], []
         print('model_name:', [x for x in os.listdir(save_dir) if x.endswith('.pth')])
-        model = torch.load(save_dir + [x for x in os.listdir(save_dir) if x.endswith('.pth')])
+        model = torch.load(save_dir + [x for x in os.listdir(save_dir) if x.endswith('.pth')][-1])
         model.eval()
         torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
         for k in range(len(test_dataset)):

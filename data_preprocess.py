@@ -57,17 +57,29 @@ def kfold_split():
     cancer_mask_out_path = 'D:/MED_File/dataset/KidneyDataset/kfold-cancer-mask/'
     if not os.path.exists(cancer_mask_out_path):
         os.makedirs(cancer_mask_out_path, exist_ok=True)
-
+    kidney_split = True
+    cancer_split = False
     ben_list, mal_list = [], []
-    for j in jsons:
-        with open(base_dir + j, 'r', encoding='utf-8') as fp:
-            json_data = json.load(fp)
-            if len(json_data['shapes']) > 1:
-                mal_list.append(j)
-            elif len(json_data['shapes']) == 1 and json_data['shapes'][0]['label'] == 'Kidney':
-                ben_list.append(j)
-            elif len(json_data['shapes']) == 1 and json_data['shapes'][0]['label'] == 'Kidney cancer':
-                mal_list.append(j)
+    if cancer_split:
+        for j in jsons:
+            with open(base_dir + j, 'r', encoding='utf-8') as fp:
+                json_data = json.load(fp)
+                if len(json_data['shapes']) > 1:
+                    mal_list.append(j)
+                elif len(json_data['shapes']) == 1 and json_data['shapes'][0]['label'] == 'Kidney':
+                    ben_list.append(j)
+                elif len(json_data['shapes']) == 1 and json_data['shapes'][0]['label'] == 'Kidney cancer':
+                    mal_list.append(j)
+    if kidney_split:
+        for j in jsons:
+            with open(base_dir + j, 'r', encoding='utf-8') as fp:
+                json_data = json.load(fp)
+                if len(json_data['shapes']) > 1:
+                    mal_list.append(j)
+                elif len(json_data['shapes']) == 1 and json_data['shapes'][0]['label'] == 'Kidney cancer':
+                    ben_list.append(j)
+                elif len(json_data['shapes']) == 1 and json_data['shapes'][0]['label'] == 'Kidney':
+                    mal_list.append(j)
 
     for cla in ['0', '1']:
         if cla == '0':
@@ -113,38 +125,39 @@ def kfold_split():
                             points = np.array(json_data['shapes'][0]['points'])
                     crop_img = img[int(min(points[:, 1])): int(max(points[:, 1])),
                                    int(min(points[:, 0])): int(max(points[:, 0]))]
-                    cv2.imwrite(os.path.join(crop_save_path, img_name.replace('.json', '.jpg')), crop_img)
+                    cv2.imwrite(os.path.join(crop_save_path, img_name.replace('.json', '.png')), crop_img)
                     'kidney mask image'
-                    kidney_mask = np.zeros(img.shape[:2], dtype=np.uint8)
-                    if len(json_data['shapes']) == 1 and json_data['shapes'][0]['label'] == 'Kidney':
-                        points = np.array(json_data['shapes'][0]['points'])
-                        polygon = np.array(points, np.int32)  # 坐标为顺时针方向
-                        cv2.fillConvexPoly(kidney_mask, polygon, (255, 255, 255))
-                    elif len(json_data['shapes']) > 1:
-                        if json_data['shapes'][0]['label'] == 'Kidney':
+                    if kidney_split:
+                        kidney_mask = np.zeros(img.shape[:2], dtype=np.uint8)
+                        if len(json_data['shapes']) == 1 and json_data['shapes'][0]['label'] == 'Kidney':
                             points = np.array(json_data['shapes'][0]['points'])
-                        else:
-                            points = np.array(json_data['shapes'][1]['points'])
-                        polygon = np.array(points, np.int32)  # 坐标为顺时针方向
-                        cv2.fillConvexPoly(kidney_mask, polygon, (255, 255, 255))
-                    cv2.imwrite(os.path.join(kidney_mask_save_path, img_name.replace('.json', '.jpg')), kidney_mask)
+                            polygon = np.array(points, np.int32)  # 坐标为顺时针方向
+                            cv2.fillConvexPoly(kidney_mask, polygon, (255, 255, 255))
+                        elif len(json_data['shapes']) > 1:
+                            if json_data['shapes'][0]['label'] == 'Kidney':
+                                points = np.array(json_data['shapes'][0]['points'])
+                            else:
+                                points = np.array(json_data['shapes'][1]['points'])
+                            polygon = np.array(points, np.int32)  # 坐标为顺时针方向
+                            cv2.fillConvexPoly(kidney_mask, polygon, (255, 255, 255))
+                        cv2.imwrite(os.path.join(kidney_mask_save_path, img_name.replace('.json', '.png')), kidney_mask)
                     'cancer mask image'
-                    cancer_mask = np.zeros(img.shape[:2], dtype=np.uint8)
-                    if len(json_data['shapes']) == 1 and json_data['shapes'][0]['label'] == 'Kidney cancer':
-                        points = np.array(json_data['shapes'][0]['points'])
-                        polygon = np.array(points, np.int32)  # 坐标为顺时针方向
-                        cv2.fillConvexPoly(cancer_mask, polygon, (255, 255, 255))
-                    elif len(json_data['shapes']) > 1:
-                        if json_data['shapes'][0]['label'] == 'Kidney cancer':
+                    if cancer_split:
+                        cancer_mask = np.zeros(img.shape[:2], dtype=np.uint8)
+                        if len(json_data['shapes']) == 1 and json_data['shapes'][0]['label'] == 'Kidney cancer':
                             points = np.array(json_data['shapes'][0]['points'])
-                        else:
-                            points = np.array(json_data['shapes'][1]['points'])
-                        polygon = np.array(points, np.int32)  # 坐标为顺时针方向
-                        cv2.fillConvexPoly(cancer_mask, polygon, (255, 255, 255))
-                    cv2.imwrite(os.path.join(cancer_mask_save_path, img_name.replace('.json', '.jpg')), cancer_mask)
+                            polygon = np.array(points, np.int32)  # 坐标为顺时针方向
+                            cv2.fillConvexPoly(cancer_mask, polygon, (255, 255, 255))
+                        elif len(json_data['shapes']) > 1:
+                            if json_data['shapes'][0]['label'] == 'Kidney cancer':
+                                points = np.array(json_data['shapes'][0]['points'])
+                            else:
+                                points = np.array(json_data['shapes'][1]['points'])
+                            polygon = np.array(points, np.int32)  # 坐标为顺时针方向
+                            cv2.fillConvexPoly(cancer_mask, polygon, (255, 255, 255))
+                        cv2.imwrite(os.path.join(cancer_mask_save_path, img_name.replace('.json', '.png')), cancer_mask)
 
 
 if __name__ == '__main__':
     # dataset_count()
     kfold_split()
-    # create_mask()
