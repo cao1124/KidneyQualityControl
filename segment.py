@@ -5,7 +5,8 @@ import torch
 import numpy as np
 import segmentation_models_pytorch as smp
 from torch.utils.data import DataLoader
-from segment_util import SegmentDataset, training_augmentation, valid_augmentation, save_seg_history, get_iou, get_f1
+from segment_util import SegmentDataset, training_augmentation, valid_augmentation, save_seg_history, get_iou, get_f1, \
+    add_weighted, combine_image
 
 
 def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, pred_dir, device):
@@ -122,8 +123,8 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
         for k in range(len(test_dataset)):
             image, gt_mask = test_dataset[k]
-            # gt_mask = gt_mask.squeeze()
-            # gt_mask[gt_mask == 1] = 255
+            gt_mask = gt_mask.squeeze()
+            gt_mask[gt_mask == 1] = 255
             x_tensor = torch.from_numpy(image).to(device).unsqueeze(0)
 
             mask_ori = cv2.imread(os.path.join(test_dataset.masks[i]), cv2.IMREAD_GRAYSCALE)
@@ -155,7 +156,13 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
             print(test_dataset.images[k], "\tdice:", dice, "\tiou:", iou)
 
             save_full_path = pred_dir + test_dataset.images[k].split('/')[-1]
-            cv2.imwrite(save_full_path, pred_mask)
+            # cv2.imwrite(save_full_path, pred_mask)
+
+            img = cv2.imread(test_dataset.images[k], cv2.IMREAD_COLOR)
+            img_gt = add_weighted(img, gt_mask, 'BG')
+            img_pred = add_weighted(img, pred_mask, 'GR')
+            img_gt_pred = combine_image(img_gt, img_pred)
+            cv2.imwrite(save_full_path, img_gt_pred)
 
         print("\tMean Dice:", np.average(dice_list))
         print("\tMean IoU:", np.average(iou_list))
@@ -188,15 +195,15 @@ def segment():
     timm-efficientnet-l2
     replknet-31b
     """
-    encoder_name = "efficientnet-b0"
+    encoder_name = "resnet50"
     encoder_weights = "imagenet"
     encoder_activation = "sigmoid"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
-    bs = 1
+    bs = 24
     lr = 1e-4
     epochs = 10000
-    save_dir = "segment_model/0509-cancer-train-" + encoder_name
-    pred_dir = "segment_model/0509-cancer-pred-" + encoder_name
+    save_dir = "segment_model/0510-cancer-train-" + encoder_name + '/'
+    pred_dir = "segment_model/0510-cancer-pred-" + encoder_name + '/'
     if not os.path.exists(save_dir):
         os.makedirs(save_dir, exist_ok=True)
     if not os.path.exists(pred_dir):

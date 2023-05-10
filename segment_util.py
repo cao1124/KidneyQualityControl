@@ -149,3 +149,25 @@ def get_iou(gt, pred):
     if len(iou) == 1:
         return iou[0]
     return iou[1]
+
+
+def add_weighted(img, mask, which_channel="B", w_alpha=0.2):
+    [B, G, R] = cv2.split(img)
+    if "B" in which_channel:
+        B = cv2.addWeighted(B, 1, mask, w_alpha, 0)
+    if "G" in which_channel:
+        G = cv2.addWeighted(G, 1, mask, w_alpha, 0)
+    if "R" in which_channel:
+        R = cv2.addWeighted(R, 1, mask, w_alpha, 0)
+
+    img_add = cv2.merge([B, G, R])
+    return img_add
+
+
+def combine_image(gt, pred):
+    [height, width, channel] = gt.shape
+    img_res = np.zeros((height, width*2, channel), dtype=np.int32)
+    img_res[:height, :width, :] = gt
+    img_res[:height, width:width*2, :] = pred
+    return img_res
+
