@@ -117,7 +117,7 @@ def kfold_split():
                     shutil.copy(os.path.join(base_dir, img_name), os.path.join(ori_save_path, img_name))   # crop json
                     shutil.copy(os.path.join(base_dir, img_name.replace('.json', '.jpg')),
                                 os.path.join(ori_save_path, img_name.replace('.json', '.jpg')))   # crop image
-                    img = cv2.imread(os.path.join(base_dir, img_name.replace('.json', '.jpg')))
+                    img = cv_imread(os.path.join(base_dir, img_name.replace('.json', '.jpg')))
                     with open(base_dir + img_name, 'r', encoding='utf-8') as fp:
                         json_data = json.load(fp)
                     'cancer mask image'
