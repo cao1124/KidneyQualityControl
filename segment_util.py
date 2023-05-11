@@ -105,7 +105,7 @@ class SegmentDataset(BaseDataset):
         target_height = 512
         if image.shape[:2] != [target_height, target_width]:
             image = cv2.resize(image, (target_width, target_height), interpolation=cv2.INTER_NEAREST)
-            # mask = cv2.resize(mask, (target_width, target_height), interpolation=cv2.INTER_NEAREST)
+            mask = cv2.resize(mask, (target_width, target_height), interpolation=cv2.INTER_NEAREST)
             _, mask = cv2.threshold(mask, 1, 255, cv2.THRESH_BINARY)
 
         # apply augmentations
@@ -121,7 +121,7 @@ class SegmentDataset(BaseDataset):
         mask[mask == 255] = 1
 
         image = image.transpose(2, 0, 1).astype('float32')
-        # mask = np.expand_dims(mask, 0).astype('float32')
+        mask = np.expand_dims(mask, 0).astype('float32')
 
         return image, mask
 

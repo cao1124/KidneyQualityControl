@@ -140,6 +140,7 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
 
             if pred_mask.shape != mask_ori.shape:
                 pred_mask = cv2.resize(pred_mask, (orig_w, orig_h), cv2.INTER_NEAREST)
+                gt_mask = cv2.resize(gt_mask, (orig_w, orig_h), cv2.INTER_NEAREST)
                 _, pred_mask = cv2.threshold(pred_mask, 1, 255, cv2.THRESH_BINARY)
 
             if np.sum(mask_ori) == 0 and np.sum(pred_mask) == 0:
