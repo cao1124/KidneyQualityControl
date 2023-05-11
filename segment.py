@@ -11,8 +11,7 @@ from segment_util import SegmentDataset, training_augmentation, valid_augmentati
 def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device):
     for i in range(5):
         save_dir = save_dir + "fold" + str(i) + '/'
-        if not os.path.exists(save_dir):
-            os.makedirs(save_dir)
+        os.makedirs(save_dir, exist_ok=True)
         print('五折交叉验证 第{}次实验:'.format(i))
         fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/']
         mask_dir = data_dir.replace('ori/', 'mask/')
@@ -117,8 +116,9 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
 
         'test'
         iou_list, dice_list = [], []
-        print('model_name:', [x for x in os.listdir(save_dir) if x.endswith('.pth')])
-        model = torch.load(save_dir + [x for x in os.listdir(save_dir) if x.endswith('.pth')][-1])
+        # print('model_name:', [x for x in os.listdir(save_dir) if x.endswith('.pth')])
+        # model = torch.load(save_dir + [x for x in os.listdir(save_dir) if x.endswith('.pth')][-1])
+        model = torch.load('best_0.8164.pth')
         model.eval()
         torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
         for k in range(len(test_dataset)):
@@ -160,7 +160,7 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
             # cv2.imwrite(save_full_path, pred_mask)
 
             img = cv2.imread(test_dataset.images[k], cv2.IMREAD_COLOR)
-            img_gt = add_weighted(img, gt_mask, 'BG')
+            img_gt = add_weighted(img, gt_mask.astype('uint8'), 'BG')
             img_pred = add_weighted(img, pred_mask.astype('uint8'), 'GR')
             img_gt_pred = combine_image(img_gt, img_pred)
             cv2.imwrite(save_full_path, img_gt_pred)
