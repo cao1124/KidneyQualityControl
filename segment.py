@@ -116,7 +116,7 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
 
         'test'
         iou_list, dice_list = [], []
-        print('model_name:', [x for x in os.listdir(save_dir1) if x.endswith('.pth')])
+        print('model_name:', [x for x in os.listdir(save_dir1) if x.endswith('.pth')][-1])
         model = torch.load(save_dir1 + [x for x in os.listdir(save_dir1) if x.endswith('.pth')][-1])
         model.eval()
         torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
@@ -155,7 +155,7 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
             dice_list.append(dice)
             print(test_dataset.images[k], "\tdice:", dice, "\tiou:", iou)
 
-            save_full_path = save_dir1 + test_dataset.images[k].split('\\')[-1]
+            save_full_path = save_dir1 + test_dataset.images[k].split('/')[-1]    # windows \\   linux /
             print(save_full_path)
             # cv2.imwrite(save_full_path, pred_mask)
 
@@ -175,7 +175,7 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
 def segment():
     os.environ['CUDA_VISIBLE_DEVICES'] = "0"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    data_dir = '/home/ai999/caoxu/dataset/KidneyDataset/kfold-cancer-ori/'   # kfold-kidney-ori
+    data_dir = '/home/ai999/caoxu/dataset/KidneyDataset/kfold-kidney-ori/'   # kfold-kidney-ori
     """
     分割网络选择：
     Unet、Linknet、FPN、PSPNet、PAN、DeepLabV3、UnetPlusPlus
@@ -203,7 +203,7 @@ def segment():
     bs = 24
     lr = 1e-4
     epochs = 10000
-    save_dir = "segment_model/0511-cancer-train-" + encoder_name + '/'
+    save_dir = "segment_model/0511-kidney-train-" + encoder_name + '/'
     train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device)
 
 
