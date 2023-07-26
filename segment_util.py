@@ -205,7 +205,6 @@ class SmallTumorDataset(BaseDataset):
         else:
             i = item
         # read data
-        print(self.images[i])
         image = cv_read(self.images[i])
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         mask = cv_read(self.masks[i])
