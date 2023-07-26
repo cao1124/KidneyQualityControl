@@ -163,6 +163,114 @@ def kfold_split():
                         cv2.imwrite(os.path.join(kidney_mask_save_path, img_name.replace('.json', '.png')), kidney_mask)
 
 
+def img2video():
+    fps = 12
+    img_dir = 'D:/PycharmProjects/us_reconstruction/video_to_image/kidney/'
+    img_list = os.listdir(img_dir)
+    # img_key = lambda i: int(i.split('.')[-1])  # .split('frame')[1]
+    # img_list = sorted(os.listdir(img_dir), key=img_key)
+    img1 = cv2.imread(os.path.join(img_dir, img_list[0]))
+    img_size = (img1.shape[1], img1.shape[0])
+    video_dir = 'D:/PycharmProjects/us_reconstruction/video_to_image/'
+    os.makedirs(video_dir, exist_ok=True)
+    video = cv2.VideoWriter(video_dir + 'kidney_ultrasound.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), fps,
+                            img_size)
+    for i in range(0, len(img_list) - 1):
+        img = cv2.imread(os.path.join(img_dir, img_list[i]))
+        video.write(img)
+    video.release()
+    cv2.destroyAllWindows()
+
+
+def mead_split_patient():
+    """
+        按病例数分成5折
+    """
+    random.seed(0)
+
+    # 设置５折实验
+
+    org_path = 'D:/med dataset/kidney-small-tumor/'
+    out_path = 'D:/med dataset/kidney-small-tumor-kfold/'
+
+    for cla in ['1']:   # ['benign', 'malig']
+        in_path = os.path.join(org_path, cla)
+        img_list = []
+        patient_list = []
+        for name in os.listdir(in_path):
+            img_list.append(os.listdir(os.path.join(org_path, cla, name)))
+            if name not in patient_list:
+                patient_list.append(name)
+
+        random.shuffle(patient_list)  # 打乱病例名称
+        img_nums = len(img_list)  # 所有的图片数目
+        patient_nums = len(patient_list)  # 病例数
+        temp = func(patient_list, int(patient_nums * 0.1), m=10)  # 平均分为10份,10折交叉训练
+
+        for index, cross in enumerate(temp):
+            print(" %d / %d " % (index + 1, img_nums))  # processing bar
+            new_save_path = os.path.join(out_path, f"fold{index}")
+            os.makedirs(new_save_path, exist_ok=True)
+            for patient in patient_list:
+                if patient in cross:
+                    shutil.copytree(os.path.join(org_path, cla, patient), os.path.join(new_save_path, patient))
+
+
+def cv_read(file_path, flag=-1):
+    # 可读取图片（路径为中文）
+    cv_img = cv2.imdecode(np.fromfile(file_path, dtype=np.uint8), flags=flag)
+    # flag = -1,   8位深度，原通道
+    # flag = 0，   8位深度，1通道
+    # flag = 1，   8位深度，3通道
+    # flag = 2，   原深度， 1通道
+    # flag = 3，   原深度， 3通道
+    # flag = 4，   8位深度，3通道
+    return cv_img
+
+
+def cv_write(file_path, file):
+    cv2.imencode('.bmp', file)[1].tofile(file_path)
+
+
+def get_mask_by_json():
+    base_dir = 'D:/med dataset/kidney-small-tumor-kfold/'
+    mask_path = 'D:/med dataset/kidney-small-tumor-mask/'
+    for f in os.listdir(base_dir):
+        for p in os.listdir(os.path.join(base_dir, f)):
+            os.makedirs(os.path.join(mask_path, f, p), exist_ok=True)
+            img_json_list = [x for x in os.listdir(os.path.join(base_dir, f, p)) if x.endswith('.json')]
+            for img_json in img_json_list:
+                if os.path.exists(os.path.join(base_dir, f, p, img_json.replace('.json', '.jpg'))):
+                    img = cv_read(os.path.join(base_dir, f, p, img_json.replace('.json', '.jpg')))
+                else:
+                    img = cv_read(os.path.join(base_dir, f, p, img_json.replace('.json', '.JPG')))
+                mask_img = np.zeros(img.shape[:2], dtype=np.uint8)
+                with open(os.path.join(base_dir, f, p, img_json), 'r', encoding='utf-8') as fp:
+                    json_data = json.load(fp)
+                for i in range(len(json_data['shapes'])):
+                    if json_data['shapes'][i]['label'] == 'Renal':
+                        points = np.array(json_data['shapes'][i]['points'])
+                        polygon = np.array(points, np.int32)        # 坐标为顺时针方向
+                        cv2.fillConvexPoly(mask_img, polygon, (128, 128, 128))
+                for i in range(len(json_data['shapes'])):
+                    if json_data['shapes'][i]['label'] == 'Reference':
+                        points = np.array(json_data['shapes'][i]['points'])
+                        polygon = np.array(points, np.int32)  # 坐标为顺时针方向
+                        cv2.fillConvexPoly(mask_img, polygon, (64, 64, 64))
+                for i in range(len(json_data['shapes'])):
+                    if json_data['shapes'][i]['label'] == 'Mass':
+                        points = np.array(json_data['shapes'][i]['points'])
+                        polygon = np.array(points, np.int32)  # 坐标为顺时针方向
+                        cv2.fillConvexPoly(mask_img, polygon, (255, 255, 255))
+                    # else:
+                    #     print('error label in:', f, '-', p, '-', img_json)
+                cv_write(os.path.join(mask_path, f, p, img_json.replace('.json', '.JPG')), mask_img)
+
+
 if __name__ == '__main__':
     # dataset_count()
-    kfold_split()
+    # kfold_split()
+    # img2video()
+    # mead_split_patient()
+    get_mask_by_json()
+

@@ -41,7 +41,7 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         #                  classes=1,
         #                  activation=encoder_activation,
         #                  in_channels=3,
-        #                  encoder_weights=None)
+        #                  encoder_weights="imagenet")
         # # print(model)
         # loss_fn = smp.utils.losses.DiceLoss() + smp.utils.losses.BCELoss()
         # # for image segmentation dice loss could be the best first choice
