@@ -15,7 +15,6 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         save_dir1 = save_dir + "fold" + str(i) + '/'
         os.makedirs(save_dir1, exist_ok=True)
         print('五折交叉验证 第{}次实验:'.format(i))
-        print('五折交叉验证 第{}次实验:'.format(i))
         fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/',
                      'fold5/', 'fold6/', 'fold7/', 'fold8/', 'fold9/']
         valid_path = [data_dir + fold_list[i]]
@@ -123,24 +122,33 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         for k in range(len(test_dataset)):
             image, gt_mask = test_dataset[k]
             gt_mask = gt_mask.squeeze()
-            gt_mask[gt_mask == 1] = 255
+            renal_img, reference_img, mass_img = cv2.split(gt_mask)
+            renal_img[renal_img == 1] = 64
+            reference_img[reference_img == 1] = 128
+            mass_img[mass_img == 1] = 255
+            gt_mask = cv2.merge([renal_img, reference_img, mass_img])
             x_tensor = torch.from_numpy(image).to(device).unsqueeze(0)
 
-            mask_ori = cv_read(os.path.join(test_dataset.masks[k]), 0)
-            _, mask_ori = cv2.threshold(mask_ori, 1, 255, cv2.THRESH_BINARY)
+            mask_ori = cv_read(os.path.join(test_dataset.masks[k]))
             [orig_h, orig_w] = mask_ori.shape
 
             with torch.no_grad():
                 pred_mask = model(x_tensor)
                 pred_mask = (pred_mask.squeeze().cpu().numpy().round())
 
-            pred_mask[pred_mask < 0.5] = 0
-            pred_mask[pred_mask >= 0.5] = 255
+            renal_img, reference_img, mass_img = cv2.split(pred_mask)
+            renal_img[renal_img < 0.5] = 0
+            renal_img[renal_img >= 0.5] = 64
+            reference_img[reference_img < 0.5] = 0
+            reference_img[reference_img >= 0.5] = 128
+            mass_img[mass_img < 0.5] = 0
+            mass_img[mass_img >= 0.5] = 255
+            pred_mask = cv2.merge([renal_img, reference_img, mass_img])
 
             if pred_mask.shape != mask_ori.shape:
                 pred_mask = cv2.resize(pred_mask, (orig_w, orig_h), cv2.INTER_NEAREST)
                 gt_mask = cv2.resize(gt_mask, (orig_w, orig_h), cv2.INTER_NEAREST)
-                _, pred_mask = cv2.threshold(pred_mask, 1, 255, cv2.THRESH_BINARY)
+                # _, pred_mask = cv2.threshold(pred_mask, 1, 255, cv2.THRESH_BINARY)
 
             if np.sum(mask_ori) == 0 and np.sum(pred_mask) == 0:
                 iou = 1

@@ -205,9 +205,10 @@ class SmallTumorDataset(BaseDataset):
         else:
             i = item
         # read data
-        image = cv_read(self.images[i], -1)
+        print(self.images[i])
+        image = cv_read(self.images[i])
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        mask = cv_read(self.masks[i], -1)
+        mask = cv_read(self.masks[i])
 
         target_width = 512
         target_height = 512
@@ -227,8 +228,8 @@ class SmallTumorDataset(BaseDataset):
             image, mask = sample['image'], sample['mask']
         image = image/255.0
         mask[mask == 64] = 1
-        mask[mask == 128] = 2
-        mask[mask == 255] = 3
+        mask[mask == 128] = 1
+        mask[mask == 255] = 1
 
         image = image.transpose(2, 0, 1).astype('float32')
         mask = np.expand_dims(mask, 0).astype('float32')
