@@ -4,7 +4,7 @@ from torch.utils.data import Dataset as BaseDataset
 import cv2
 import os
 import albumentations as albu
-from sklearn.metrics import jaccard_similarity_score, f1_score
+from sklearn.metrics import jaccard_score, f1_score
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
@@ -148,8 +148,7 @@ def get_f1(gt, pred):
 def get_iou(gt, pred):
     gt = gt.ravel()
     pred = pred.ravel()
-
-    iou = jaccard_similarity_score(gt, pred)
+    iou = jaccard_score(gt, pred, average=None)
 
     if len(iou) == 1:
         return iou[0]
@@ -164,7 +163,22 @@ def add_weighted(img, mask, which_channel="B", w_alpha=0.2):
         G = cv2.addWeighted(G, 1, mask, w_alpha, 0)
     if "R" in which_channel:
         R = cv2.addWeighted(R, 1, mask, w_alpha, 0)
+    img_add = cv2.merge([B, G, R])
+    return img_add
 
+
+def add_weighted_multi(img, mask, which_channel="B", w_alpha=0.2):
+    [B, G, R] = cv2.split(img)
+    [B_m, G_m, R_m] = cv2.split(mask)
+    if "B" in which_channel:
+        B_m[B_m == 1] = 255
+        B = cv2.addWeighted(B, 1, B_m, w_alpha, 0)
+    if "G" in which_channel:
+        G_m[G_m == 1] = 255
+        G = cv2.addWeighted(G, 1, G_m, w_alpha, 0)
+    if "R" in which_channel:
+        R_m[R_m == 1] = 255
+        R = cv2.addWeighted(R, 1, R_m, w_alpha, 0)
     img_add = cv2.merge([B, G, R])
     return img_add
 
@@ -231,7 +245,7 @@ class SmallTumorDataset(BaseDataset):
         mask[mask == 255] = 1
 
         image = image.transpose(2, 0, 1).astype('float32')
-        mask = np.expand_dims(mask, 0).astype('float32')
+        mask = mask.transpose(2, 0, 1).astype('float32')
 
         return image, mask
 

@@ -1,3 +1,4 @@
+import collections
 import os
 import cv2
 import torch
@@ -5,9 +6,9 @@ import numpy as np
 from torch.utils.data import DataLoader
 import segmentation_models_pytorch as smp
 
-from data_preprocess import cv_read
-from segment_util import SmallTumorDataset, training_augmentation, valid_augmentation, save_seg_history, get_iou, get_f1, \
-    add_weighted, combine_image
+from data_preprocess import cv_read, cv_write
+from segment_util import SmallTumorDataset, training_augmentation, valid_augmentation, save_seg_history, \
+    add_weighted_multi, combine_image, get_iou, get_f1
 
 
 def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device):
@@ -35,143 +36,144 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         train_loader = DataLoader(train_dataset, batch_size=bs, shuffle=True, num_workers=4, pin_memory=True)
         valid_loader = DataLoader(valid_dataset, batch_size=bs, shuffle=False, num_workers=4)
 
-        # build model
-        model = smp.Unet(encoder_name=encoder_name,
-                         classes=3,
-                         activation=encoder_activation,
-                         in_channels=3,
-                         encoder_weights="imagenet")
-        # print(model)
-        loss_fn = smp.utils.losses.DiceLoss() + smp.utils.losses.BCELoss()
-        # for image segmentation dice loss could be the best first choice
-        # loss_fn = smp.losses.DiceLoss(smp.losses.BINARY_MODE, from_logits=True)
-
-        metrics = [
-            smp.utils.metrics.IoU(threshold=0.5),
-            smp.utils.metrics.Fscore()
-        ]
-
-        optimizer = torch.optim.Adam([
-            dict(params=model.parameters(), lr=lr),
-        ])
-
-        # create epoch runners
-        # it is a simple loop of iterating over dataloader`s samples
-        train_epoch = smp.utils.train.TrainEpoch(
-            model,
-            loss=loss_fn,
-            metrics=metrics,
-            optimizer=optimizer,
-            device=device,
-            verbose=True,
-        )
-
-        valid_epoch = smp.utils.train.ValidEpoch(
-            model,
-            loss=loss_fn,
-            metrics=metrics,
-            device=device,
-            verbose=True,
-        )
-
-        # train model for 40 epochs
-        max_score = -1
-        max_dice = 0
-        best_epoch = 0
-        early_stops = 2000
-
-        train_history = {'dice_loss + bce_loss': [], 'fscore': []}
-        val_history = {'dice_loss + bce_loss': [], 'fscore': []}
-        for j in range(epochs):
-            if j - best_epoch > early_stops:
-                print(j - best_epoch, " epochs don't change, early stopping.")
-                break
-            print('\nEpoch: {}'.format(j))
-            print("Best epoch:", best_epoch, "\tiou:", max_score, "\tbest dice:", max_dice)
-            train_logs = train_epoch.run(train_loader)
-            train_history['dice_loss + bce_loss'].append(train_logs['dice_loss + bce_loss'])
-            train_history['fscore'].append(train_logs['fscore'])
-
-            valid_logs = valid_epoch.run(valid_loader)
-            val_history['dice_loss + bce_loss'].append(valid_logs['dice_loss + bce_loss'])
-            val_history['fscore'].append(valid_logs['fscore'])
-
-            save_seg_history(train_history, val_history, save_dir1)
-
-            # do something (save model, change lr, etc.)
-            if max_score < np.round(valid_logs['iou_score'], 4):  # fscore  iou_score
-                if max_score != -1:
-                    old_filepath = save_dir1 + "best_" + str(max_score) + ".pth"
-                    os.remove(old_filepath)
-                max_score = np.round(valid_logs['iou_score'], 4)
-                max_dice = np.round(valid_logs['fscore'], 4)
-                torch.save(model, save_dir1 + "best_" + str(max_score) + ".pth")
-                print('best iou score={}, Model saved!'.format(max_score))
-                best_epoch = j
-
-            if j - best_epoch > 1000:
-                optimizer.param_groups[0]['lr'] = optimizer.param_groups[0]['lr'] / 2
-                print('Decrease decoder learning rate. lr:', optimizer.param_groups[0]['lr'])
+        # # build model
+        # model = smp.Unet(encoder_name=encoder_name,
+        #                  classes=3,
+        #                  activation=encoder_activation,
+        #                  in_channels=3,
+        #                  encoder_weights="imagenet")
+        # # print(model)
+        # loss_fn = smp.utils.losses.DiceLoss() + smp.utils.losses.BCELoss()
+        # # for image segmentation dice loss could be the best first choice
+        # # loss_fn = smp.losses.DiceLoss(smp.losses.BINARY_MODE, from_logits=True)
+        #
+        # metrics = [
+        #     smp.utils.metrics.IoU(threshold=0.5),
+        #     smp.utils.metrics.Fscore()
+        # ]
+        #
+        # optimizer = torch.optim.Adam([
+        #     dict(params=model.parameters(), lr=lr),
+        # ])
+        #
+        # # create epoch runners
+        # # it is a simple loop of iterating over dataloader`s samples
+        # train_epoch = smp.utils.train.TrainEpoch(
+        #     model,
+        #     loss=loss_fn,
+        #     metrics=metrics,
+        #     optimizer=optimizer,
+        #     device=device,
+        #     verbose=True,
+        # )
+        #
+        # valid_epoch = smp.utils.train.ValidEpoch(
+        #     model,
+        #     loss=loss_fn,
+        #     metrics=metrics,
+        #     device=device,
+        #     verbose=True,
+        # )
+        #
+        # # train model for 40 epochs
+        # max_score = -1
+        # max_dice = 0
+        # best_epoch = 0
+        # early_stops = 2000
+        #
+        # train_history = {'dice_loss + bce_loss': [], 'fscore': []}
+        # val_history = {'dice_loss + bce_loss': [], 'fscore': []}
+        # for j in range(epochs):
+        #     if j - best_epoch > early_stops:
+        #         print(j - best_epoch, " epochs don't change, early stopping.")
+        #         break
+        #     print('\nEpoch: {}'.format(j))
+        #     print("Best epoch:", best_epoch, "\tiou:", max_score, "\tbest dice:", max_dice)
+        #     train_logs = train_epoch.run(train_loader)
+        #     train_history['dice_loss + bce_loss'].append(train_logs['dice_loss + bce_loss'])
+        #     train_history['fscore'].append(train_logs['fscore'])
+        #
+        #     valid_logs = valid_epoch.run(valid_loader)
+        #     val_history['dice_loss + bce_loss'].append(valid_logs['dice_loss + bce_loss'])
+        #     val_history['fscore'].append(valid_logs['fscore'])
+        #
+        #     save_seg_history(train_history, val_history, save_dir1)
+        #
+        #     # do something (save model, change lr, etc.)
+        #     if max_score < np.round(valid_logs['iou_score'], 4):  # fscore  iou_score
+        #         if max_score != -1:
+        #             old_filepath = save_dir1 + "best_" + str(max_score) + ".pth"
+        #             os.remove(old_filepath)
+        #         max_score = np.round(valid_logs['iou_score'], 4)
+        #         max_dice = np.round(valid_logs['fscore'], 4)
+        #         torch.save(model, save_dir1 + "best_" + str(max_score) + ".pth")
+        #         print('best iou score={}, Model saved!'.format(max_score))
+        #         best_epoch = j
+        #
+        #     if j - best_epoch > 1000:
+        #         optimizer.param_groups[0]['lr'] = optimizer.param_groups[0]['lr'] / 2
+        #         print('Decrease decoder learning rate. lr:', optimizer.param_groups[0]['lr'])
 
         'test'
+        colors = [("renal", [255, 0, 255]), ("mass", [128, 0, 255]), ("reference", [255, 0, 128])]
+        colors_mask = [("renal", [64, 64, 64]), ("mass", [128, 128, 128]), ("reference", [160, 160, 160])]
         iou_list, dice_list = [], []
-        print('model_name:', [x for x in os.listdir(save_dir1) if x.endswith('.pth')][-1])
-        model = torch.load(save_dir1 + [x for x in os.listdir(save_dir1) if x.endswith('.pth')][-1])
+        # print('model_name:', [x for x in os.listdir(save_dir1) if x.endswith('.pth')][-1])
+        # model = torch.load(save_dir1 + [x for x in os.listdir(save_dir1) if x.endswith('.pth')][-1])
+        model = torch.load('D:/PycharmProjects/kidney-quality-control/kidney-small-tumor-segment/best_0.595.pth')
         model.eval()
         torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
         for k in range(len(test_dataset)):
-            image, gt_mask = test_dataset[k]
-            gt_mask = gt_mask.squeeze()
-            renal_img, reference_img, mass_img = cv2.split(gt_mask)
-            renal_img[renal_img == 1] = 64
-            reference_img[reference_img == 1] = 128
-            mass_img[mass_img == 1] = 255
-            gt_mask = cv2.merge([renal_img, reference_img, mass_img])
-            x_tensor = torch.from_numpy(image).to(device).unsqueeze(0)
-
-            mask_ori = cv_read(os.path.join(test_dataset.masks[k]))
+            image, gt_mask3 = test_dataset[k]
+            gt_mask3 = gt_mask3.squeeze().astype(np.uint8)
+            mask_ori = cv2.imread(os.path.join(test_dataset.masks[k]), cv2.IMREAD_GRAYSCALE)
             [orig_h, orig_w] = mask_ori.shape
-
+            x_tensor = torch.from_numpy(image).to(device).unsqueeze(0)
             with torch.no_grad():
-                pred_mask = model(x_tensor)
-                pred_mask = (pred_mask.squeeze().cpu().numpy().round())
+                pred_mask3 = model(x_tensor)
+                pred_mask3 = (pred_mask3.squeeze().cpu().numpy().round().astype(np.uint8))
+            pred_mask3[pred_mask3 < 0.5] = 0
+            pred_mask3[pred_mask3 >= 0.5] = 1
+            pred_draw = np.zeros([orig_h, orig_w, 3]).astype(np.uint8)
+            gt_draw = np.zeros([orig_h, orig_w, 3]).astype(np.uint8)
+            for c in range(image.shape[0]):
+                gt_mask = gt_mask3[c]
+                pred_mask = pred_mask3[c]
+                if c == 0:
+                    name = 'renal'
+                elif c == 1:
+                    name = 'mass'
+                elif c == 2:
+                    name = 'reference'
 
-            renal_img, reference_img, mass_img = cv2.split(pred_mask)
-            renal_img[renal_img < 0.5] = 0
-            renal_img[renal_img >= 0.5] = 64
-            reference_img[reference_img < 0.5] = 0
-            reference_img[reference_img >= 0.5] = 128
-            mass_img[mass_img < 0.5] = 0
-            mass_img[mass_img >= 0.5] = 255
-            pred_mask = cv2.merge([renal_img, reference_img, mass_img])
+                if np.sum(mask_ori) == 0 and np.sum(pred_mask) == 0:
+                    iou = 1
+                    dice = 1
+                else:
+                    iou = get_iou(gt_mask, pred_mask)
+                    dice = get_f1(gt_mask, pred_mask)
 
-            if pred_mask.shape != mask_ori.shape:
-                pred_mask = cv2.resize(pred_mask, (orig_w, orig_h), cv2.INTER_NEAREST)
-                gt_mask = cv2.resize(gt_mask, (orig_w, orig_h), cv2.INTER_NEAREST)
-                # _, pred_mask = cv2.threshold(pred_mask, 1, 255, cv2.THRESH_BINARY)
+                iou = np.round(iou, 4)
+                dice = np.round(dice, 4)
+                iou_list.append(iou)
+                dice_list.append(dice)
+                print(test_dataset.images[k], "\t", name, ":dice:", dice, "\tiou:", iou)
 
-            if np.sum(mask_ori) == 0 and np.sum(pred_mask) == 0:
-                iou = 1
-                dice = 1
-            else:
-                iou = get_iou(mask_ori, pred_mask)
-                dice = get_f1(mask_ori, pred_mask)
-
-            iou = np.round(iou, 4)
-            dice = np.round(dice, 4)
-            iou_list.append(iou)
-            dice_list.append(dice)
-            print(test_dataset.images[k], "\tdice:", dice, "\tiou:", iou)
-
+                if pred_mask.shape != mask_ori.shape:
+                    pred_mask = cv2.resize(pred_mask, (orig_w, orig_h), cv2.INTER_NEAREST)
+                    gt_mask = cv2.resize(gt_mask, (orig_w, orig_h), cv2.INTER_NEAREST)
+                    pred_draw[:, :, c] = pred_mask
+                    gt_draw[:, :, c] = gt_mask
             save_full_path = save_dir1 + test_dataset.images[k].split('/')[-1]    # windows \\   linux /
+            os.makedirs(save_full_path.split('\\')[0], exist_ok=True)
             print(save_full_path)
             # cv2.imwrite(save_full_path, pred_mask)
 
-            img = cv2.imread(test_dataset.images[k], cv2.IMREAD_COLOR)
-            img_gt = add_weighted(img, gt_mask.astype('uint8'), 'BG')
-            img_pred = add_weighted(img, pred_mask.astype('uint8'), 'GR')
+            img = cv_read(test_dataset.images[k], cv2.IMREAD_COLOR)
+            img_gt = add_weighted_multi(img, gt_draw, 'BGR')
+            img_pred = add_weighted_multi(img, pred_draw, 'BGR')
             img_gt_pred = combine_image(img_gt, img_pred)
-            cv2.imwrite(save_full_path, img_gt_pred)
+            cv_write(save_full_path, img_gt_pred)
 
         print("\tMean Dice:", np.average(dice_list))
         print("\tMean IoU:", np.average(iou_list))
@@ -181,17 +183,17 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
 
 
 def segment():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "7"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "0"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     data_dir = '/home/ai999/dataset/kidney/kidney-small-tumor-kfold/'
     encoder_name = "resnext50_32x4d"
     encoder_activation = "softmax2d"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # encoder_weights = "imagenet"
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
-    bs = 12
+    bs = 1
     lr = 1e-4
     epochs = 10000
-    save_dir = "kidney-small-tumor-segment/0726-segment-" + encoder_name + '/'
+    save_dir = "kidney-small-tumor-segment/0727-segment-" + encoder_name + '/'
     train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device)
 
 
