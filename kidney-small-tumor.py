@@ -167,9 +167,10 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
                     gt_mask = cv2.resize(gt_mask, (orig_w, orig_h), cv2.INTER_NEAREST)
                     pred_draw[:, :, c] = pred_mask
                     gt_draw[:, :, c] = gt_mask
-            save_full_path = save_dir1 + test_dataset.images[k].split('/')[-1]    # windows \\   linux /
-            os.makedirs(save_full_path.split('\\')[0], exist_ok=True)
+            save_full_path = save_dir1 + os.path.split(test_dataset.images[k])[0].split('/')[-1] + '/' + \
+                             os.path.split(test_dataset.images[k])[1]
             print(save_full_path)
+            os.makedirs(os.path.split(save_full_path)[0], exist_ok=True)
             # cv2.imwrite(save_full_path, pred_mask)
 
             img = cv_read(test_dataset.images[k], cv2.IMREAD_COLOR)
