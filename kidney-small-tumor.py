@@ -18,9 +18,10 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         print('五折交叉验证 第{}次实验:'.format(i))
         fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/',
                      'fold5/', 'fold6/', 'fold7/', 'fold8/', 'fold9/']
-        valid_path = [data_dir + fold_list[i]]
+        valid_path = [data_dir + fold_list[i], data_dir + fold_list[i+1]]
         valid_mask = [data_dir.replace('kfold', 'mask') + fold_list[i]]
         fold_list.remove(fold_list[i])
+        fold_list.remove(fold_list[i+1])
         test_path = [data_dir + fold_list[i]]
         test_mask = [data_dir.replace('kfold', 'mask') + fold_list[i]]
         fold_list.remove(fold_list[i])
@@ -190,7 +191,7 @@ def segment():
     encoder_activation = "softmax2d"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # encoder_weights = "imagenet"
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
-    bs = 1
+    bs = 24
     lr = 1e-4
     epochs = 10000
     save_dir = "kidney-small-tumor-segment/0727-segment-" + encoder_name + '/'
