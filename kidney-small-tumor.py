@@ -82,7 +82,7 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         max_score = -1
         max_dice = 0
         best_epoch = 0
-        early_stops = 200
+        early_stops = 2000
 
         train_history = {'dice_loss + bce_loss': [], 'fscore': []}
         val_history = {'dice_loss + bce_loss': [], 'fscore': []}
@@ -126,63 +126,63 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         reference_iou_list, reference_dice_list = [], []
         print('load model name:', [x for x in os.listdir(save_dir1) if x.endswith('.pth')][-1])
         model = torch.load(save_dir1 + [x for x in os.listdir(save_dir1) if x.endswith('.pth')][-1])
-        # model = torch.load('D:/med project/中山医院-肾脏/0727-segment-resnext50_32x4d/fold4/best_0.7373.pth')
+        # model = torch.load('C:/Users/user/Desktop/0731-segment-efficientnet-b7/fold0/best_0.6564.pth')
         model.eval()
         torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
-        for k in range(len(test_dataset)):
-            image, gt_mask3 = test_dataset[k]
-            gt_mask3 = gt_mask3.squeeze().astype(np.uint8)
-            mask_ori = cv2.imread(os.path.join(test_dataset.masks[k]), cv2.IMREAD_GRAYSCALE)
-            [orig_h, orig_w] = mask_ori.shape
-            x_tensor = torch.from_numpy(image).to(device).unsqueeze(0)
-            with torch.no_grad():
+        with torch.no_grad():
+            for k in range(len(test_dataset)):
+                image, gt_mask3 = test_dataset[k]
+                gt_mask3 = gt_mask3.squeeze().astype(np.uint8)
+                mask_ori = cv_read(os.path.join(test_dataset.masks[k]))
+                [orig_h, orig_w, orig_c] = mask_ori.shape
+                x_tensor = torch.from_numpy(image).to(device).unsqueeze(0)
                 pred_mask3 = model(x_tensor)
                 pred_mask3 = (pred_mask3.squeeze().cpu().numpy().round().astype(np.uint8))
-            pred_mask3[pred_mask3 < 0.5] = 0
-            pred_mask3[pred_mask3 >= 0.5] = 1
-            pred_draw = np.zeros([orig_h, orig_w, 3]).astype(np.uint8)
-            gt_draw = np.zeros([orig_h, orig_w, 3]).astype(np.uint8)
-            for c in range(image.shape[0]):
-                gt_mask = gt_mask3[c]
-                pred_mask = pred_mask3[c]
+                pred_mask3[pred_mask3 < 0.5] = 0
+                pred_mask3[pred_mask3 >= 0.5] = 1
+                pred_draw = np.zeros([orig_h, orig_w, orig_c]).astype(np.uint8)
+                gt_draw = np.zeros([orig_h, orig_w, orig_c]).astype(np.uint8)
+                for c in range(orig_c):
+                    gt_mask = gt_mask3[c]
+                    pred_mask = pred_mask3[c]
 
-                if np.sum(mask_ori) == 0 and np.sum(pred_mask) == 0:
-                    iou = 1
-                    dice = 1
-                else:
-                    iou = get_iou(gt_mask, pred_mask)
-                    dice = get_f1(gt_mask, pred_mask)
+                    if np.sum(mask_ori) == 0 and np.sum(pred_mask) == 0:
+                        iou = 1
+                        dice = 1
+                    else:
+                        iou = get_iou(gt_mask, pred_mask)
+                        dice = get_f1(gt_mask, pred_mask)
 
-                if c == 0:
-                    name = 'renal'
-                    renal_iou_list.append(np.round(iou, 4))
-                    renal_dice_list.append(np.round(dice, 4))
-                elif c == 1:
-                    name = 'mass'
-                    mass_iou_list.append(np.round(iou, 4))
-                    mass_dice_list.append(np.round(dice, 4))
-                elif c == 2:
-                    name = 'reference'
-                    reference_iou_list.append(np.round(iou, 4))
-                    reference_dice_list.append(np.round(dice, 4))
-                print(test_dataset.images[k], "\t", name, ":dice:", dice, "\tiou:", iou)
+                    if c == 0:
+                        name = 'renal'
+                        renal_iou_list.append(np.round(iou, 4))
+                        renal_dice_list.append(np.round(dice, 4))
+                    elif c == 1:
+                        name = 'mass'
+                        mass_iou_list.append(np.round(iou, 4))
+                        mass_dice_list.append(np.round(dice, 4))
+                    elif c == 2:
+                        name = 'reference'
+                        reference_iou_list.append(np.round(iou, 4))
+                        reference_dice_list.append(np.round(dice, 4))
+                    print(test_dataset.images[k], "\t", name, ":dice:", dice, "\tiou:", iou)
 
-                if pred_mask.shape != mask_ori.shape:
-                    pred_mask = cv2.resize(pred_mask, (orig_w, orig_h), cv2.INTER_NEAREST)
-                    gt_mask = cv2.resize(gt_mask, (orig_w, orig_h), cv2.INTER_NEAREST)
-                    pred_draw[:, :, c] = pred_mask
-                    gt_draw[:, :, c] = gt_mask
-            save_full_path = save_dir1 + os.path.split(test_dataset.images[k])[0].split('/')[-1] + '/' + \
-                             os.path.split(test_dataset.images[k])[1]
-            print(save_full_path)
-            os.makedirs(os.path.split(save_full_path)[0], exist_ok=True)
-            # cv2.imwrite(save_full_path, pred_mask)
+                    if pred_mask.shape != mask_ori.shape:
+                        pred_mask = cv2.resize(pred_mask, (orig_w, orig_h), cv2.INTER_NEAREST)
+                        gt_mask = cv2.resize(gt_mask, (orig_w, orig_h), cv2.INTER_NEAREST)
+                        pred_draw[:, :, c] = pred_mask
+                        gt_draw[:, :, c] = gt_mask
+                save_full_path = save_dir1 + os.path.split(test_dataset.images[k])[0].split('/')[-1] + '/' + \
+                                 os.path.split(test_dataset.images[k])[1]
+                print(save_full_path)
+                os.makedirs(os.path.split(save_full_path)[0], exist_ok=True)
+                # cv2.imwrite(save_full_path, pred_mask)
 
-            img = cv_read(test_dataset.images[k], cv2.IMREAD_COLOR)
-            img_gt = add_weighted_multi(img, gt_draw, 'BGR')
-            img_pred = add_weighted_multi(img, pred_draw, 'BGR')
-            img_gt_pred = combine_image(img_gt, img_pred)
-            cv_write(save_full_path, img_gt_pred)
+                img = cv_read(test_dataset.images[k], cv2.IMREAD_COLOR)
+                img_gt = add_weighted_multi(img, gt_draw, 'BGR')
+                img_pred = add_weighted_multi(img, pred_draw, 'BGR')
+                img_gt_pred = combine_image(img_gt, img_pred)
+                cv_write(save_full_path, img_gt_pred)
 
         print("\tRenal Mean Dice:", np.average(renal_dice_list))
         print("\tRenal Mean IoU:", np.average(renal_iou_list))
@@ -199,14 +199,14 @@ def segment():
     os.environ['CUDA_VISIBLE_DEVICES'] = "0"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     data_dir = '/home/ai999/dataset/kidney/kidney-small-tumor-kfold/'
-    # 'D:/med dataset/kidney-small-tumor-kfold/'     #
-    encoder_name = "efficientnet-b7"
+    # 'D:/med dataset/kidney-small-tumor-kfold/'     # '/home/ai999/dataset/kidney/kidney-small-tumor-kfold/'
+    encoder_name = 'resnext101_32x16d'               # "efficientnet-b7"
     encoder_activation = "softmax2d"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # encoder_weights = "imagenet"
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
     bs = 24
     lr = 1e-4
-    epochs = 1000
+    epochs = 10000
     save_dir = "kidney-small-tumor-segment/0731-segment-" + encoder_name + '/'
     train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device)
 
