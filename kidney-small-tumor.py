@@ -40,7 +40,7 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         valid_loader = DataLoader(valid_dataset, batch_size=bs, shuffle=False, num_workers=4)
 
         # build model
-        model = smp.Unet(encoder_name=encoder_name,
+        model = smp.UnetPlusPlus(encoder_name=encoder_name,
                          classes=3,
                          activation=encoder_activation,
                          in_channels=3,
@@ -200,11 +200,11 @@ def segment():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     data_dir = '/home/ai999/dataset/kidney/kidney-small-tumor-kfold/'
     # 'D:/med dataset/kidney-small-tumor-kfold/'     # '/home/ai999/dataset/kidney/kidney-small-tumor-kfold/'
-    encoder_name = 'resnext101_32x16d'               # "efficientnet-b7"
+    encoder_name = 'resnext50_32x4d'               # "efficientnet-b7"
     encoder_activation = "softmax2d"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # encoder_weights = "imagenet"
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
-    bs = 24
+    bs = 8
     lr = 1e-4
     epochs = 10000
     save_dir = "kidney-small-tumor-segment/0731-segment-" + encoder_name + '/'
