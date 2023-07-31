@@ -38,84 +38,84 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         print('train size:{}, valid:{}, test:{}'.format(len(train_dataset), len(valid_dataset), len(test_dataset)))
         train_loader = DataLoader(train_dataset, batch_size=bs, shuffle=True, num_workers=4, pin_memory=True)
         valid_loader = DataLoader(valid_dataset, batch_size=bs, shuffle=False, num_workers=4)
-        #
-        # # build model
-        # model = smp.Unet(encoder_name=encoder_name,
-        #                  classes=3,
-        #                  activation=encoder_activation,
-        #                  in_channels=3,
-        #                  encoder_weights="imagenet")
-        # # print(model)
-        # loss_fn = smp.utils.losses.DiceLoss() + smp.utils.losses.BCELoss()
-        # # for image segmentation dice loss could be the best first choice
-        # # loss_fn = smp.losses.DiceLoss(smp.losses.BINARY_MODE, from_logits=True)
-        #
-        # metrics = [
-        #     smp.utils.metrics.IoU(threshold=0.5),
-        #     smp.utils.metrics.Fscore()
-        # ]
-        #
-        # optimizer = torch.optim.Adam([
-        #     dict(params=model.parameters(), lr=lr),
-        # ])
-        #
-        # # create epoch runners
-        # # it is a simple loop of iterating over dataloader`s samples
-        # train_epoch = smp.utils.train.TrainEpoch(
-        #     model,
-        #     loss=loss_fn,
-        #     metrics=metrics,
-        #     optimizer=optimizer,
-        #     device=device,
-        #     verbose=True,
-        # )
-        #
-        # valid_epoch = smp.utils.train.ValidEpoch(
-        #     model,
-        #     loss=loss_fn,
-        #     metrics=metrics,
-        #     device=device,
-        #     verbose=True,
-        # )
-        #
-        # # train model for 40 epochs
-        # max_score = -1
-        # max_dice = 0
-        # best_epoch = 0
-        # early_stops = 200
-        #
-        # train_history = {'dice_loss + bce_loss': [], 'fscore': []}
-        # val_history = {'dice_loss + bce_loss': [], 'fscore': []}
-        # for j in range(epochs):
-        #     if j - best_epoch > early_stops:
-        #         print(j - best_epoch, " epochs don't change, early stopping.")
-        #         break
-        #     print('\nEpoch: {}'.format(j))
-        #     print("Best epoch:", best_epoch, "\tiou:", max_score, "\tbest dice:", max_dice)
-        #     train_logs = train_epoch.run(train_loader)
-        #     train_history['dice_loss + bce_loss'].append(train_logs['dice_loss + bce_loss'])
-        #     train_history['fscore'].append(train_logs['fscore'])
-        #
-        #     valid_logs = valid_epoch.run(valid_loader)
-        #     val_history['dice_loss + bce_loss'].append(valid_logs['dice_loss + bce_loss'])
-        #     val_history['fscore'].append(valid_logs['fscore'])
-        #
-        #     save_seg_history(train_history, val_history, save_dir1)
-        #
-        #     # do something (save model, change lr, etc.)
-        #     if max_score < np.round(valid_logs['iou_score'], 4):  # fscore  iou_score
-        #         if max_score != -1:
-        #             old_filepath = save_dir1 + "best_" + str(max_score) + ".pth"
-        #             os.remove(old_filepath)
-        #         max_score = np.round(valid_logs['iou_score'], 4)
-        #         max_dice = np.round(valid_logs['fscore'], 4)
-        #         torch.save(model, save_dir1 + "best_" + str(max_score) + ".pth")
-        #         print('best iou score={}, Model saved!'.format(max_score))
-        #         best_epoch = j
-        #
-        #     if j - best_epoch > 1000:
-        #         optimizer.param_groups[0]['lr'] = optimizer.param_groups[0]['lr'] / 2
-        #         print('Decrease decoder learning rate. lr:', optimizer.param_groups[0]['lr'])
+
+        # build model
+        model = smp.Unet(encoder_name=encoder_name,
+                         classes=3,
+                         activation=encoder_activation,
+                         in_channels=3,
+                         encoder_weights="imagenet")
+        # print(model)
+        loss_fn = smp.utils.losses.DiceLoss() + smp.utils.losses.BCELoss()
+        # for image segmentation dice loss could be the best first choice
+        # loss_fn = smp.losses.DiceLoss(smp.losses.BINARY_MODE, from_logits=True)
+
+        metrics = [
+            smp.utils.metrics.IoU(threshold=0.5),
+            smp.utils.metrics.Fscore()
+        ]
+
+        optimizer = torch.optim.Adam([
+            dict(params=model.parameters(), lr=lr),
+        ])
+
+        # create epoch runners
+        # it is a simple loop of iterating over dataloader`s samples
+        train_epoch = smp.utils.train.TrainEpoch(
+            model,
+            loss=loss_fn,
+            metrics=metrics,
+            optimizer=optimizer,
+            device=device,
+            verbose=True,
+        )
+
+        valid_epoch = smp.utils.train.ValidEpoch(
+            model,
+            loss=loss_fn,
+            metrics=metrics,
+            device=device,
+            verbose=True,
+        )
+
+        # train model for 40 epochs
+        max_score = -1
+        max_dice = 0
+        best_epoch = 0
+        early_stops = 200
+
+        train_history = {'dice_loss + bce_loss': [], 'fscore': []}
+        val_history = {'dice_loss + bce_loss': [], 'fscore': []}
+        for j in range(epochs):
+            if j - best_epoch > early_stops:
+                print(j - best_epoch, " epochs don't change, early stopping.")
+                break
+            print('\nEpoch: {}'.format(j))
+            print("Best epoch:", best_epoch, "\tiou:", max_score, "\tbest dice:", max_dice)
+            train_logs = train_epoch.run(train_loader)
+            train_history['dice_loss + bce_loss'].append(train_logs['dice_loss + bce_loss'])
+            train_history['fscore'].append(train_logs['fscore'])
+
+            valid_logs = valid_epoch.run(valid_loader)
+            val_history['dice_loss + bce_loss'].append(valid_logs['dice_loss + bce_loss'])
+            val_history['fscore'].append(valid_logs['fscore'])
+
+            save_seg_history(train_history, val_history, save_dir1)
+
+            # do something (save model, change lr, etc.)
+            if max_score < np.round(valid_logs['iou_score'], 4):  # fscore  iou_score
+                if max_score != -1:
+                    old_filepath = save_dir1 + "best_" + str(max_score) + ".pth"
+                    os.remove(old_filepath)
+                max_score = np.round(valid_logs['iou_score'], 4)
+                max_dice = np.round(valid_logs['fscore'], 4)
+                torch.save(model, save_dir1 + "best_" + str(max_score) + ".pth")
+                print('best iou score={}, Model saved!'.format(max_score))
+                best_epoch = j
+
+            if j - best_epoch > 1000:
+                optimizer.param_groups[0]['lr'] = optimizer.param_groups[0]['lr'] / 2
+                print('Decrease decoder learning rate. lr:', optimizer.param_groups[0]['lr'])
 
         'test'
         # colors = [("renal", [255, 0, 255]), ("mass", [128, 0, 255]), ("reference", [255, 0, 128])]
@@ -124,9 +124,9 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         renal_iou_list, renal_dice_list = [], []
         mass_iou_list, mass_dice_list = [], []
         reference_iou_list, reference_dice_list = [], []
-        # print('model_name:', [x for x in os.listdir(save_dir1) if x.endswith('.pth')][-1])
-        # model = torch.load(save_dir1 + [x for x in os.listdir(save_dir1) if x.endswith('.pth')][-1])
-        model = torch.load('D:/med project/中山医院-肾脏/0727-segment-resnext50_32x4d/fold4/best_0.7373.pth')
+        print('load model name:', [x for x in os.listdir(save_dir1) if x.endswith('.pth')][-1])
+        model = torch.load(save_dir1 + [x for x in os.listdir(save_dir1) if x.endswith('.pth')][-1])
+        # model = torch.load('D:/med project/中山医院-肾脏/0727-segment-resnext50_32x4d/fold4/best_0.7373.pth')
         model.eval()
         torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
         for k in range(len(test_dataset)):
@@ -198,7 +198,8 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
 def segment():
     os.environ['CUDA_VISIBLE_DEVICES'] = "0"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    data_dir = 'D:/med dataset/kidney-small-tumor-kfold/'     # '/home/ai999/dataset/kidney/kidney-small-tumor-kfold/'
+    data_dir = '/home/ai999/dataset/kidney/kidney-small-tumor-kfold/'
+    # 'D:/med dataset/kidney-small-tumor-kfold/'     #
     encoder_name = "efficientnet-b7"
     encoder_activation = "softmax2d"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # encoder_weights = "imagenet"
