@@ -40,7 +40,7 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         valid_loader = DataLoader(valid_dataset, batch_size=bs, shuffle=False, num_workers=4)
 
         # build model
-        model = smp.UnetPlusPlus(encoder_name=encoder_name,
+        model = smp.Unet(encoder_name=encoder_name,
                          classes=3,
                          activation=encoder_activation,
                          in_channels=3,
@@ -196,7 +196,7 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
 
 
 def segment():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "0"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "7"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     data_dir = '/home/ai999/dataset/kidney/kidney-small-tumor-kfold/'
     # 'D:/med dataset/kidney-small-tumor-kfold/'     # '/home/ai999/dataset/kidney/kidney-small-tumor-kfold/'
@@ -207,7 +207,7 @@ def segment():
     bs = 8
     lr = 1e-4
     epochs = 10000
-    save_dir = "kidney-small-tumor-segment/0731-segment-" + encoder_name + '/'
+    save_dir = "kidney-small-tumor-segment/0801-segment-" + encoder_name + '/'
     train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device)
 
 
