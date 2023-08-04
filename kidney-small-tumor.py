@@ -20,17 +20,17 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
                      'fold5/', 'fold6/', 'fold7/', 'fold8/', 'fold9/']
         valid_path = [data_dir + fold_list[i],
                       data_dir + fold_list[i+1]]
-        valid_mask = [data_dir.replace('kfold', 'mask') + fold_list[i],
-                      data_dir.replace('kfold', 'mask') + fold_list[i+1]]
+        valid_mask = [data_dir.replace('kfold', 'mask-npy') + fold_list[i],
+                      data_dir.replace('kfold', 'mask-npy') + fold_list[i+1]]
         fold_list.remove(fold_list[i])
         fold_list.remove(fold_list[i+1])
         test_path = [data_dir + fold_list[i]]
-        test_mask = [data_dir.replace('kfold', 'mask') + fold_list[i]]
+        test_mask = [data_dir.replace('kfold', 'mask-npy') + fold_list[i]]
         fold_list.remove(fold_list[i])
         train_path, train_mask = [], []
         for x in range(len(fold_list)):
             train_path.append(data_dir + fold_list[x])
-            train_mask.append(data_dir.replace('kfold', 'mask') + fold_list[x])
+            train_mask.append(data_dir.replace('kfold', 'mask-npy') + fold_list[x])
 
         train_dataset = KidneyMassDataset(train_path, train_mask, augmentation=training_augmentation())
         valid_dataset = KidneyMassDataset(valid_path, valid_mask, augmentation=valid_augmentation())
@@ -130,20 +130,20 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
         with torch.no_grad():
             for k in range(len(test_dataset)):
-                image, gt_mask3 = test_dataset[k]
-                gt_mask3 = gt_mask3.squeeze().astype(np.uint8)
+                image, gt_mask2 = test_dataset[k]
+                gt_mask2 = gt_mask2.squeeze().astype(np.uint8)
                 mask_ori = cv_read(os.path.join(test_dataset.masks[k]))
                 [orig_h, orig_w, orig_c] = mask_ori.shape
                 x_tensor = torch.from_numpy(image).to(device).unsqueeze(0)
-                pred_mask3 = model(x_tensor)
-                pred_mask3 = (pred_mask3.squeeze().cpu().numpy().round().astype(np.uint8))
-                pred_mask3[pred_mask3 < 0.5] = 0
-                pred_mask3[pred_mask3 >= 0.5] = 1
-                pred_draw = np.zeros([orig_h, orig_w, orig_c]).astype(np.uint8)
-                gt_draw = np.zeros([orig_h, orig_w, orig_c]).astype(np.uint8)
+                pred_mask2 = model(x_tensor)
+                pred_mask2 = (pred_mask2.squeeze().cpu().numpy().round().astype(np.uint8))
+                pred_mask2[pred_mask2 < 0.5] = 0
+                pred_mask2[pred_mask2 >= 0.5] = 1
+                pred_draw = np.zeros([orig_h, orig_w, 3]).astype(np.uint8)
+                gt_draw = np.zeros([orig_h, orig_w, 3]).astype(np.uint8)
                 for c in range(orig_c):
-                    gt_mask = gt_mask3[c]
-                    pred_mask = pred_mask3[c]
+                    gt_mask = gt_mask2[c]
+                    pred_mask = pred_mask2[c]
 
                     if np.sum(mask_ori) == 0 and np.sum(pred_mask) == 0:
                         iou = 1
@@ -189,9 +189,9 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
 
 
 def segment():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "0"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "1"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    data_dir = 'D:/med dataset/kidney-mass-kfold/'
+    data_dir = '/home/ai999/dataset/kidney/kidney-mass-kfold/'
     # 'D:/med dataset/kidney-small-tumor-kfold/'     # '/home/ai999/dataset/kidney/kidney-small-tumor-kfold/'
     encoder_name = "efficientnet-b7"               # "efficientnet-b7"  'resnext50_32x4d'
     encoder_activation = "softmax2d"  # could be None for logits or 'softmax2d' for multiclass segmentation

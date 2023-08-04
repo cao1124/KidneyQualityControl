@@ -236,21 +236,23 @@ def cv_write(file_path, file):
 
 def get_mask_by_json():
     base_dir = 'D:/med dataset/kidney-mass-kfold/'
-    renal_mass_mask_path = 'D:/med dataset/kidney-mass-mask/'
-    renal_mask_path = 'D:/med dataset/kidney-mask/'
-    mass_mask_path = 'D:/med dataset/mass-mask/'
+    renal_mass_mask_path = 'D:/med dataset/kidney-mass-mask-npy/'
+    # renal_mask_path = 'D:/med dataset/kidney-mask/'
+    # mass_mask_path = 'D:/med dataset/mass-mask/'
     for f in os.listdir(base_dir):
         os.makedirs(os.path.join(renal_mass_mask_path, f), exist_ok=True)
-        os.makedirs(os.path.join(renal_mask_path, f), exist_ok=True)
-        os.makedirs(os.path.join(mass_mask_path, f), exist_ok=True)
+        # os.makedirs(os.path.join(renal_mask_path, f), exist_ok=True)
+        # os.makedirs(os.path.join(mass_mask_path, f), exist_ok=True)
         img_json_list = [x for x in os.listdir(os.path.join(base_dir, f)) if x.endswith('.json')]
         for img_json in img_json_list:
             if os.path.exists(os.path.join(base_dir, f, img_json.replace('.json', '.jpg'))):
                 img = cv_read(os.path.join(base_dir, f, img_json.replace('.json', '.jpg')))
             else:
                 img = cv_read(os.path.join(base_dir, f, img_json.replace('.json', '.JPG')))
-            mask_img = np.zeros(img.shape, dtype=np.uint8)
-            renal_img, mass_img, _ = cv2.split(mask_img)  # 拆分为 BGR 独立通道
+            mask_img = np.zeros((img.shape[0], img.shape[1], 2), dtype=np.uint8)
+            renal_img, mass_img = cv2.split(mask_img)  # 拆分为 BGR 独立通道
+            # mask_img = np.zeros(img.shape, dtype=np.uint8)
+            # renal_img, mass_img, _ = cv2.split(mask_img)  # 拆分为 BGR 独立通道
             with open(os.path.join(base_dir, f, img_json), 'r', encoding='utf-8') as fp:
                 json_data = json.load(fp)
             for i in range(len(json_data['shapes'])):
@@ -270,10 +272,12 @@ def get_mask_by_json():
                     cv2.fillConvexPoly(mass_img, polygon, 255)
                 # else:
                 #     print('error label in:', f, '-', p, '-', img_json)
-            imgMerge = cv2.merge([renal_img, mass_img, _])
-            cv_write(os.path.join(renal_mask_path, f, img_json.replace('.json', '.jpg')), renal_img)
-            cv_write(os.path.join(mass_mask_path, f, img_json.replace('.json', '.jpg')), mass_img)
-            cv_write(os.path.join(renal_mass_mask_path, f, img_json.replace('.json', '.jpg')), imgMerge)
+            imgMerge = cv2.merge([renal_img, mass_img])
+            np.save(os.path.join(renal_mass_mask_path, f, img_json.replace('.json', '.npy')), imgMerge)
+            # imgMerge = cv2.merge([renal_img, mass_img, _])
+            # cv_write(os.path.join(renal_mask_path, f, img_json.replace('.json', '.jpg')), renal_img)
+            # cv_write(os.path.join(mass_mask_path, f, img_json.replace('.json', '.jpg')), mass_img)
+            # cv_write(os.path.join(renal_mass_mask_path, f, img_json.replace('.json', '.jpg')), imgMerge)
 
 
 if __name__ == '__main__':
@@ -282,7 +286,6 @@ if __name__ == '__main__':
     # img2video()
     # mead_split_patient()
     get_mask_by_json()
-
 
     # mask_img = cv2.imread('D:/med dataset/kidney-small-tumor-mask/fold1/21-result/Image01.JPG')
     # mask_img[mask_img == 64] = 1

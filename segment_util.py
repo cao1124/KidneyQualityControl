@@ -202,12 +202,12 @@ class KidneyMassDataset(BaseDataset):
     ):
         self.images, self.masks = [], []
         for i in range(len(images_dir)):
-            for img_name in os.listdir(os.path.join(images_dir[i])):
+            for img_name in os.listdir(images_dir[i]):
                 self.images.append(os.path.join(images_dir[i], img_name))
                 if '.JPG' in img_name:
-                    self.masks.append(os.path.join(masks_dir[i], img_name.replace('.JPG', '.jpg')))
+                    self.masks.append(os.path.join(masks_dir[i], img_name.replace('.JPG', '.npy')))
                 else:
-                    self.masks.append(os.path.join(masks_dir[i], img_name))
+                    self.masks.append(os.path.join(masks_dir[i], img_name.replace('.jpg', '.npy')))
         self.augmentation = augmentation
         self.preprocessing = preprocessing
         self.multi_scale = multi_scale
@@ -220,7 +220,7 @@ class KidneyMassDataset(BaseDataset):
         # read data
         image = cv_read(self.images[i])
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        mask = cv_read(self.masks[i])
+        mask = np.load(self.masks[i])
 
         target_width = 512
         target_height = 512
@@ -239,7 +239,6 @@ class KidneyMassDataset(BaseDataset):
             sample = self.preprocessing(image=image, mask=mask)
             image, mask = sample['image'], sample['mask']
         image = image/255.0
-        mask[mask == 64] = 1
         mask[mask == 128] = 1
         mask[mask == 255] = 1
 
