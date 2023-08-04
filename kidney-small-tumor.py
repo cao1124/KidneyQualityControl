@@ -123,7 +123,6 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         iou_list, dice_list = [], []
         renal_iou_list, renal_dice_list = [], []
         mass_iou_list, mass_dice_list = [], []
-        reference_iou_list, reference_dice_list = [], []
         print('load model name:', [x for x in os.listdir(save_dir1) if x.endswith('.pth')][-1])
         model = torch.load(save_dir1 + [x for x in os.listdir(save_dir1) if x.endswith('.pth')][-1])
         # model = torch.load('C:/Users/user/Desktop/0731-segment-efficientnet-b7/fold0/best_0.6564.pth')
@@ -161,10 +160,6 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
                         name = 'mass'
                         mass_iou_list.append(np.round(iou, 4))
                         mass_dice_list.append(np.round(dice, 4))
-                    elif c == 2:
-                        name = 'reference'
-                        reference_iou_list.append(np.round(iou, 4))
-                        reference_dice_list.append(np.round(dice, 4))
                     print(test_dataset.images[k], "\t", name, ":dice:", dice, "\tiou:", iou)
 
                     if pred_mask.shape != mask_ori.shape:
@@ -188,8 +183,6 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         print("\tRenal Mean IoU:", np.average(renal_iou_list))
         print("\tMass Mean Dice:", np.average(mass_dice_list))
         print("\tMass Mean IoU:", np.average(mass_iou_list))
-        print("\treference Mean Dice:", np.average(reference_dice_list))
-        print("\treference Mean IoU:", np.average(reference_iou_list))
         # hist, bins = np.histogram(dice_list, bins=np.arange(0.0, 1.05, 0.1))
         # print(hist)
         # print(hist / len(test_dataset))
