@@ -202,13 +202,12 @@ class SmallTumorDataset(BaseDataset):
     ):
         self.images, self.masks = [], []
         for i in range(len(images_dir)):
-            for p in os.listdir(images_dir[i]):
-                for img_name in os.listdir(os.path.join(images_dir[i], p)):
-                    self.images.append(os.path.join(images_dir[i], p, img_name))
-                    if '.jpg' in img_name:
-                        self.masks.append(os.path.join(masks_dir[i], p, img_name.replace('.jpg', '.JPG')))
-                    else:
-                        self.masks.append(os.path.join(masks_dir[i], p, img_name))
+            for img_name in os.listdir(os.path.join(images_dir[i])):
+                self.images.append(os.path.join(images_dir[i], img_name))
+                if '.jpg' in img_name:
+                    self.masks.append(os.path.join(masks_dir[i], img_name.replace('.jpg', '.JPG')))
+                else:
+                    self.masks.append(os.path.join(masks_dir[i], img_name))
         self.augmentation = augmentation
         self.preprocessing = preprocessing
         self.multi_scale = multi_scale
