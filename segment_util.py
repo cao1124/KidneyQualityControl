@@ -204,8 +204,8 @@ class SmallTumorDataset(BaseDataset):
         for i in range(len(images_dir)):
             for img_name in os.listdir(os.path.join(images_dir[i])):
                 self.images.append(os.path.join(images_dir[i], img_name))
-                if '.jpg' in img_name:
-                    self.masks.append(os.path.join(masks_dir[i], img_name.replace('.jpg', '.JPG')))
+                if '.JPG' in img_name:
+                    self.masks.append(os.path.join(masks_dir[i], img_name.replace('.JPG', '.jpg')))
                 else:
                     self.masks.append(os.path.join(masks_dir[i], img_name))
         self.augmentation = augmentation
