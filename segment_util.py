@@ -191,7 +191,7 @@ def combine_image(gt, pred):
     return img_res.astype('uint8')
 
 
-class SmallTumorDataset(BaseDataset):
+class KidneyMassDataset(BaseDataset):
     def __init__(
             self,
             images_dir,
@@ -250,3 +250,64 @@ class SmallTumorDataset(BaseDataset):
 
     def __len__(self):
         return len(self.images)
+
+
+class RenalDataset(BaseDataset):
+    def __init__(
+            self,
+            images_dir,
+            masks_dir,
+            augmentation=None,
+            preprocessing=None,
+            multi_scale=False,
+    ):
+        self.images, self.masks = [], []
+        for i in range(len(images_dir)):
+            for img_name in os.listdir(os.path.join(images_dir[i])):
+                self.images.append(os.path.join(images_dir[i], img_name))
+                if '.JPG' in img_name:
+                    self.masks.append(os.path.join(masks_dir[i], img_name.replace('.JPG', '.jpg')))
+                else:
+                    self.masks.append(os.path.join(masks_dir[i], img_name))
+        self.augmentation = augmentation
+        self.preprocessing = preprocessing
+        self.multi_scale = multi_scale
+
+    def __getitem__(self, item):
+        if type(item) == list or type(item) == tuple:
+            i, size = item
+        else:
+            i = item
+        # read data
+        image = cv_read(self.images[i])
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        mask = cv_read(self.masks[i])
+
+        target_width = 512
+        target_height = 512
+        if image.shape[:2] != [target_height, target_width]:
+            image = cv2.resize(image, (target_width, target_height), interpolation=cv2.INTER_NEAREST)
+            mask = cv2.resize(mask, (target_width, target_height), interpolation=cv2.INTER_NEAREST)
+            # _, mask = cv2.threshold(mask, 1, 255, cv2.THRESH_BINARY)
+
+        # apply augmentations
+        if self.augmentation:
+            sample = self.augmentation(image=image, mask=mask)
+            image, mask = sample['image'], sample['mask']
+
+        # apply preprocessing
+        if self.preprocessing:
+            sample = self.preprocessing(image=image, mask=mask)
+            image, mask = sample['image'], sample['mask']
+        image = image/255.0
+        mask[mask == 255] = 1
+
+        image = image.transpose(2, 0, 1).astype('float32')
+        mask = np.expand_dims(mask, 0).astype('float32')
+
+        return image, mask
+
+    def __len__(self):
+        return len(self.images)
+
+

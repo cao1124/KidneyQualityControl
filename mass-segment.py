@@ -4,7 +4,7 @@ import torch
 import numpy as np
 import segmentation_models_pytorch as smp
 from torch.utils.data import DataLoader
-from segment_util import SmallTumorDataset, training_augmentation, valid_augmentation, save_seg_history, get_iou, get_f1, \
+from segment_util import RenalDataset, training_augmentation, valid_augmentation, save_seg_history, get_iou, get_f1, \
     add_weighted, combine_image
 
 
@@ -29,9 +29,9 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
             train_path.append(data_dir + fold_list[x])
             train_mask.append(data_dir.replace('kfold', 'mask') + fold_list[x])
 
-        train_dataset = SmallTumorDataset(train_path, train_mask, augmentation=training_augmentation())
-        valid_dataset = SmallTumorDataset(valid_path, valid_mask, augmentation=valid_augmentation())
-        test_dataset = SmallTumorDataset(test_path, test_mask, augmentation=valid_augmentation())
+        train_dataset = RenalDataset(train_path, train_mask, augmentation=training_augmentation())
+        valid_dataset = RenalDataset(valid_path, valid_mask, augmentation=valid_augmentation())
+        test_dataset = RenalDataset(test_path, test_mask, augmentation=valid_augmentation())
         print('train size:{}, valid:{}, test:{}'.format(len(train_dataset), len(valid_dataset), len(test_dataset)))
         train_loader = DataLoader(train_dataset, batch_size=bs, shuffle=True, num_workers=4, pin_memory=True)
         valid_loader = DataLoader(valid_dataset, batch_size=bs, shuffle=False, num_workers=4)
@@ -200,7 +200,7 @@ def segment():
     encoder_weights = "imagenet"
     encoder_activation = "sigmoid"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
-    bs = 6
+    bs = 5
     lr = 1e-4
     epochs = 10000
     save_dir = "mass-segment/0804-deeplabv3-segment-" + encoder_name + '/'

@@ -7,7 +7,7 @@ from torch.utils.data import DataLoader
 import segmentation_models_pytorch as smp
 
 from data_preprocess import cv_read, cv_write
-from segment_util import SmallTumorDataset, training_augmentation, valid_augmentation, save_seg_history, \
+from segment_util import KidneyMassDataset, training_augmentation, valid_augmentation, save_seg_history, \
     add_weighted_multi, combine_image, get_iou, get_f1
 
 
@@ -32,9 +32,9 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
             train_path.append(data_dir + fold_list[x])
             train_mask.append(data_dir.replace('kfold', 'mask') + fold_list[x])
 
-        train_dataset = SmallTumorDataset(train_path, train_mask, augmentation=training_augmentation())
-        valid_dataset = SmallTumorDataset(valid_path, valid_mask, augmentation=valid_augmentation())
-        test_dataset = SmallTumorDataset(test_path, test_mask, augmentation=valid_augmentation())
+        train_dataset = KidneyMassDataset(train_path, train_mask, augmentation=training_augmentation())
+        valid_dataset = KidneyMassDataset(valid_path, valid_mask, augmentation=valid_augmentation())
+        test_dataset = KidneyMassDataset(test_path, test_mask, augmentation=valid_augmentation())
         print('train size:{}, valid:{}, test:{}'.format(len(train_dataset), len(valid_dataset), len(test_dataset)))
         train_loader = DataLoader(train_dataset, batch_size=bs, shuffle=True, num_workers=4, pin_memory=True)
         valid_loader = DataLoader(valid_dataset, batch_size=bs, shuffle=False, num_workers=4)
@@ -189,15 +189,15 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
 
 
 def segment():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "1"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "0"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    data_dir = '/home/ai999/dataset/kidney/kidney-mass-kfold/'
+    data_dir = 'D:/med dataset/kidney-mass-kfold/'
     # 'D:/med dataset/kidney-small-tumor-kfold/'     # '/home/ai999/dataset/kidney/kidney-small-tumor-kfold/'
     encoder_name = "efficientnet-b7"               # "efficientnet-b7"  'resnext50_32x4d'
     encoder_activation = "softmax2d"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # encoder_weights = "imagenet"
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
-    bs = 6
+    bs = 5
     lr = 1e-4
     epochs = 10000
     save_dir = "kidney-mass-segment/0804-deeplabv3-segment-" + encoder_name + '/'
