@@ -16,6 +16,9 @@ mass_model
 *.png
 *.txt
 *.txt.gz
+dist
+kidney-small-tumor-segment/
+segment_model/
 # Distribution / packaging
 .Python
 env/

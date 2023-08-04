@@ -198,16 +198,16 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
 def segment():
     os.environ['CUDA_VISIBLE_DEVICES'] = "1"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    data_dir = '/home/ai999/dataset/kidney/kidney-small-tumor-kfold/'
+    data_dir = '/home/ai999/dataset/kidney/kidney-mass-kfold/'
     # 'D:/med dataset/kidney-small-tumor-kfold/'     # '/home/ai999/dataset/kidney/kidney-small-tumor-kfold/'
-    encoder_name = 'resnext50_32x4d'               # "efficientnet-b7"
+    encoder_name = "efficientnet-b7"               # "efficientnet-b7"  'resnext50_32x4d'
     encoder_activation = "softmax2d"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # encoder_weights = "imagenet"
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
-    bs = 8
+    bs = 24
     lr = 1e-4
     epochs = 10000
-    save_dir = "kidney-small-tumor-segment/0801-deeplabv3-segment-" + encoder_name + '/'
+    save_dir = "kidney-mass-segment/0804-deeplabv3-segment-" + encoder_name + '/'
     train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device)
 
 

@@ -14,7 +14,7 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         os.makedirs(save_dir1, exist_ok=True)
         print('五折交叉验证 第{}次实验:'.format(i))
         fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/']
-        mask_dir = data_dir.replace('ori/', 'mask/')
+        mask_dir = data_dir.replace('kidney-mass-kfold/', 'mass-mask/')
         valid_path = [data_dir + fold_list[i]]
         valid_mask = [mask_dir + fold_list[i]]
         fold_list.remove(fold_list[i])
@@ -36,83 +36,83 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         train_loader = DataLoader(train_dataset, batch_size=bs, shuffle=True, num_workers=4, pin_memory=True)
         valid_loader = DataLoader(valid_dataset, batch_size=bs, shuffle=False, num_workers=4)
 
-        # # build model
-        # model = smp.Unet(encoder_name=encoder_name,
-        #                  classes=1,
-        #                  activation=encoder_activation,
-        #                  in_channels=3,
-        #                  encoder_weights="imagenet")
-        # # print(model)
-        # loss_fn = smp.utils.losses.DiceLoss() + smp.utils.losses.BCELoss()
-        # # for image segmentation dice loss could be the best first choice
-        # # loss_fn = smp.losses.DiceLoss(smp.losses.BINARY_MODE, from_logits=True)
-        #
-        # metrics = [
-        #     smp.utils.metrics.IoU(threshold=0.5),
-        #     smp.utils.metrics.Fscore()
-        # ]
-        #
-        # optimizer = torch.optim.Adam([
-        #     dict(params=model.parameters(), lr=lr),
-        # ])
-        #
-        # # create epoch runners
-        # # it is a simple loop of iterating over dataloader`s samples
-        # train_epoch = smp.utils.train.TrainEpoch(
-        #     model,
-        #     loss=loss_fn,
-        #     metrics=metrics,
-        #     optimizer=optimizer,
-        #     device=device,
-        #     verbose=True,
-        # )
-        #
-        # valid_epoch = smp.utils.train.ValidEpoch(
-        #     model,
-        #     loss=loss_fn,
-        #     metrics=metrics,
-        #     device=device,
-        #     verbose=True,
-        # )
-        #
-        # # train model for 40 epochs
-        # max_score = -1
-        # max_dice = 0
-        # best_epoch = 0
-        # early_stops = 2000
-        #
-        # train_history = {'dice_loss + bce_loss': [], 'fscore': []}
-        # val_history = {'dice_loss + bce_loss': [], 'fscore': []}
-        # for j in range(epochs):
-        #     if j - best_epoch > early_stops:
-        #         print(j - best_epoch, " epochs don't change, early stopping.")
-        #         break
-        #     print('\nEpoch: {}'.format(j))
-        #     print("Best epoch:", best_epoch, "\tiou:", max_score, "\tbest dice:", max_dice)
-        #     train_logs = train_epoch.run(train_loader)
-        #     train_history['dice_loss + bce_loss'].append(train_logs['dice_loss + bce_loss'])
-        #     train_history['fscore'].append(train_logs['fscore'])
-        #
-        #     valid_logs = valid_epoch.run(valid_loader)
-        #     val_history['dice_loss + bce_loss'].append(valid_logs['dice_loss + bce_loss'])
-        #     val_history['fscore'].append(valid_logs['fscore'])
-        #
-        #     save_seg_history(train_history, val_history, save_dir1)
-        #
-        #     # do something (save model, change lr, etc.)
-        #     if max_score < np.round(valid_logs['iou_score'], 4):  # fscore  iou_score
-        #         if max_score != -1:
-        #             old_filepath = save_dir1 + "best_" + str(max_score) + ".pth"
-        #             os.remove(old_filepath)
-        #         max_score = np.round(valid_logs['iou_score'], 4)
-        #         max_dice = np.round(valid_logs['fscore'], 4)
-        #         torch.save(model, save_dir1 + "best_" + str(max_score) + ".pth")
-        #         print('best iou score={}, Model saved!'.format(max_score))
-        #         best_epoch = j
-        #
-        #     if j - best_epoch > 1000:
-        #         optimizer.param_groups[0]['lr'] = optimizer.param_groups[0]['lr'] / 2
-        #         print('Decrease decoder learning rate. lr:', optimizer.param_groups[0]['lr'])
+        # build model
+        model = smp.Unet(encoder_name=encoder_name,
+                         classes=1,
+                         activation=encoder_activation,
+                         in_channels=3,
+                         encoder_weights="imagenet")
+        # print(model)
+        loss_fn = smp.utils.losses.DiceLoss() + smp.utils.losses.BCELoss()
+        # for image segmentation dice loss could be the best first choice
+        # loss_fn = smp.losses.DiceLoss(smp.losses.BINARY_MODE, from_logits=True)
+
+        metrics = [
+            smp.utils.metrics.IoU(threshold=0.5),
+            smp.utils.metrics.Fscore()
+        ]
+
+        optimizer = torch.optim.Adam([
+            dict(params=model.parameters(), lr=lr),
+        ])
+
+        # create epoch runners
+        # it is a simple loop of iterating over dataloader`s samples
+        train_epoch = smp.utils.train.TrainEpoch(
+            model,
+            loss=loss_fn,
+            metrics=metrics,
+            optimizer=optimizer,
+            device=device,
+            verbose=True,
+        )
+
+        valid_epoch = smp.utils.train.ValidEpoch(
+            model,
+            loss=loss_fn,
+            metrics=metrics,
+            device=device,
+            verbose=True,
+        )
+
+        # train model for 40 epochs
+        max_score = -1
+        max_dice = 0
+        best_epoch = 0
+        early_stops = 2000
+
+        train_history = {'dice_loss + bce_loss': [], 'fscore': []}
+        val_history = {'dice_loss + bce_loss': [], 'fscore': []}
+        for j in range(epochs):
+            if j - best_epoch > early_stops:
+                print(j - best_epoch, " epochs don't change, early stopping.")
+                break
+            print('\nEpoch: {}'.format(j))
+            print("Best epoch:", best_epoch, "\tiou:", max_score, "\tbest dice:", max_dice)
+            train_logs = train_epoch.run(train_loader)
+            train_history['dice_loss + bce_loss'].append(train_logs['dice_loss + bce_loss'])
+            train_history['fscore'].append(train_logs['fscore'])
+
+            valid_logs = valid_epoch.run(valid_loader)
+            val_history['dice_loss + bce_loss'].append(valid_logs['dice_loss + bce_loss'])
+            val_history['fscore'].append(valid_logs['fscore'])
+
+            save_seg_history(train_history, val_history, save_dir1)
+
+            # do something (save model, change lr, etc.)
+            if max_score < np.round(valid_logs['iou_score'], 4):  # fscore  iou_score
+                if max_score != -1:
+                    old_filepath = save_dir1 + "best_" + str(max_score) + ".pth"
+                    os.remove(old_filepath)
+                max_score = np.round(valid_logs['iou_score'], 4)
+                max_dice = np.round(valid_logs['fscore'], 4)
+                torch.save(model, save_dir1 + "best_" + str(max_score) + ".pth")
+                print('best iou score={}, Model saved!'.format(max_score))
+                best_epoch = j
+
+            if j - best_epoch > 1000:
+                optimizer.param_groups[0]['lr'] = optimizer.param_groups[0]['lr'] / 2
+                print('Decrease decoder learning rate. lr:', optimizer.param_groups[0]['lr'])
 
         'test'
         iou_list, dice_list = [], []
@@ -173,9 +173,9 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
 
 
 def segment():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "0"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "2"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    data_dir = '/home/ai999/caoxu/dataset/KidneyDataset/kfold-kidney-ori/'   # kfold-kidney-ori
+    data_dir = '/home/ai999/dataset/kidney/kidney-mass-kfold/'
     """
     分割网络选择：
     Unet、Linknet、FPN、PSPNet、PAN、DeepLabV3、UnetPlusPlus
@@ -196,14 +196,14 @@ def segment():
     timm-efficientnet-l2
     replknet-31b
     """
-    encoder_name = "efficientnet-b0"
+    encoder_name = "efficientnet-b7"
     encoder_weights = "imagenet"
     encoder_activation = "sigmoid"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
     bs = 24
     lr = 1e-4
     epochs = 10000
-    save_dir = "segment_model/0511-kidney-train-" + encoder_name + '/'
+    save_dir = "mass-segment/0804-deeplabv3-segment-" + encoder_name + '/'
     train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device)
 
 
