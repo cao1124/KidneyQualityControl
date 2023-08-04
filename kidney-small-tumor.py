@@ -41,7 +41,7 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
 
         # build model
         model = smp.DeepLabV3Plus(encoder_name=encoder_name,
-                         classes=3,
+                         classes=2,
                          activation=encoder_activation,
                          in_channels=3,
                          encoder_weights="imagenet")
@@ -197,7 +197,7 @@ def segment():
     encoder_activation = "softmax2d"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # encoder_weights = "imagenet"
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
-    bs = 24
+    bs = 6
     lr = 1e-4
     epochs = 10000
     save_dir = "kidney-mass-segment/0804-deeplabv3-segment-" + encoder_name + '/'

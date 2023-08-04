@@ -13,21 +13,21 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         save_dir1 = save_dir + "fold" + str(i) + '/'
         os.makedirs(save_dir1, exist_ok=True)
         print('五折交叉验证 第{}次实验:'.format(i))
-        fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/']
-        mask_dir = data_dir.replace('kidney-mass-kfold/', 'kidney-mask/')
-        valid_path = [data_dir + fold_list[i]]
-        valid_mask = [mask_dir + fold_list[i]]
+        fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/',
+                     'fold5/', 'fold6/', 'fold7/', 'fold8/', 'fold9/']
+        valid_path = [data_dir + fold_list[i],
+                      data_dir + fold_list[i + 1]]
+        valid_mask = [data_dir.replace('kfold', 'mask') + fold_list[i],
+                      data_dir.replace('kfold', 'mask') + fold_list[i + 1]]
         fold_list.remove(fold_list[i])
-        if i == 4:
-            test_path = [data_dir + fold_list[0]]
-            test_mask = [mask_dir + fold_list[0]]
-            fold_list.remove(fold_list[0])
-        else:
-            test_path = [data_dir + fold_list[i]]
-            test_mask = [mask_dir + fold_list[i]]
-            fold_list.remove(fold_list[i])
-        train_path = [data_dir + fold_list[0], data_dir + fold_list[1], data_dir + fold_list[2]]
-        train_mask = [mask_dir + fold_list[0], mask_dir + fold_list[1], mask_dir + fold_list[2]]
+        fold_list.remove(fold_list[i + 1])
+        test_path = [data_dir + fold_list[i]]
+        test_mask = [data_dir.replace('kfold', 'mask') + fold_list[i]]
+        fold_list.remove(fold_list[i])
+        train_path, train_mask = [], []
+        for x in range(len(fold_list)):
+            train_path.append(data_dir + fold_list[x])
+            train_mask.append(data_dir.replace('kfold', 'mask') + fold_list[x])
 
         train_dataset = SmallTumorDataset(train_path, train_mask, augmentation=training_augmentation())
         valid_dataset = SmallTumorDataset(valid_path, valid_mask, augmentation=valid_augmentation())
@@ -37,7 +37,7 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         valid_loader = DataLoader(valid_dataset, batch_size=bs, shuffle=False, num_workers=4)
 
         # build model
-        model = smp.Unet(encoder_name=encoder_name,
+        model = smp.DeepLabV3Plus(encoder_name=encoder_name,
                          classes=1,
                          activation=encoder_activation,
                          in_channels=3,
@@ -176,11 +176,11 @@ def segment():
     os.environ['CUDA_VISIBLE_DEVICES'] = "3"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     data_dir = '/home/ai999/dataset/kidney/kidney-mass-kfold/'
-    encoder_name = "efficientnet-b0"
+    encoder_name = "efficientnet-b7"
     encoder_weights = "imagenet"
     encoder_activation = "sigmoid"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
-    bs = 24
+    bs = 6
     lr = 1e-4
     epochs = 10000
     save_dir = "renal-segment/0804-deeplabv3-segment-" + encoder_name + '/'
