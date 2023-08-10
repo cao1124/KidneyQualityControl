@@ -40,7 +40,7 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         valid_loader = DataLoader(valid_dataset, batch_size=bs, shuffle=False, num_workers=4)
 
         # build model
-        model = smp.DeepLabV3Plus(encoder_name=encoder_name,
+        model = smp.Unet(encoder_name=encoder_name,
                          classes=2,
                          activation=encoder_activation,
                          in_channels=3,
@@ -200,7 +200,7 @@ def segment():
     bs = 5
     lr = 1e-4
     epochs = 10000
-    save_dir = "kidney-mass-segment/0804-deeplabv3-segment-" + encoder_name + '/'
+    save_dir = "kidney-mass-segment/0810-unet-segment-" + encoder_name + '/'
     train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device)
 
 
