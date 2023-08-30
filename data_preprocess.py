@@ -192,10 +192,10 @@ def mead_split_patient():
 
     # 设置５折实验
 
-    org_path = 'D:/med dataset/kidney-small-tumor/'
-    out_path = 'D:/med dataset/kidney-small-tumor-kfold/'
+    org_path = 'D:/med dataset/kidney/zhongshan-kidney-dataset/'
+    out_path = 'D:/med dataset/kidney/zhongshan-kidney-patient-fold/'
 
-    for cla in ['1']:   # ['benign', 'malig']
+    for cla in ['0', '1']:
         in_path = os.path.join(org_path, cla)
         img_list = []
         patient_list = []
@@ -207,11 +207,11 @@ def mead_split_patient():
         random.shuffle(patient_list)  # 打乱病例名称
         img_nums = len(img_list)  # 所有的图片数目
         patient_nums = len(patient_list)  # 病例数
-        temp = func(patient_list, int(patient_nums * 0.1), m=10)  # 平均分为10份,10折交叉训练
+        temp = func(patient_list, int(patient_nums * 0.1), m=5)  # 平均分为5份,5折交叉训练
 
         for index, cross in enumerate(temp):
             print(" %d / %d " % (index + 1, img_nums))  # processing bar
-            new_save_path = os.path.join(out_path, f"fold{index}")
+            new_save_path = os.path.join(out_path, f"fold{index}", cla)
             os.makedirs(new_save_path, exist_ok=True)
             for patient in patient_list:
                 if patient in cross:
@@ -284,8 +284,8 @@ if __name__ == '__main__':
     # dataset_count()
     # kfold_split()
     # img2video()
-    # mead_split_patient()
-    get_mask_by_json()
+    mead_split_patient()
+    # get_mask_by_json()
 
     # mask_img = cv2.imread('D:/med dataset/kidney-small-tumor-mask/fold1/21-result/Image01.JPG')
     # mask_img[mask_img == 64] = 1

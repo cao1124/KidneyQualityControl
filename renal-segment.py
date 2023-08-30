@@ -180,7 +180,7 @@ def segment():
     encoder_weights = "imagenet"
     encoder_activation = "sigmoid"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
-    bs = 5
+    bs = 6
     lr = 1e-4
     epochs = 10000
     save_dir = "renal-segment/0810-unet--segment-" + encoder_name + '/'

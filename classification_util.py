@@ -67,10 +67,10 @@ class ClassificationDataset(Dataset):
         if self.train:
             for img_fold in self.img_path:
                 for cla in os.listdir(img_fold):
-                    data_path = os.path.join(img_fold, cla)
-                    for img_name in [x for x in os.listdir(data_path) if x.endswith('.jpg')]:
-                        self.img_name.append(os.path.join(data_path, img_name))
-                        self.labels.append(int(cla))
+                    for p in os.listdir(os.path.join(img_fold, cla)):
+                        for img_name in os.listdir(os.path.join(img_fold, cla)):
+                            self.img_name.append(os.path.join(img_fold, cla, p, img_name))
+                            self.labels.append(int(cla))
         self.length = len(self.img_name)
 
     def __getitem__(self, index):

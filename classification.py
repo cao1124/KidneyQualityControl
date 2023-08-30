@@ -50,7 +50,7 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
         'model, optimizer, scheduler, warmup, loss_function '
         model, optimizer, scheduler, warmup, loss_func = prepare_model(category_num, model_name, lr, num_epochs, device)
         'EarlyStopping'
-        early_stopping = EarlyStopping(pt_dir, patience=100)
+        early_stopping = EarlyStopping(pt_dir, patience=200)
         best_test_acc, best_valid_acc, best_valid_recall, best_epoch = 0.0, 0.0, 0.0, 0
         history = []
         error_sample = []
@@ -172,12 +172,12 @@ def classification():
     os.environ['CUDA_VISIBLE_DEVICES'] = "0"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model_name = 'resnext50'
-    data_dir = '/home/ai999/caoxu/dataset/KidneyDataset/kfold-crop/'
+    data_dir = '/home/ai999/dataset/kidney/zhongshan-kidney-patient-fold/'
     category_num = 2
     bs = 64
     lr = 0.01
     num_epochs = 300
-    data = 'classification-model/0505-kidney-cancer-'
+    data = 'classification-model/0830-kidney-cancer-'
     save_path = data + str(category_num) + 'class-' + model_name + '-bs' + str(bs) + '-lr' + str(lr) + '/'
     pt_dir = 'classification_model/' + save_path
     if not os.path.exists(pt_dir):

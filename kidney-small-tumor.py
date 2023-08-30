@@ -197,7 +197,7 @@ def segment():
     encoder_activation = "softmax2d"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # encoder_weights = "imagenet"
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
-    bs = 5
+    bs = 6
     lr = 1e-4
     epochs = 10000
     save_dir = "kidney-mass-segment/0810-unet-segment-" + encoder_name + '/'
