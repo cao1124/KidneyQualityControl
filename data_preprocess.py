@@ -200,14 +200,14 @@ def mead_split_patient():
         img_list = []
         patient_list = []
         for name in os.listdir(in_path):
-            img_list.append(os.listdir(os.path.join(org_path, cla, name)))
+            img_list.extend(os.listdir(os.path.join(org_path, cla, name)))
             if name not in patient_list:
                 patient_list.append(name)
 
         random.shuffle(patient_list)  # 打乱病例名称
         img_nums = len(img_list)  # 所有的图片数目
         patient_nums = len(patient_list)  # 病例数
-        temp = func(patient_list, int(patient_nums * 0.1), m=5)  # 平均分为5份,5折交叉训练
+        temp = func(patient_list, int(patient_nums * 0.2), m=5)  # 平均分为5份,5折交叉训练
 
         for index, cross in enumerate(temp):
             print(" %d / %d " % (index + 1, img_nums))  # processing bar

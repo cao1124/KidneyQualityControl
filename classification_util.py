@@ -68,7 +68,7 @@ class ClassificationDataset(Dataset):
             for img_fold in self.img_path:
                 for cla in os.listdir(img_fold):
                     for p in os.listdir(os.path.join(img_fold, cla)):
-                        for img_name in os.listdir(os.path.join(img_fold, cla)):
+                        for img_name in os.listdir(os.path.join(img_fold, cla, p)):
                             self.img_name.append(os.path.join(img_fold, cla, p, img_name))
                             self.labels.append(int(cla))
         self.length = len(self.img_name)
