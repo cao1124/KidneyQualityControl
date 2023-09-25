@@ -176,8 +176,8 @@ def classification():
     category_num = 2
     bs = 64
     lr = 0.01
-    num_epochs = 300
-    data = 'classification-model/0907-kidney-cancer-'
+    num_epochs = 500
+    data = 'classification-model/0925-kidney-cancer-'
     save_path = data + str(category_num) + 'class-' + model_name + '-bs' + str(bs) + '-lr' + str(lr) + '/'
     pt_dir = 'classification_model/' + save_path
     if not os.path.exists(pt_dir):
