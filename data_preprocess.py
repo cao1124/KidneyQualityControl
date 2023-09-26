@@ -280,12 +280,34 @@ def get_mask_by_json():
             # cv_write(os.path.join(renal_mass_mask_path, f, img_json.replace('.json', '.jpg')), imgMerge)
 
 
+def dataset_augment():
+    org_path = 'D:/med dataset/kidney/zhongshan-kidney-dataset/0/'
+    for p in os.listdir(org_path):
+        for i in os.listdir(os.path.join(org_path, p)):
+            original_image = cv_read(os.path.join(org_path, p, i))
+            rows, cols, _ = original_image.shape
+            flip_flag = random.randint(-1, 1)
+            bright_flag = random.uniform(1, 1.5)
+            flipped_image = cv2.flip(original_image, flip_flag)  # 1表示水平翻转
+            # 调整亮度，alpha为缩放因子，beta为偏移值
+            brightened_image = cv2.convertScaleAbs(flipped_image, alpha=bright_flag, beta=0)
+            # 平移
+            x_translation = random.randint(-20, 20)
+            y_translation = random.randint(-20, 20)
+            translation_matrix = np.float32([[1, 0, x_translation], [0, 1, y_translation]])
+            translated_image = cv2.warpAffine(brightened_image, translation_matrix, (cols, rows))
+            # 保存增强后的图像
+            new_name = os.path.splitext(i)[0] + '-augment' + os.path.splitext(i)[1]
+            cv_write(os.path.join(org_path, p, new_name), translated_image)
+
+
 if __name__ == '__main__':
     # dataset_count()
     # kfold_split()
     # img2video()
     mead_split_patient()
     # get_mask_by_json()
+    # dataset_augment()
 
     # mask_img = cv2.imread('D:/med dataset/kidney-small-tumor-mask/fold1/21-result/Image01.JPG')
     # mask_img[mask_img == 64] = 1
