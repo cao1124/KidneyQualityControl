@@ -1,7 +1,10 @@
 import os
+
+import cv2
 from PIL import Image
 import numpy as np
 import torch
+import albumentations as albu
 from torch import nn, optim
 from torch.utils.data import Dataset
 from torchvision import transforms, models
@@ -42,11 +45,34 @@ image_transforms = {
         transforms.ToTensor(),
         transforms.Normalize(mass_mean, mass_std)]),
     'valid': transforms.Compose([
-        transforms.Resize([224, 224]),
         transforms.ToTensor(),
+        transforms.Resize([224, 224]),
         transforms.Normalize(mass_mean, mass_std)
     ])
 }
+
+
+def augment_compose(prob):
+    train_transform = [
+        albu.OneOf([albu.Rotate(p=prob, limit=180, border_mode=cv2.BORDER_CONSTANT, value=0),
+                    albu.HorizontalFlip(always_apply=False, p=prob),
+                    albu.VerticalFlip(always_apply=False, p=prob),
+                    albu.ShiftScaleRotate(shift_limit=0.0625, scale_limit=(1, 1), rotate_limit=(0, 0), interpolation=1,
+                                          border_mode=4, value=None, mask_value=None, always_apply=False, p=prob)],
+                   p=prob),
+        albu.OneOf([albu.GridDistortion(p=prob, distort_limit=(-0.2, 0), num_steps=5),
+                    albu.ElasticTransform(p=prob, alpha_affine=30),
+                    albu.Perspective(scale=(0.01, 0.05), p=prob)],  p=prob),
+        albu.OneOf([albu.RandomBrightnessContrast(brightness_limit=0.5, contrast_limit=0.5,
+                                                  brightness_by_max=None, always_apply=False, p=prob),
+                    albu.GaussNoise(p=prob, var_limit=(20, 100)),
+                    albu.MotionBlur(blur_limit=15, always_apply=False, p=prob),
+                    albu.GaussianBlur(blur_limit=15, always_apply=False, p=prob),
+                    albu.RandomGamma(gamma_limit=(40, 160), eps=1e-07, always_apply=False, p=prob),
+                    albu.CLAHE(clip_limit=4.0, tile_grid_size=(8, 8), always_apply=False, p=prob),
+                    albu.RGBShift(always_apply=False, p=prob, r_shift_limit=(-20, 20), g_shift_limit=(-20, 20),
+                                  b_shift_limit=(-20, 20))], p=prob)]
+    return albu.Compose(train_transform)
 
 
 class ClassificationDataset(Dataset):
@@ -60,6 +86,7 @@ class ClassificationDataset(Dataset):
         self.img_path = img_path
         self.train = train
         self.transforms = transforms
+        self.albu_transforms = augment_compose(0.5)
         self.test = test
 
         self.img_name = []
@@ -76,13 +103,19 @@ class ClassificationDataset(Dataset):
     def __getitem__(self, index):
         # print(self.labels[index])
         img = Image.open(self.img_name[index]).convert('RGB')
-        if self.transforms is not None:
+        # if self.transforms is not None:
+        #     try:
+        #         img = self.transforms(img)
+        #     except:
+        #         print("Cannot transform image: {}".format(
+        #             self.img_name[index]))
+        # return (img, self.labels[index], self.img_name[index])
+        if self.albu_transforms is not None:
             try:
-                img = self.transforms(img)
-            except:
-                print("Cannot transform image: {}".format(
-                    self.img_name[index]))
-        return (img, self.labels[index], self.img_name[index])
+                img = self.albu_transforms(image=np.array(img))
+            except Exception as e:
+                print("Cannot transform image: {}".format(self.img_name[index]), ': for error in ', e)
+        return image_transforms['valid'](img['image']), self.labels[index], self.img_name[index]
 
     def __len__(self):
         return self.length
