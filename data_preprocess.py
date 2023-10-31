@@ -192,8 +192,8 @@ def mead_split_patient():
 
     # 设置５折实验
 
-    org_path = 'D:/med dataset/kidney/zhongshan-kidney-dataset/'
-    out_path = 'D:/med dataset/kidney/zhongshan-kidney-patient-fold/'
+    org_path = 'D:/med dataset/kidney/classify-dataset/'
+    out_path = 'D:/med dataset/kidney/classify-dataset-patient-fold/'
 
     for cla in ['0', '1']:
         in_path = os.path.join(org_path, cla)
