@@ -103,19 +103,19 @@ class ClassificationDataset(Dataset):
     def __getitem__(self, index):
         # print(self.labels[index])
         img = Image.open(self.img_name[index]).convert('RGB')
-        # if self.transforms is not None:
-        #     try:
-        #         img = self.transforms(img)
-        #     except:
-        #         print("Cannot transform image: {}".format(
-        #             self.img_name[index]))
-        # return (img, self.labels[index], self.img_name[index])
-        if self.albu_transforms is not None:
+        if self.transforms is not None:
             try:
-                img = self.albu_transforms(image=np.array(img))
-            except Exception as e:
-                print("Cannot transform image: {}".format(self.img_name[index]), ': for error in ', e)
-        return image_transforms['valid'](img['image']), self.labels[index], self.img_name[index]
+                img = self.transforms(img)
+            except:
+                print("Cannot transform image: {}".format(
+                    self.img_name[index]))
+        return (img, self.labels[index], self.img_name[index])
+        # if self.albu_transforms is not None:
+        #     try:
+        #         img = self.albu_transforms(image=np.array(img))
+        #     except Exception as e:
+        #         print("Cannot transform image: {}".format(self.img_name[index]), ': for error in ', e)
+        # return image_transforms['valid'](img['image']), self.labels[index], self.img_name[index]
 
     def __len__(self):
         return self.length

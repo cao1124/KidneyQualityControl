@@ -28,19 +28,26 @@ def func(list_temp, n, m=5):
 
 
 def dataset_count():
-    base_dir = 'D:/med dataset/kidney-tumor-kfold/'
+    base_dir = r'D:\med dataset\kidney\zhongshan-kidney-json-20231204\malignant'
     a, b, c = 0, 0, 0
-    for f in os.listdir(base_dir):
-        jsons = [os.path.join(base_dir, f, x) for x in os.listdir(os.path.join(base_dir, f)) if x.endswith('.json')]
+    for p in os.listdir(base_dir):
+        jsons = [os.path.join(base_dir, p, x) for x in os.listdir(os.path.join(base_dir, p)) if x.endswith('.json')]
         for j in jsons:
             with open(j, 'r', encoding='utf-8') as fp:
                 json_data = json.load(fp)
-                if len(json_data['shapes']) > 1:
-                    a += 1
-                elif len(json_data['shapes']) == 1 and json_data['shapes'][0]['label'] == 'Kidney':
-                    b += 1
-                elif len(json_data['shapes']) == 1 and json_data['shapes'][0]['label'] == 'Kidney cancer':
-                    c += 1
+                try:
+                    if len(json_data['shapes']) > 1:
+                        for n in range(len(json_data['shapes'])):
+                            print(j, '----', json_data['shapes'][n]['label'])
+                        a += 1
+                    elif len(json_data['shapes']) == 1 and json_data['shapes'][0]['label'] == 'Kidney' or \
+                            json_data['shapes'][0]['label'] == 'renal' or json_data['shapes'][0]['label'] == 'Renal':
+                        b += 1
+                    elif len(json_data['shapes']) == 1 and json_data['shapes'][0]['label'] == 'Kidney cancer' \
+                            or json_data['shapes'][0]['label'] == 'tumor' or json_data['shapes'][0]['label'] == 'Mass':
+                        c += 1
+                except:
+                    print(j)
     print(a, b, c)
 
 
@@ -86,8 +93,8 @@ def kfold_split():
                 elif len(json_data['shapes']) == 1 and json_data['shapes'][0]['label'] == 'Kidney':
                     mal_list.append(j)
 
-    for cla in ['0', '1']:
-        if cla == '0':
+    for cla in ['benign', 'malignant']:
+        if cla == 'benign':
             img_list = ben_list
         else:
             img_list = mal_list
@@ -192,10 +199,10 @@ def mead_split_patient():
 
     # 设置５折实验
 
-    org_path = 'D:/med dataset/kidney/classify-dataset/'
-    out_path = 'D:/med dataset/kidney/classify-dataset-patient-fold/'
+    org_path = r'D:\med dataset\kidney\20231204-classify-dataset'
+    out_path = r'D:\med dataset\kidney\20231204-classify-dataset-patient-5fold/'
 
-    for cla in ['0', '1']:
+    for cla in ['0', '1']:   # ['benign', 'malignant']
         in_path = os.path.join(org_path, cla)
         img_list = []
         patient_list = []
