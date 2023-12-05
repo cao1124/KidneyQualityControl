@@ -202,12 +202,14 @@ class KidneyMassDataset(BaseDataset):
     ):
         self.images, self.masks = [], []
         for i in range(len(images_dir)):
-            for img_name in os.listdir(images_dir[i]):
-                self.images.append(os.path.join(images_dir[i], img_name))
-                if '.JPG' in img_name:
-                    self.masks.append(os.path.join(masks_dir[i], img_name.replace('.JPG', '.npy')))
-                else:
-                    self.masks.append(os.path.join(masks_dir[i], img_name.replace('.jpg', '.npy')))
+            for cla in os.listdir(images_dir[i]):
+                for p in os.listdir(os.path.join(images_dir[i], cla)):
+                    for img_name in os.listdir(os.path.join(images_dir[i], cla, p)):
+                        self.images.append(os.path.join(images_dir[i], cla, p, img_name))
+                        if '.JPG' in img_name:
+                            self.masks.append(os.path.join(masks_dir[i], cla, p, img_name.replace('.JPG', '.npy')))
+                        else:
+                            self.masks.append(os.path.join(masks_dir[i], cla, p, img_name.replace('.jpg', '.npy')))
         self.augmentation = augmentation
         self.preprocessing = preprocessing
         self.multi_scale = multi_scale
