@@ -16,8 +16,7 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         save_dir1 = save_dir + "fold" + str(i) + '/'
         os.makedirs(save_dir1, exist_ok=True)
         print('五折交叉验证 第{}次实验:'.format(i))
-        fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/',
-                     'fold5/', 'fold6/', 'fold7/', 'fold8/', 'fold9/']
+        fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/']
         valid_path = [data_dir + fold_list[i],
                       data_dir + fold_list[i+1]]
         valid_mask = [data_dir.replace('image', 'mask') + fold_list[i],
