@@ -20,17 +20,17 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
                      'fold5/', 'fold6/', 'fold7/', 'fold8/', 'fold9/']
         valid_path = [data_dir + fold_list[i],
                       data_dir + fold_list[i+1]]
-        valid_mask = [data_dir.replace('kfold', 'mask-npy') + fold_list[i],
-                      data_dir.replace('kfold', 'mask-npy') + fold_list[i+1]]
+        valid_mask = [data_dir.replace('image', 'mask') + fold_list[i],
+                      data_dir.replace('image', 'mask') + fold_list[i+1]]
         fold_list.remove(fold_list[i])
         fold_list.remove(fold_list[i+1])
         test_path = [data_dir + fold_list[i]]
-        test_mask = [data_dir.replace('kfold', 'mask-npy') + fold_list[i]]
+        test_mask = [data_dir.replace('image', 'mask') + fold_list[i]]
         fold_list.remove(fold_list[i])
         train_path, train_mask = [], []
         for x in range(len(fold_list)):
             train_path.append(data_dir + fold_list[x])
-            train_mask.append(data_dir.replace('kfold', 'mask-npy') + fold_list[x])
+            train_mask.append(data_dir.replace('image', 'mask') + fold_list[x])
 
         train_dataset = KidneyMassDataset(train_path, train_mask, augmentation=training_augmentation())
         valid_dataset = KidneyMassDataset(valid_path, valid_mask, augmentation=valid_augmentation())
@@ -189,9 +189,9 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
 
 
 def segment():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "1"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "0"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    data_dir = '/home/ai999/dataset/kidney/kidney-mass-kfold/'
+    data_dir = '/media/user/Disk1/caoxu/dataset/kidney/20231204-segment-dataset/image-5fold/'
     # 'D:/med dataset/kidney-small-tumor-kfold/'     # '/home/ai999/dataset/kidney/kidney-small-tumor-kfold/'
     encoder_name = "efficientnet-b7"               # "efficientnet-b7"  'resnext50_32x4d'
     encoder_activation = "softmax2d"  # could be None for logits or 'softmax2d' for multiclass segmentation
@@ -200,7 +200,7 @@ def segment():
     bs = 6
     lr = 1e-4
     epochs = 10000
-    save_dir = "kidney-mass-segment/0810-unet-segment-" + encoder_name + '/'
+    save_dir = "kidney-mass-segment/20231205-unet-segment-" + encoder_name + '/'
     train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device)
 
 
