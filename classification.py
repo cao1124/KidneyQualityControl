@@ -169,9 +169,9 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
 
 
 def classification():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "5"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "2"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model_name = 'resnet18'
+    model_name = 'densenet161'
     data_dir = '/media/user/Disk1/caoxu/dataset/kidney/20231204-classify-dataset-patient-5fold/'
     category_num = 2
     bs = 128
