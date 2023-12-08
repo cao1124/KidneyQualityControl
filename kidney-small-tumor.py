@@ -131,7 +131,8 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
             for k in range(len(test_dataset)):
                 image, gt_mask2 = test_dataset[k]
                 gt_mask2 = gt_mask2.squeeze().astype(np.uint8)
-                mask_ori = cv_read(os.path.join(test_dataset.masks[k]))
+                mask_ori = np.load(os.path.join(test_dataset.masks[k]))
+                # mask_ori = cv_read(os.path.join(test_dataset.masks[k]))
                 [orig_h, orig_w, orig_c] = mask_ori.shape
                 x_tensor = torch.from_numpy(image).to(device).unsqueeze(0)
                 pred_mask2 = model(x_tensor)
@@ -191,7 +192,6 @@ def segment():
     os.environ['CUDA_VISIBLE_DEVICES'] = "0"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     data_dir = '/media/user/Disk1/caoxu/dataset/kidney/20231204-segment-dataset/image-5fold/'
-    # 'D:/med dataset/kidney-small-tumor-kfold/'     # '/home/ai999/dataset/kidney/kidney-small-tumor-kfold/'
     encoder_name = "efficientnet-b7"               # "efficientnet-b7"  'resnext50_32x4d'
     encoder_activation = "softmax2d"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # encoder_weights = "imagenet"
