@@ -174,7 +174,7 @@ def classification():
     model_name = 'densenet161'
     data_dir = '/media/user/Disk1/caoxu/dataset/kidney/20231204-classify-dataset-patient-5fold/'
     category_num = 2
-    bs = 128
+    bs = 100
     lr = 0.01
     num_epochs = 500
     data = 'classification-model/20231204-kidney-cancer-classify-'
