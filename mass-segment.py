@@ -16,17 +16,17 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/']
         valid_path = [data_dir + fold_list[i],
                       data_dir + fold_list[i + 1]]
-        valid_mask = [data_dir.replace('image', 'mask') + fold_list[i],
-                      data_dir.replace('image', 'mask') + fold_list[i + 1]]
+        valid_mask = [data_dir.replace('image', 'mass') + fold_list[i],
+                      data_dir.replace('image', 'mass') + fold_list[i + 1]]
         fold_list.remove(fold_list[i])
         fold_list.remove(fold_list[i + 1])
         test_path = [data_dir + fold_list[i]]
-        test_mask = [data_dir.replace('image', 'mask') + fold_list[i]]
+        test_mask = [data_dir.replace('image', 'mass') + fold_list[i]]
         fold_list.remove(fold_list[i])
         train_path, train_mask = [], []
         for x in range(len(fold_list)):
             train_path.append(data_dir + fold_list[x])
-            train_mask.append(data_dir.replace('image', 'mask') + fold_list[x])
+            train_mask.append(data_dir.replace('image', 'mass') + fold_list[x])
 
         train_dataset = RenalDataset(train_path, train_mask, augmentation=training_augmentation())
         valid_dataset = RenalDataset(valid_path, valid_mask, augmentation=valid_augmentation())
