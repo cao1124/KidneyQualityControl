@@ -13,21 +13,20 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         save_dir1 = save_dir + "fold" + str(i) + '/'
         os.makedirs(save_dir1, exist_ok=True)
         print('五折交叉验证 第{}次实验:'.format(i))
-        fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/',
-                     'fold5/', 'fold6/', 'fold7/', 'fold8/', 'fold9/']
+        fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/']
         valid_path = [data_dir + fold_list[i],
                       data_dir + fold_list[i + 1]]
-        valid_mask = [data_dir.replace('kidney-mass-kfold', 'kidney-mask') + fold_list[i],
-                      data_dir.replace('kidney-mass-kfold', 'kidney-mask') + fold_list[i + 1]]
+        valid_mask = [data_dir.replace('image', 'renal') + fold_list[i],
+                      data_dir.replace('image', 'renal') + fold_list[i + 1]]
         fold_list.remove(fold_list[i])
         fold_list.remove(fold_list[i + 1])
         test_path = [data_dir + fold_list[i]]
-        test_mask = [data_dir.replace('kidney-mass-kfold', 'kidney-mask') + fold_list[i]]
+        test_mask = [data_dir.replace('image', 'renal') + fold_list[i]]
         fold_list.remove(fold_list[i])
         train_path, train_mask = [], []
         for x in range(len(fold_list)):
             train_path.append(data_dir + fold_list[x])
-            train_mask.append(data_dir.replace('kidney-mass-kfold', 'kidney-mask') + fold_list[x])
+            train_mask.append(data_dir.replace('image', 'renal') + fold_list[x])
 
         train_dataset = RenalDataset(train_path, train_mask, augmentation=training_augmentation())
         valid_dataset = RenalDataset(valid_path, valid_mask, augmentation=valid_augmentation())
@@ -173,9 +172,9 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
 
 
 def segment():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "3"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "0"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    data_dir = '/home/ai999/dataset/kidney/kidney-mass-kfold/'
+    data_dir = '/media/user/Disk1/caoxu/dataset/kidney/20231204-segment-dataset-mass/image-5fold/'
     encoder_name = "efficientnet-b7"
     encoder_weights = "imagenet"
     encoder_activation = "sigmoid"  # could be None for logits or 'softmax2d' for multiclass segmentation
@@ -183,7 +182,7 @@ def segment():
     bs = 6
     lr = 1e-4
     epochs = 10000
-    save_dir = "renal-segment/0810-unet--segment-" + encoder_name + '/'
+    save_dir = "renal-segment/20231205-unet-segment-" + encoder_name + '/'
     train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device)
 
 
