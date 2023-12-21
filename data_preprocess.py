@@ -199,8 +199,8 @@ def mead_split_patient():
 
     # 设置５折实验
 
-    org_path = r'D:\med dataset\kidney\zhongshan-kidney-json-20231204'
-    out_path = r'D:\med dataset\kidney\20231204-segment-dataset\image-5fold'
+    org_path = r'D:\med dataset\kidney\zhongshan-kidney-ori-2023-12-20'
+    out_path = r'D:\med dataset\kidney\20231220-classify-dataset\image-5fold'
 
     for cla in ['0', '1']:   # ['benign', 'malignant']
         in_path = os.path.join(org_path, cla)
@@ -330,8 +330,8 @@ if __name__ == '__main__':
     # dataset_count()
     # kfold_split()
     # img2video()
-    # mead_split_patient()
-    get_mask_by_json()
+    mead_split_patient()
+    # get_mask_by_json()
     # dataset_augment()
 
     # mask_img = cv2.imread('D:/med dataset/kidney-small-tumor-mask/fold1/21-result/Image01.JPG')
