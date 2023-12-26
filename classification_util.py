@@ -150,7 +150,7 @@ def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
 
     # 定义损失函数和优化器。
     # 定义loss权重  class_weights = torch.tensor([5.0, 1.0])
-    loss_func = nn.CrossEntropyLoss(weight=weights)
+    loss_func = nn.CrossEntropyLoss(weight=weights.to(device))
     optimizer = optim.SGD(model.parameters(), lr=lr, weight_decay=2e-4, momentum=0.9, nesterov=True)
     # optimizer = optim.NAdam(model.parameters(), lr=lr, betas=(0.8, 0.888), eps=1e-08, weight_decay=2e-4)
     # 定义学习率与轮数关系的函数
