@@ -11,7 +11,7 @@ import numpy as np
 import torch
 from sklearn.metrics import confusion_matrix, classification_report
 from classification_util import ClassificationDataset, image_transforms, prepare_model, EarlyStopping
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, WeightedRandomSampler
 import matplotlib
 import matplotlib.pyplot as plt
 import torch.multiprocessing
@@ -44,13 +44,16 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
                                              transforms=image_transforms['valid'])
         train_size, valid_size, test_size = train_dataset.length, valid_dataset.length, test_dataset.length
         print('train_size:{}, valid_size:{}, test_size:{}'.format(train_size, valid_size, test_size))
+        'class weight'
+        label_count = Counter(train_dataset.labels)
+        class_weights = torch.tensor([1 / label_count.get(0), 1 / label_count.get(1)])
         'dataloader'
-        train_loader = DataLoader(train_dataset, bs, shuffle=True, num_workers=4)
+        # 创建WeightedRandomSampler
+        train_sampler = WeightedRandomSampler(weights=class_weights, num_samples=train_size, replacement=True)
+        train_loader = DataLoader(train_dataset, bs, shuffle=True, num_workers=4, sampler=train_sampler)
         valid_loader = DataLoader(valid_dataset, bs, shuffle=False, num_workers=4)
         test_loader = DataLoader(test_dataset, bs, shuffle=False, num_workers=4)
         'model, optimizer, scheduler, warmup, loss_function '
-        label_count = Counter(train_dataset.labels)
-        class_weights = torch.tensor([1/label_count.get(0), 1/label_count.get(1)])
         model, optimizer, scheduler, warmup, loss_func = prepare_model(category_num, model_name, lr, num_epochs, device, class_weights)
         'EarlyStopping'
         early_stopping = EarlyStopping(pt_dir, patience=200)
@@ -172,15 +175,15 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
 
 
 def classification():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "1"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "3"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model_name = 'resnext50'
     data_dir = '/media/user/Disk1/caoxu/dataset/kidney/20231220-classify-dataset/'
     category_num = 2
-    bs = 68  # 128
+    bs = 128
     lr = 0.01
     num_epochs = 500
-    data = 'classification-model/20231220-dataset-class-weights-20231226-classify-'
+    data = 'classification-model/20231220-dataset-WeightedRandomSampler-LossWeight-20231226-classify-'
     save_path = data + str(category_num) + 'class-' + model_name + '-bs' + str(bs) + '-lr' + str(lr) + '/'
     pt_dir = 'classification_model/' + save_path
     if not os.path.exists(pt_dir):
