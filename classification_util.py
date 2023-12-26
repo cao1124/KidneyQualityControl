@@ -98,7 +98,7 @@ class ClassificationDataset(Dataset):
                         for img_name in os.listdir(os.path.join(img_fold, cla, p)):
                             self.img_name.append(os.path.join(img_fold, cla, p, img_name))
                             self.labels.append(int(cla))
-        self.length = len(self.img_name)
+        self.length = len(self.labels)
 
     def __getitem__(self, index):
         # print(self.labels[index])
@@ -110,6 +110,7 @@ class ClassificationDataset(Dataset):
                 print("Cannot transform image: {}".format(
                     self.img_name[index]))
         return (img, self.labels[index], self.img_name[index])
+
         # if self.albu_transforms is not None:
         #     try:
         #         img = self.albu_transforms(image=np.array(img))
@@ -119,6 +120,60 @@ class ClassificationDataset(Dataset):
 
     def __len__(self):
         return self.length
+
+
+class FusionDataset(Dataset):
+    def __init__(self,
+                 img_path,
+                 category_num,
+                 train=False,
+                 test=False,
+                 transforms=None):
+
+        self.img_path = img_path
+        self.train = train
+        self.transforms = transforms
+        self.albu_transforms = augment_compose(0.5)
+        self.test = test
+
+        # self.img_name = []
+        self.gray_img, self.blood_img = [], []
+        self.labels = []
+        if self.train:
+            for img_fold in self.img_path:
+                for cla in os.listdir(img_fold):
+                    for p in os.listdir(os.path.join(img_fold, cla)):
+                        img_name = os.listdir(os.path.join(img_fold, cla, p))
+                        self.gray_img.append(os.path.join(img_fold, cla, p, img_name[0]))
+                        self.blood_img.append(os.path.join(img_fold, cla, p, img_name[1]))
+                        self.labels.append(int(cla))
+        self.length = len(self.labels)
+
+    def __getitem__(self, index):
+        img1 = Image.open(self.gray_img[index]).convert('RGB')
+        img2 = Image.open(self.blood_img[index]).convert('RGB')
+        if self.transforms is not None:
+            try:
+                img1 = self.transforms(img1)
+                img2 = self.transforms(img2)
+            except:
+                print("Cannot transform image: {}".format(
+                    self.gray_img[index]))
+        return img1, img2, self.labels[index], self.gray_img[index]
+
+    def __len__(self):
+        return self.length
+
+
+class EarlyFusionModel(nn.Module):
+    def __init__(self, net):
+        super(EarlyFusionModel, self).__init__()
+        self.net = net
+
+    def forward(self, x1, x2):
+        x = torch.add(x1, x2)
+        x = self.net(x)
+        return x
 
 
 def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
@@ -143,6 +198,8 @@ def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
     elif model_name in ['efficientnet_b0']:
         model.classifier[1] = nn.Linear(in_features=1280, out_features=category_num, bias=True)
 
+    'fusion'
+    model = EarlyFusionModel(model)
     # 多GPU
     if torch.cuda.device_count() > 1:
         model = nn.DataParallel(model)

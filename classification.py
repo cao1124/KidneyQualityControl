@@ -10,7 +10,7 @@ import os
 import numpy as np
 import torch
 from sklearn.metrics import confusion_matrix, classification_report
-from classification_util import ClassificationDataset, image_transforms, prepare_model, EarlyStopping
+from classification_util import ClassificationDataset, image_transforms, prepare_model, EarlyStopping, FusionDataset
 from torch.utils.data import DataLoader, WeightedRandomSampler
 import matplotlib
 import matplotlib.pyplot as plt
@@ -36,12 +36,12 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
             fold_list.remove(fold_list[i])
         train_path = [data_dir + fold_list[0], data_dir + fold_list[1], data_dir + fold_list[2]]
 
-        train_dataset = ClassificationDataset(img_path=train_path, category_num=category_num, train=True,
-                                              transforms=image_transforms['train'])
-        valid_dataset = ClassificationDataset(img_path=valid_path, category_num=category_num, train=True,
-                                              transforms=image_transforms['valid'])
-        test_dataset = ClassificationDataset(img_path=test_path, category_num=category_num, train=True,
-                                             transforms=image_transforms['valid'])
+        train_dataset = FusionDataset(img_path=train_path, category_num=category_num, train=True,
+                                      transforms=image_transforms['train'])
+        valid_dataset = FusionDataset(img_path=valid_path, category_num=category_num, train=True,
+                                      transforms=image_transforms['valid'])
+        test_dataset = FusionDataset(img_path=test_path, category_num=category_num, train=True,
+                                     transforms=image_transforms['valid'])
         train_size, valid_size, test_size = train_dataset.length, valid_dataset.length, test_dataset.length
         print('train_size:{}, valid_size:{}, test_size:{}'.format(train_size, valid_size, test_size))
         'class weight'
@@ -49,8 +49,9 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
         class_weights = torch.tensor([1 / label_count.get(0), 1 / label_count.get(1)])
         'dataloader'
         # 创建WeightedRandomSampler
-        train_sampler = WeightedRandomSampler(weights=class_weights, num_samples=train_size, replacement=True)
-        train_loader = DataLoader(train_dataset, bs, shuffle=False, num_workers=4, sampler=train_sampler)
+        # train_sampler = WeightedRandomSampler(weights=class_weights, num_samples=train_size, replacement=True)
+        # train_loader = DataLoader(train_dataset, bs, shuffle=False, num_workers=4, sampler=train_sampler)
+        train_loader = DataLoader(train_dataset, bs, shuffle=True, num_workers=4)
         valid_loader = DataLoader(valid_dataset, bs, shuffle=False, num_workers=4)
         test_loader = DataLoader(test_dataset, bs, shuffle=False, num_workers=4)
         'model, optimizer, scheduler, warmup, loss_function '
@@ -68,10 +69,11 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
             model.train()
             torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
             for step, batch in enumerate(train_loader):
-                inputs = batch[0].to(device)
-                labels = batch[1].to(device)
+                inputs1 = batch[0].to(device)
+                inputs2 = batch[1].to(device)
+                labels = batch[2].to(device)
 
-                outputs = model(inputs)
+                outputs = model(inputs1, inputs2)
                 loss_step = loss_func(outputs, labels)
                 train_loss += loss_step.item()
                 temp_num_correct = torch.eq(outputs.argmax(dim=1), labels).sum().float().item()
@@ -94,11 +96,11 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
             torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
             with torch.no_grad():
                 for step, batch in enumerate(valid_loader):
-                    inputs = batch[0].to(device)
-                    labels = batch[1].to(device)
-                    img_name = batch[2]
+                    inputs1 = batch[0].to(device)
+                    inputs2 = batch[1].to(device)
+                    labels = batch[2].to(device)
 
-                    outputs = model(inputs)
+                    outputs = model(inputs1, inputs2)
                     for r in range(len(torch.eq(outputs.argmax(dim=1), labels))):
                         if torch.eq(outputs.argmax(dim=1), labels)[r].item() is False:
                             error_sample.append(img_name[r] + ',' + str(labels[r].item()))
@@ -156,10 +158,11 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
         torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
         with torch.no_grad():
             for step, batch in enumerate(test_loader):
-                inputs = batch[0].to(device)
-                labels = batch[1].to(device)
-                img_name = batch[2]
-                outputs = model(inputs)
+                inputs1 = batch[0].to(device)
+                inputs2 = batch[1].to(device)
+                labels = batch[2].to(device)
+                img_name = batch[3]
+                outputs = model(inputs1, inputs2)
                 for r in range(len(torch.eq(outputs.argmax(dim=1), labels))):
                     if torch.eq(outputs.argmax(dim=1), labels)[r].item() is False:
                         error_sample.append(img_name[r]+','+str(labels[r].item()))
@@ -175,15 +178,16 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
 
 
 def classification():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "4"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "1"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model_name = 'resnext50'
-    data_dir = '/media/user/Disk1/caoxu/dataset/kidney/20231220-classify-dataset/'
+    data_dir = '/media/user/Disk1/caoxu/dataset/kidney/20231220-classify-dataset-fusion/'
+    # 'D:/med_dataset/kidney/20231220-classify-dataset-fusion/'
     category_num = 2
     bs = 128
     lr = 0.01
     num_epochs = 500
-    data = 'classification-model/20231220-dataset-WeightedRandomSampler-LossWeight-20231226-classify-'
+    data = 'classification-model/20231220-dataset-fusion-20231226-classify-'
     save_path = data + str(category_num) + 'class-' + model_name + '-bs' + str(bs) + '-lr' + str(lr) + '/'
     pt_dir = 'classification_model/' + save_path
     if not os.path.exists(pt_dir):
