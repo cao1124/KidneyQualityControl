@@ -51,9 +51,9 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
         # 创建WeightedRandomSampler
         # train_sampler = WeightedRandomSampler(weights=class_weights, num_samples=train_size, replacement=True)
         # train_loader = DataLoader(train_dataset, bs, shuffle=False, num_workers=4, sampler=train_sampler)
-        train_loader = DataLoader(train_dataset, bs, shuffle=True, num_workers=0)
-        valid_loader = DataLoader(valid_dataset, bs, shuffle=False, num_workers=0)
-        test_loader = DataLoader(test_dataset, bs, shuffle=False, num_workers=0)
+        train_loader = DataLoader(train_dataset, bs, shuffle=True, num_workers=4)
+        valid_loader = DataLoader(valid_dataset, bs, shuffle=False, num_workers=4)
+        test_loader = DataLoader(test_dataset, bs, shuffle=False, num_workers=4)
         'model, optimizer, scheduler, warmup, loss_function '
         model, optimizer, scheduler, warmup, loss_func = prepare_model(category_num, model_name, lr, num_epochs, device, class_weights)
         'EarlyStopping'
