@@ -101,9 +101,9 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
                     labels = batch[2].to(device)
 
                     outputs = model(inputs1, inputs2)
-                    for r in range(len(torch.eq(outputs.argmax(dim=1), labels))):
-                        if torch.eq(outputs.argmax(dim=1), labels)[r].item() is False:
-                            error_sample.append(img_name[r] + ',' + str(labels[r].item()))
+                    # for r in range(len(torch.eq(outputs.argmax(dim=1), labels))):
+                    #     if torch.eq(outputs.argmax(dim=1), labels)[r].item() is False:
+                    #         error_sample.append(img_name[r] + ',' + str(labels[r].item()))
                     loss_step = loss_func(outputs, labels)
                     valid_loss += loss_step.item()
                     num_correct += torch.eq(outputs.argmax(dim=1), labels).sum().float().item()
