@@ -176,6 +176,38 @@ class EarlyFusionModel(nn.Module):
         return x
 
 
+class LateFusionModel(nn.Module):
+    def __init__(self, net, num_class):
+        super(LateFusionModel, self).__init__()
+        self.net = net
+        self.fc = nn.Linear(in_features=2048, out_features=num_class, bias=True)
+
+    def forward(self, x1, x2):
+        x1 = self.net.conv1(x1)
+        x1 = self.net.bn1(x1)
+        x1 = self.net.relu(x1)
+        x1 = self.net.maxpool(x1)
+        x1 = self.net.layer1(x1)
+        x1 = self.net.layer2(x1)
+        x1 = self.net.layer3(x1)
+        x1 = self.net.layer4(x1)
+
+        x2 = self.net.conv1(x2)
+        x2 = self.net.bn1(x2)
+        x2 = self.net.relu(x2)
+        x2 = self.net.maxpool(x2)
+        x2 = self.net.layer1(x2)
+        x2 = self.net.layer2(x2)
+        x2 = self.net.layer3(x2)
+        x2 = self.net.layer4(x2)
+
+        x = torch.add(x1, x2)
+        x = self.net.avgpool(x)
+        x = torch.flatten(x, 1)
+        x = self.fc(x)
+        return x
+
+
 def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
     model = model_dict[model_name](pretrained=True)
     if model_name in ['resnet50', 'resnet101', 'resnet152', 'resnext50', 'wide_resnet50', 'resnext101',
@@ -199,7 +231,7 @@ def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
         model.classifier[1] = nn.Linear(in_features=1280, out_features=category_num, bias=True)
 
     'fusion'
-    model = EarlyFusionModel(model)
+    model = LateFusionModel(model, category_num)
     # 多GPU
     if torch.cuda.device_count() > 1:
         model = nn.DataParallel(model)

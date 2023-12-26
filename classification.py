@@ -51,9 +51,9 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
         # 创建WeightedRandomSampler
         # train_sampler = WeightedRandomSampler(weights=class_weights, num_samples=train_size, replacement=True)
         # train_loader = DataLoader(train_dataset, bs, shuffle=False, num_workers=4, sampler=train_sampler)
-        train_loader = DataLoader(train_dataset, bs, shuffle=True, num_workers=4)
-        valid_loader = DataLoader(valid_dataset, bs, shuffle=False, num_workers=4)
-        test_loader = DataLoader(test_dataset, bs, shuffle=False, num_workers=4)
+        train_loader = DataLoader(train_dataset, bs, shuffle=True, num_workers=0)
+        valid_loader = DataLoader(valid_dataset, bs, shuffle=False, num_workers=0)
+        test_loader = DataLoader(test_dataset, bs, shuffle=False, num_workers=0)
         'model, optimizer, scheduler, warmup, loss_function '
         model, optimizer, scheduler, warmup, loss_func = prepare_model(category_num, model_name, lr, num_epochs, device, class_weights)
         'EarlyStopping'
@@ -178,7 +178,7 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
 
 
 def classification():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "1"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "4"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model_name = 'resnext50'
     data_dir = '/media/user/Disk1/caoxu/dataset/kidney/20231220-classify-dataset-fusion/'
@@ -187,7 +187,7 @@ def classification():
     bs = 128
     lr = 0.01
     num_epochs = 500
-    data = 'classification-model/20231220-dataset-fusion-20231226-classify-'
+    data = 'classification-model/20231220-dataset-late-fusion-20231226-classify-'
     save_path = data + str(category_num) + 'class-' + model_name + '-bs' + str(bs) + '-lr' + str(lr) + '/'
     pt_dir = 'classification_model/' + save_path
     if not os.path.exists(pt_dir):
