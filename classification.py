@@ -184,7 +184,7 @@ def classification():
     data_dir = '/media/user/Disk1/caoxu/dataset/kidney/20231220-classify-dataset-fusion/'
     # 'D:/med_dataset/kidney/20231220-classify-dataset-fusion/'
     category_num = 2
-    bs = 128
+    bs = 96
     lr = 0.01
     num_epochs = 500
     data = 'classification-model/20231220-dataset-late-fusion-20231226-classify-'
