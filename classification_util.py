@@ -121,7 +121,7 @@ class ClassificationDataset(Dataset):
         return self.length
 
 
-def prepare_model(category_num, model_name, lr, num_epochs, device):
+def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
     model = model_dict[model_name](pretrained=True)
     if model_name in ['resnet50', 'resnet101', 'resnet152', 'resnext50', 'wide_resnet50', 'resnext101',
                       'wide_resnet101']:
@@ -149,7 +149,8 @@ def prepare_model(category_num, model_name, lr, num_epochs, device):
     model.to(device)
 
     # 定义损失函数和优化器。
-    loss_func = nn.CrossEntropyLoss()
+    # 定义loss权重  class_weights = torch.tensor([5.0, 1.0])
+    loss_func = nn.CrossEntropyLoss(weight=weights)
     optimizer = optim.SGD(model.parameters(), lr=lr, weight_decay=2e-4, momentum=0.9, nesterov=True)
     # optimizer = optim.NAdam(model.parameters(), lr=lr, betas=(0.8, 0.888), eps=1e-08, weight_decay=2e-4)
     # 定义学习率与轮数关系的函数

@@ -15,6 +15,7 @@ from torch.utils.data import DataLoader
 import matplotlib
 import matplotlib.pyplot as plt
 import torch.multiprocessing
+from collections import Counter
 import warnings
 matplotlib.use('AGG')
 torch.multiprocessing.set_sharing_strategy('file_system')
@@ -48,7 +49,9 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
         valid_loader = DataLoader(valid_dataset, bs, shuffle=False, num_workers=4)
         test_loader = DataLoader(test_dataset, bs, shuffle=False, num_workers=4)
         'model, optimizer, scheduler, warmup, loss_function '
-        model, optimizer, scheduler, warmup, loss_func = prepare_model(category_num, model_name, lr, num_epochs, device)
+        label_count = Counter(train_dataset.labels)
+        class_weights = torch.tensor([1/label_count.get(0), 1/label_count.get(1)])
+        model, optimizer, scheduler, warmup, loss_func = prepare_model(category_num, model_name, lr, num_epochs, device, class_weights)
         'EarlyStopping'
         early_stopping = EarlyStopping(pt_dir, patience=200)
         best_test_acc, best_valid_acc, best_valid_recall, best_epoch = 0.0, 0.0, 0.0, 0
@@ -169,15 +172,15 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
 
 
 def classification():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "2"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "1"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model_name = 'resnext50'
-    data_dir = '/media/user/Disk1/caoxu/dataset/kidney/20231220-classify-dataset-blood/'
+    data_dir = '/media/user/Disk1/caoxu/dataset/kidney/20231220-classify-dataset/'
     category_num = 2
     bs = 68  # 128
     lr = 0.01
     num_epochs = 500
-    data = 'classification-model/20231220dataset-blood-only-classify-'
+    data = 'classification-model/20231220-dataset-class-weights-20231226-classify-'
     save_path = data + str(category_num) + 'class-' + model_name + '-bs' + str(bs) + '-lr' + str(lr) + '/'
     pt_dir = 'classification_model/' + save_path
     if not os.path.exists(pt_dir):
