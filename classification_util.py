@@ -165,9 +165,9 @@ class FusionDataset(Dataset):
         return self.length
 
 
-class EarlyFusionModel(nn.Module):
+class EarlyAddFusionModel(nn.Module):
     def __init__(self, net):
-        super(EarlyFusionModel, self).__init__()
+        super(EarlyAddFusionModel, self).__init__()
         self.net = net
 
     def forward(self, x1, x2):
@@ -176,9 +176,21 @@ class EarlyFusionModel(nn.Module):
         return x
 
 
-class LateFusionModel(nn.Module):
+class EarlyCatFusionModel(nn.Module):
+    def __init__(self, net):
+        super(EarlyCatFusionModel, self).__init__()
+        self.net = net
+        self.net.conv1 = nn.Conv2d(6, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
+
+    def forward(self, x1, x2):
+        x = torch.cat((x1, x2), dim=1)
+        x = self.net(x)
+        return x
+
+
+class LateAddFusionModel(nn.Module):
     def __init__(self, net, num_class):
-        super(LateFusionModel, self).__init__()
+        super(LateAddFusionModel, self).__init__()
         self.net = net
         self.fc = nn.Linear(in_features=2048, out_features=num_class, bias=True)
 
@@ -202,6 +214,38 @@ class LateFusionModel(nn.Module):
         x2 = self.net.layer4(x2)
 
         x = torch.add(x1, x2)
+        x = self.net.avgpool(x)
+        x = torch.flatten(x, 1)
+        x = self.fc(x)
+        return x
+
+
+class LateCatFusionModel(nn.Module):
+    def __init__(self, net, num_class):
+        super(LateCatFusionModel, self).__init__()
+        self.net = net
+        self.fc = nn.Linear(in_features=4096, out_features=num_class, bias=True)
+
+    def forward(self, x1, x2):
+        x1 = self.net.conv1(x1)
+        x1 = self.net.bn1(x1)
+        x1 = self.net.relu(x1)
+        x1 = self.net.maxpool(x1)
+        x1 = self.net.layer1(x1)
+        x1 = self.net.layer2(x1)
+        x1 = self.net.layer3(x1)
+        x1 = self.net.layer4(x1)
+
+        x2 = self.net.conv1(x2)
+        x2 = self.net.bn1(x2)
+        x2 = self.net.relu(x2)
+        x2 = self.net.maxpool(x2)
+        x2 = self.net.layer1(x2)
+        x2 = self.net.layer2(x2)
+        x2 = self.net.layer3(x2)
+        x2 = self.net.layer4(x2)
+
+        x = torch.cat((x1, x2), dim=1)
         x = self.net.avgpool(x)
         x = torch.flatten(x, 1)
         x = self.fc(x)
@@ -281,8 +325,9 @@ def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
         model.classifier[1] = nn.Linear(in_features=1280, out_features=category_num, bias=True)
 
     'fusion'
-    # model = LateFusionModel(model, category_num)
-    model = AttentionFusionModel(model, category_num, 3, 3)
+    model = EarlyCatFusionModel(model)
+    # model = LateCatFusionModel(model, category_num)
+    # model = AttentionFusionModel(model, category_num, 3, 3)
     # 多GPU
     if torch.cuda.device_count() > 1:
         model = nn.DataParallel(model)
