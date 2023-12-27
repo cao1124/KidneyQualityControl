@@ -325,8 +325,8 @@ def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
         model.classifier[1] = nn.Linear(in_features=1280, out_features=category_num, bias=True)
 
     'fusion'
-    model = EarlyCatFusionModel(model)
-    # model = LateCatFusionModel(model, category_num)
+    # model = EarlyCatFusionModel(model)
+    model = LateCatFusionModel(model, category_num)
     # model = AttentionFusionModel(model, category_num, 3, 3)
     # 多GPU
     if torch.cuda.device_count() > 1:
