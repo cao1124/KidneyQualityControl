@@ -5,6 +5,7 @@ from PIL import Image
 import numpy as np
 import torch
 import albumentations as albu
+from pretrainedmodels.models import senet
 from torch import nn, optim
 from torch.utils.data import Dataset
 from torchvision import transforms, models
@@ -27,6 +28,8 @@ model_dict = {
     'densenet169': models.densenet169,
     'densenet201': models.densenet201,
     "regnet_y_32gf": models.regnet_y_32gf,
+    "SENet_resnet50": senet.se_resnet50,
+    "SENet_resnext50": senet.se_resnext50_32x4d,
 }
 
 
@@ -275,7 +278,7 @@ class AttentionFusionModel(nn.Module):
         )
 
         # 分类层
-        self.classifier = nn.Linear(2048, num_class)
+        self.classifier = nn.Linear(2048, num_class, bias=True)
 
     def forward(self, x1, x2):
         # 拼接两个模态的输入
@@ -303,7 +306,10 @@ class AttentionFusionModel(nn.Module):
 
 
 def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
-    model = model_dict[model_name](pretrained=True)
+    if 'SENet' in model_name:
+        model = model_dict[model_name](pretrained='imagenet')
+    else:
+        model = model_dict[model_name](pretrained=True)
     if model_name in ['resnet50', 'resnet101', 'resnet152', 'resnext50', 'wide_resnet50', 'resnext101',
                       'wide_resnet101']:
         model.fc = nn.Linear(in_features=2048, out_features=category_num, bias=True)
@@ -323,11 +329,14 @@ def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
         model.classifier[6] = nn.Linear(in_features=4096, out_features=category_num, bias=True)
     elif model_name in ['efficientnet_b0']:
         model.classifier[1] = nn.Linear(in_features=1280, out_features=category_num, bias=True)
+    elif model_name in ['SENet_resnext50']:   # SENet
+        model.last_linear = nn.Linear(in_features=2048, out_features=category_num, bias=True)
 
     'fusion'
     # model = EarlyCatFusionModel(model)
-    model = LateCatFusionModel(model, category_num)
+    # model = LateCatFusionModel(model, category_num)
     # model = AttentionFusionModel(model, category_num, 3, 3)
+
     # 多GPU
     if torch.cuda.device_count() > 1:
         model = nn.DataParallel(model)
