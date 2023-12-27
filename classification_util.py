@@ -329,7 +329,7 @@ def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
         model.classifier[6] = nn.Linear(in_features=4096, out_features=category_num, bias=True)
     elif model_name in ['efficientnet_b0']:
         model.classifier[1] = nn.Linear(in_features=1280, out_features=category_num, bias=True)
-    elif model_name in ['SENet_resnext50']:   # SENet
+    elif model_name in ['SENet_resnext50', 'SENet_resnet50']:   # SENet
         model.last_linear = nn.Linear(in_features=2048, out_features=category_num, bias=True)
 
     'fusion'
