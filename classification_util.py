@@ -1,3 +1,4 @@
+import math
 import os
 
 import cv2
@@ -10,6 +11,8 @@ from torch import nn, optim
 from torch.utils.data import Dataset
 from torchvision import transforms, models
 from warmup_scheduler import GradualWarmupScheduler
+
+from ECA_ResNet import eca_resnet50, eca_resNeXt50_32x4d
 
 model_dict = {
     'efficientnet_b0': models.efficientnet_b0,
@@ -30,6 +33,8 @@ model_dict = {
     "regnet_y_32gf": models.regnet_y_32gf,
     "SENet_resnet50": senet.se_resnet50,
     "SENet_resnext50": senet.se_resnext50_32x4d,
+    "eca_resnet50": eca_resnet50,
+    "eca_resnext50": eca_resNeXt50_32x4d,
 }
 
 
@@ -306,10 +311,13 @@ class AttentionFusionModel(nn.Module):
 
 
 def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
-    if 'SENet' in model_name:
+    if 'eca' in model_name:    # ECA（Efficient Channel Attention）
+        model = model_dict[model_name]()
+    elif 'SENet' in model_name:
         model = model_dict[model_name](pretrained='imagenet')
     else:
         model = model_dict[model_name](pretrained=True)
+
     if model_name in ['resnet50', 'resnet101', 'resnet152', 'resnext50', 'wide_resnet50', 'resnext101',
                       'wide_resnet101']:
         model.fc = nn.Linear(in_features=2048, out_features=category_num, bias=True)
@@ -331,6 +339,8 @@ def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
         model.classifier[1] = nn.Linear(in_features=1280, out_features=category_num, bias=True)
     elif model_name in ['SENet_resnext50', 'SENet_resnet50']:   # SENet
         model.last_linear = nn.Linear(in_features=2048, out_features=category_num, bias=True)
+    elif model_name in ['eca_resnet50', 'eca_resnext50']:   # ECA
+        model.fc = nn.Linear(in_features=2048, out_features=category_num, bias=True)
 
     'fusion'
     # model = EarlyCatFusionModel(model)
