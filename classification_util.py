@@ -208,6 +208,56 @@ class LateFusionModel(nn.Module):
         return x
 
 
+class AttentionFusionModel(nn.Module):
+    def __init__(self, net, num_class, modality1_channels, modality2_channels):
+        super(AttentionFusionModel, self).__init__()
+
+        # 提取 ResNet50 的前半部分作为特征提取器
+        self.features = nn.Sequential(*list(net.children())[:-2])
+
+        # 修改第一个卷积层，使其适应多模态输入
+        self.features[0] = nn.Conv2d(modality1_channels + modality2_channels, 64, kernel_size=(7, 7), stride=(2, 2),
+                                     padding=(3, 3), bias=False)
+
+        # 全局平均池化层
+        self.global_avg_pooling = nn.AdaptiveAvgPool2d(1)
+
+        # 注意力机制
+        self.attention = nn.Sequential(
+            nn.Linear(2048, 64),  # 64是ResNet50的输出通道数，4是因为有两个模态
+            nn.ReLU(),
+            nn.Linear(64, 1),
+            nn.Softmax(dim=1)
+        )
+
+        # 分类层
+        self.classifier = nn.Linear(2048, num_class)
+
+    def forward(self, x1, x2):
+        # 拼接两个模态的输入
+        x = torch.cat((x1, x2), dim=1)
+
+        # 提取特征
+        features = self.features(x)
+
+        # 全局平均池化
+        pooled_features = self.global_avg_pooling(features)
+
+        # 展开特征
+        pooled_features = pooled_features.view(pooled_features.size(0), -1)
+
+        # 注意力权重
+        attention_weights = self.attention(pooled_features)
+
+        # 加权融合特征
+        fused_features = torch.sum(features * attention_weights.view(-1, 1, 1, 1), dim=(2, 3))
+
+        # 分类
+        output = self.classifier(fused_features)
+
+        return output
+
+
 def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
     model = model_dict[model_name](pretrained=True)
     if model_name in ['resnet50', 'resnet101', 'resnet152', 'resnext50', 'wide_resnet50', 'resnext101',
@@ -231,7 +281,8 @@ def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
         model.classifier[1] = nn.Linear(in_features=1280, out_features=category_num, bias=True)
 
     'fusion'
-    model = LateFusionModel(model, category_num)
+    # model = LateFusionModel(model, category_num)
+    model = AttentionFusionModel(model, category_num, 3, 3)
     # 多GPU
     if torch.cuda.device_count() > 1:
         model = nn.DataParallel(model)
