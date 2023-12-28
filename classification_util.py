@@ -13,6 +13,7 @@ from torchvision import transforms, models
 from warmup_scheduler import GradualWarmupScheduler
 from CBAM_ResNet import CBAM_Resnext, resnet18_cbam, resnet34_cbam, resnet50_cbam, resnet101_cbam, resnet152_cbam
 from ECA_ResNet import eca_resnet50, eca_resNeXt50_32x4d
+from SK_ResNet import SKNet50, SKNet101
 
 model_dict = {
     'efficientnet_b0': models.efficientnet_b0,
@@ -43,6 +44,8 @@ model_dict = {
     "resnext50_cbam": CBAM_Resnext,
     "resnext101_cbam": CBAM_Resnext,
     "resnext152_cbam": CBAM_Resnext,
+    "sknet50": SKNet50,
+    "sknet101": SKNet101,
 }
 
 mass_mean, mass_std = [0.29003, 0.29385, 0.31377], [0.18866, 0.19251, 0.19958]
@@ -320,6 +323,8 @@ class AttentionFusionModel(nn.Module):
 def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
     if 'eca' in model_name:  # ECA（Efficient Channel Attention）
         model = model_dict[model_name]()
+    elif 'sknet' in model_name:
+        model = model_dict[model_name](category_num)
     elif 'CBAM_Resnext' in model_name:
         if model_name == 'CBAM_Resnext50':
             model = model_dict[model_name](50, category_num)
@@ -334,7 +339,7 @@ def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
 
     if model_name in ['resnet50', 'resnet101', 'resnet152', 'resnext50', 'wide_resnet50', 'resnext101',
                       'wide_resnet101', 'eca_resnet50', 'eca_resnext50', 'resnet50_cbam', 'resnet101_cbam',
-                      'resnet152_cbam']:
+                      'resnet152_cbam', 'sknet50', 'sknet101']:
         model.fc = nn.Linear(in_features=2048, out_features=category_num, bias=True)
     elif model_name == ['resnet18', 'resnet18_cbam']:
         model.fc = nn.Linear(in_features=512, out_features=category_num, bias=True)
