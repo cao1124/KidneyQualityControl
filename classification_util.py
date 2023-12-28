@@ -11,7 +11,7 @@ from torch import nn, optim
 from torch.utils.data import Dataset
 from torchvision import transforms, models
 from warmup_scheduler import GradualWarmupScheduler
-from CBAM_ResNet import CBAM_Resnext
+from CBAM_ResNet import CBAM_Resnext, resnet18_cbam, resnet34_cbam, resnet50_cbam, resnet101_cbam, resnet152_cbam
 from ECA_ResNet import eca_resnet50, eca_resNeXt50_32x4d
 
 model_dict = {
@@ -35,9 +35,14 @@ model_dict = {
     "SENet_resnext50": senet.se_resnext50_32x4d,
     "eca_resnet50": eca_resnet50,
     "eca_resnext50": eca_resNeXt50_32x4d,
-    "CBAM_Resnext50": CBAM_Resnext,
-    "CBAM_Resnext101": CBAM_Resnext,
-    "CBAM_Resnext152": CBAM_Resnext,
+    "resnet18_cbam": resnet18_cbam,
+    "resnet34_cbam": resnet34_cbam,
+    "resnet50_cbam": resnet50_cbam,
+    "resnet101_cbam": resnet101_cbam,
+    "resnet152_cbam": resnet152_cbam,
+    "resnext50_cbam": CBAM_Resnext,
+    "resnext101_cbam": CBAM_Resnext,
+    "resnext152_cbam": CBAM_Resnext,
 }
 
 mass_mean, mass_std = [0.29003, 0.29385, 0.31377], [0.18866, 0.19251, 0.19958]
@@ -315,7 +320,7 @@ class AttentionFusionModel(nn.Module):
 def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
     if 'eca' in model_name:  # ECA（Efficient Channel Attention）
         model = model_dict[model_name]()
-    elif 'CBAM' in model_name:
+    elif 'CBAM_Resnext' in model_name:
         if model_name == 'CBAM_Resnext50':
             model = model_dict[model_name](50, category_num)
         elif model_name == 'CBAM_Resnext101':
@@ -328,9 +333,10 @@ def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
         model = model_dict[model_name](pretrained=True)
 
     if model_name in ['resnet50', 'resnet101', 'resnet152', 'resnext50', 'wide_resnet50', 'resnext101',
-                      'wide_resnet101']:
+                      'wide_resnet101', 'eca_resnet50', 'eca_resnext50', 'resnet50_cbam', 'resnet101_cbam',
+                      'resnet152_cbam']:
         model.fc = nn.Linear(in_features=2048, out_features=category_num, bias=True)
-    elif model_name == 'resnet18':
+    elif model_name == ['resnet18', 'resnet18_cbam']:
         model.fc = nn.Linear(in_features=512, out_features=category_num, bias=True)
     elif model_name == 'densenet121':
         model.classifier = nn.Linear(in_features=1024, out_features=category_num, bias=True)
@@ -348,8 +354,6 @@ def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
         model.classifier[1] = nn.Linear(in_features=1280, out_features=category_num, bias=True)
     elif model_name in ['SENet_resnext50', 'SENet_resnet50']:  # SENet
         model.last_linear = nn.Linear(in_features=2048, out_features=category_num, bias=True)
-    elif model_name in ['eca_resnet50', 'eca_resnext50']:  # ECA
-        model.fc = nn.Linear(in_features=2048, out_features=category_num, bias=True)
     elif model_name in ['CBAM_resnext50', 'CBAM_resnext101', 'CBAM_resnext152']:  # ECA
         model.layer7 = nn.Linear(in_features=2048, out_features=category_num, bias=True)
 
