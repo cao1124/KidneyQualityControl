@@ -40,7 +40,6 @@ model_dict = {
     "CBAM_Resnext152": CBAM_Resnext,
 }
 
-
 mass_mean, mass_std = [0.29003, 0.29385, 0.31377], [0.18866, 0.19251, 0.19958]
 
 # 数据增强
@@ -73,7 +72,7 @@ def augment_compose(prob):
                    p=prob),
         albu.OneOf([albu.GridDistortion(p=prob, distort_limit=(-0.2, 0), num_steps=5),
                     albu.ElasticTransform(p=prob, alpha_affine=30),
-                    albu.Perspective(scale=(0.01, 0.05), p=prob)],  p=prob),
+                    albu.Perspective(scale=(0.01, 0.05), p=prob)], p=prob),
         albu.OneOf([albu.RandomBrightnessContrast(brightness_limit=0.5, contrast_limit=0.5,
                                                   brightness_by_max=None, always_apply=False, p=prob),
                     albu.GaussNoise(p=prob, var_limit=(20, 100)),
@@ -314,7 +313,7 @@ class AttentionFusionModel(nn.Module):
 
 
 def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
-    if 'eca' in model_name:    # ECA（Efficient Channel Attention）
+    if 'eca' in model_name:  # ECA（Efficient Channel Attention）
         model = model_dict[model_name]()
     elif 'CBAM' in model_name:
         if model_name == 'CBAM_Resnext50':
@@ -347,11 +346,11 @@ def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
         model.classifier[6] = nn.Linear(in_features=4096, out_features=category_num, bias=True)
     elif model_name in ['efficientnet_b0']:
         model.classifier[1] = nn.Linear(in_features=1280, out_features=category_num, bias=True)
-    elif model_name in ['SENet_resnext50', 'SENet_resnet50']:   # SENet
+    elif model_name in ['SENet_resnext50', 'SENet_resnet50']:  # SENet
         model.last_linear = nn.Linear(in_features=2048, out_features=category_num, bias=True)
-    elif model_name in ['eca_resnet50', 'eca_resnext50']:   # ECA
+    elif model_name in ['eca_resnet50', 'eca_resnext50']:  # ECA
         model.fc = nn.Linear(in_features=2048, out_features=category_num, bias=True)
-    elif model_name in ['CBAM_resnext50', 'CBAM_resnext101', 'CBAM_resnext152']:   # ECA
+    elif model_name in ['CBAM_resnext50', 'CBAM_resnext101', 'CBAM_resnext152']:  # ECA
         model.layer7 = nn.Linear(in_features=2048, out_features=category_num, bias=True)
 
     'fusion'
@@ -378,6 +377,7 @@ def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
 
 class EarlyStopping:
     """Early stops the training if validation loss doesn't improve after a given patience."""
+
     def __init__(self, save_path, patience=7, verbose=False, delta=0):
         """
         Args:
@@ -420,6 +420,5 @@ class EarlyStopping:
         if self.verbose:
             print(f'Validation loss decreased ({self.val_loss_min:.6f} --> {val_loss:.6f}).  Saving model ...')
         path = os.path.join(self.save_path, 'best_network.pth')
-        torch.save(model.state_dict(), path)	# 这里会存储迄今最优模型的参数
+        torch.save(model.state_dict(), path)  # 这里会存储迄今最优模型的参数
         self.val_loss_min = val_loss
-

@@ -123,9 +123,9 @@ def kfold_split():
             for img_name in img_list:
                 if img_name in cross:
                     'copy ori image and json'
-                    shutil.copy(os.path.join(base_dir, img_name), os.path.join(ori_save_path, img_name))   # crop json
+                    shutil.copy(os.path.join(base_dir, img_name), os.path.join(ori_save_path, img_name))  # crop json
                     shutil.copy(os.path.join(base_dir, img_name.replace('.json', '.jpg')),
-                                os.path.join(ori_save_path, img_name.replace('.json', '.jpg')))   # crop image
+                                os.path.join(ori_save_path, img_name.replace('.json', '.jpg')))  # crop image
                     img = cv2.imread(os.path.join(base_dir, img_name.replace('.json', '.jpg')))
                     with open(base_dir + img_name, 'r', encoding='utf-8') as fp:
                         json_data = json.load(fp)
@@ -153,7 +153,7 @@ def kfold_split():
                         else:
                             points = np.array(json_data['shapes'][0]['points'])
                         crop_img = img[int(min(points[:, 1])): int(max(points[:, 1])),
-                                       int(min(points[:, 0])): int(max(points[:, 0]))]
+                                   int(min(points[:, 0])): int(max(points[:, 0]))]
                         cv2.imwrite(os.path.join(crop_save_path, img_name.replace('.json', '.png')), crop_img)
                     'kidney mask image'
                     if kidney_split:
@@ -202,7 +202,7 @@ def mead_split_patient():
     org_path = r'D:\med dataset\kidney\zhongshan-kidney-ori-2023-12-20'
     out_path = r'D:\med dataset\kidney\20231220-classify-dataset\image-5fold'
 
-    for cla in ['0', '1']:   # ['benign', 'malignant']
+    for cla in ['0', '1']:  # ['benign', 'malignant']
         in_path = os.path.join(org_path, cla)
         img_list = []
         patient_list = []
@@ -274,7 +274,7 @@ def get_mask_by_json():
                         if json_data['shapes'][i]['label'].lower() == 'renal' or \
                                 json_data['shapes'][i]['label'].lower() == 'kidney':
                             points = np.array(json_data['shapes'][i]['points'])
-                            polygon = np.array(points, np.int32)        # 坐标为顺时针方向
+                            polygon = np.array(points, np.int32)  # 坐标为顺时针方向
                             cv2.fillConvexPoly(renal_img, polygon, 128)
                     # for i in range(len(json_data['shapes'])):
                     #     if json_data['shapes'][i]['label'] == 'Reference':
@@ -287,8 +287,8 @@ def get_mask_by_json():
                     #         points = np.array(json_data['shapes'][i]['points'])
                     #         polygon = np.array(points, np.int32)  # 坐标为顺时针方向
                     #         cv2.fillConvexPoly(mass_img, polygon, 255)
-                        # else:
-                        #     print('error label in:', f, '-', p, '-', img_json)
+                    # else:
+                    #     print('error label in:', f, '-', p, '-', img_json)
                     'mass'
                     # cv_write(os.path.join(mass_mask_path, f, c, p, img_json.replace('.json', '.jpg')), mass_img)
                     'renal'

@@ -18,11 +18,11 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         print('五折交叉验证 第{}次实验:'.format(i))
         fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/']
         valid_path = [data_dir + fold_list[i],
-                      data_dir + fold_list[i+1]]
+                      data_dir + fold_list[i + 1]]
         valid_mask = [data_dir.replace('image', 'mask') + fold_list[i],
-                      data_dir.replace('image', 'mask') + fold_list[i+1]]
+                      data_dir.replace('image', 'mask') + fold_list[i + 1]]
         fold_list.remove(fold_list[i])
-        fold_list.remove(fold_list[i+1])
+        fold_list.remove(fold_list[i + 1])
         test_path = [data_dir + fold_list[i]]
         test_mask = [data_dir.replace('image', 'mask') + fold_list[i]]
         fold_list.remove(fold_list[i])
@@ -192,7 +192,7 @@ def segment():
     os.environ['CUDA_VISIBLE_DEVICES'] = "0"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     data_dir = '/media/user/Disk1/caoxu/dataset/kidney/20231204-segment-dataset/image-5fold/'
-    encoder_name = "efficientnet-b7"               # "efficientnet-b7"  'resnext50_32x4d'
+    encoder_name = "efficientnet-b7"  # "efficientnet-b7"  'resnext50_32x4d'
     encoder_activation = "softmax2d"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # encoder_weights = "imagenet"
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)

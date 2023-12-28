@@ -154,7 +154,7 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
             dice_list.append(dice)
             print(test_dataset.images[k], "\tdice:", dice, "\tiou:", iou)
 
-            save_full_path = save_dir1 + test_dataset.images[k].split('/')[-1]    # windows \\   linux /
+            save_full_path = save_dir1 + test_dataset.images[k].split('/')[-1]  # windows \\   linux /
             print(save_full_path)
             # cv2.imwrite(save_full_path, pred_mask)
 

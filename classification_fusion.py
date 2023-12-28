@@ -17,6 +17,7 @@ import matplotlib.pyplot as plt
 import torch.multiprocessing
 from collections import Counter
 import warnings
+
 matplotlib.use('AGG')
 torch.multiprocessing.set_sharing_strategy('file_system')
 warnings.filterwarnings("ignore")
@@ -52,7 +53,8 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
         valid_loader = DataLoader(valid_dataset, bs, shuffle=False, num_workers=4)
         test_loader = DataLoader(test_dataset, bs, shuffle=False, num_workers=4)
         'model, optimizer, scheduler, warmup, loss_function '
-        model, optimizer, scheduler, warmup, loss_func = prepare_model(category_num, model_name, lr, num_epochs, device, class_weights)
+        model, optimizer, scheduler, warmup, loss_func = prepare_model(category_num, model_name, lr, num_epochs, device,
+                                                                       class_weights)
         'EarlyStopping'
         early_stopping = EarlyStopping(pt_dir, patience=200)
         best_test_acc, best_valid_acc, best_valid_recall, best_epoch = 0.0, 0.0, 0.0, 0
@@ -162,7 +164,7 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
                 outputs = model(inputs1, inputs2)
                 for r in range(len(torch.eq(outputs.argmax(dim=1), labels))):
                     if torch.eq(outputs.argmax(dim=1), labels)[r].item() is False:
-                        error_sample.append(img_name[r]+','+str(labels[r].item()))
+                        error_sample.append(img_name[r] + ',' + str(labels[r].item()))
                 num_correct += torch.eq(outputs.argmax(dim=1), labels).sum().float().item()
 
                 test_true.extend(labels.cpu().numpy())

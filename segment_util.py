@@ -63,7 +63,7 @@ def training_augmentation():
                 # albu.HueSaturationValue(p=1),
             ],
             p=0.5,
-         ),
+        ),
     ]
     return albu.Compose(train_transform)
 
@@ -71,8 +71,8 @@ def training_augmentation():
 def valid_augmentation():
     """Add paddings to make image shape divisible by 32"""
     test_transform = [
-      #  albu.PadIfNeeded(min_height=496, min_width=640),
-      #  albu.RandomCrop(height=480, width=480, always_apply=True)
+        #  albu.PadIfNeeded(min_height=496, min_width=640),
+        #  albu.RandomCrop(height=480, width=480, always_apply=True)
     ]
     return albu.Compose(test_transform)
 
@@ -122,7 +122,7 @@ class SegmentDataset(BaseDataset):
         if self.preprocessing:
             sample = self.preprocessing(image=image, mask=mask)
             image, mask = sample['image'], sample['mask']
-        image = image/255.0
+        image = image / 255.0
         mask[mask == 255] = 1
 
         image = image.transpose(2, 0, 1).astype('float32')
@@ -185,9 +185,9 @@ def add_weighted_multi(img, mask, which_channel="B", w_alpha=0.2):
 
 def combine_image(gt, pred):
     [height, width, channel] = gt.shape
-    img_res = np.zeros((height, width*2, channel), dtype=np.int32)
+    img_res = np.zeros((height, width * 2, channel), dtype=np.int32)
     img_res[:height, :width, :] = gt
-    img_res[:height, width:width*2, :] = pred
+    img_res[:height, width:width * 2, :] = pred
     return img_res.astype('uint8')
 
 
@@ -240,7 +240,7 @@ class KidneyMassDataset(BaseDataset):
         if self.preprocessing:
             sample = self.preprocessing(image=image, mask=mask)
             image, mask = sample['image'], sample['mask']
-        image = image/255.0
+        image = image / 255.0
         mask[mask == 128] = 1
         mask[mask == 255] = 1
 
@@ -302,7 +302,7 @@ class RenalDataset(BaseDataset):
         if self.preprocessing:
             sample = self.preprocessing(image=image, mask=mask)
             image, mask = sample['image'], sample['mask']
-        image = image/255.0
+        image = image / 255.0
         mask[mask == 255] = 1
 
         image = image.transpose(2, 0, 1).astype('float32')
@@ -312,5 +312,3 @@ class RenalDataset(BaseDataset):
 
     def __len__(self):
         return len(self.images)
-
-
