@@ -11,7 +11,7 @@ from torch import nn, optim
 from torch.utils.data import Dataset
 from torchvision import transforms, models
 from warmup_scheduler import GradualWarmupScheduler
-
+from CBAM_ResNet import CBAM_Resnext
 from ECA_ResNet import eca_resnet50, eca_resNeXt50_32x4d
 
 model_dict = {
@@ -35,6 +35,9 @@ model_dict = {
     "SENet_resnext50": senet.se_resnext50_32x4d,
     "eca_resnet50": eca_resnet50,
     "eca_resnext50": eca_resNeXt50_32x4d,
+    "CBAM_Resnext50": CBAM_Resnext,
+    "CBAM_Resnext101": CBAM_Resnext,
+    "CBAM_Resnext152": CBAM_Resnext,
 }
 
 
@@ -313,6 +316,13 @@ class AttentionFusionModel(nn.Module):
 def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
     if 'eca' in model_name:    # ECA（Efficient Channel Attention）
         model = model_dict[model_name]()
+    elif 'CBAM' in model_name:
+        if model_name == 'CBAM_Resnext50':
+            model = model_dict[model_name](50, category_num)
+        elif model_name == 'CBAM_Resnext101':
+            model = model_dict[model_name](101, category_num)
+        elif model_name == 'CBAM_Resnext152':
+            model = model_dict[model_name](152, category_num)
     elif 'SENet' in model_name:
         model = model_dict[model_name](pretrained='imagenet')
     else:
@@ -341,6 +351,8 @@ def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
         model.last_linear = nn.Linear(in_features=2048, out_features=category_num, bias=True)
     elif model_name in ['eca_resnet50', 'eca_resnext50']:   # ECA
         model.fc = nn.Linear(in_features=2048, out_features=category_num, bias=True)
+    elif model_name in ['CBAM_resnext50', 'CBAM_resnext101', 'CBAM_resnext152']:   # ECA
+        model.layer7 = nn.Linear(in_features=2048, out_features=category_num, bias=True)
 
     'fusion'
     # model = EarlyCatFusionModel(model)
