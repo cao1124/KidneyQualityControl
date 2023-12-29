@@ -198,7 +198,7 @@ def segment():
     encoder_name = "efficientnet-b7"
     encoder_activation = "sigmoid"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
-    bs = 8
+    bs = 6
     lr = 1e-4
     epochs = 5000
     save_dir = "mass-segment/20231228-dataset-mass-segment-" + encoder_name + '/'
