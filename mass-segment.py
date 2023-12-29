@@ -78,7 +78,7 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         max_score = -1
         max_dice = 0
         best_epoch = 0
-        early_stops = 2000
+        early_stops = 1000
 
         train_history = {'dice_loss + bce_loss': [], 'fscore': []}
         val_history = {'dice_loss + bce_loss': [], 'fscore': []}
@@ -172,9 +172,9 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
 
 
 def segment():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "1"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "2"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    data_dir = '/media/user/Disk1/caoxu/dataset/kidney/20231204-segment-dataset-mass/image-5fold/'
+    data_dir = '/media/user/Disk1/caoxu/dataset/kidney/20231228-segment-mass-5fold/'
     """
     分割网络选择：
     Unet、Linknet、FPN、PSPNet、PAN、DeepLabV3、UnetPlusPlus
@@ -198,10 +198,10 @@ def segment():
     encoder_name = "efficientnet-b7"
     encoder_activation = "sigmoid"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
-    bs = 6
+    bs = 8
     lr = 1e-4
-    epochs = 10000
-    save_dir = "mass-segment/20231205-unet-segment-" + encoder_name + '/'
+    epochs = 5000
+    save_dir = "mass-segment/20231228-dataset-mass-segment-" + encoder_name + '/'
     train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device)
 
 
