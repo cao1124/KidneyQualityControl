@@ -8,7 +8,7 @@ import torch
 import albumentations as albu
 from pretrainedmodels.models import senet
 from torch import nn, optim
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, Sampler
 from torchvision import transforms, models
 from warmup_scheduler import GradualWarmupScheduler
 from CBAM_ResNet import CBAM_Resnext, resnet18_cbam, resnet34_cbam, resnet50_cbam, resnet101_cbam, resnet152_cbam
@@ -320,6 +320,84 @@ class AttentionFusionModel(nn.Module):
         return output
 
 
+class MultiHeadAttention(nn.Module):
+    def __init__(self, embed_size, num_heads):
+        super(MultiHeadAttention, self).__init__()
+        self.num_heads = num_heads
+        self.head_dim = embed_size // num_heads
+
+        assert (
+                self.head_dim * num_heads == embed_size
+        ), "Embedding size needs to be divisible by num_heads"
+
+        self.values = nn.Linear(embed_size, embed_size, bias=False)
+        self.keys = nn.Linear(embed_size, embed_size, bias=False)
+        self.queries = nn.Linear(embed_size, embed_size, bias=False)
+        self.fc_out = nn.Linear(num_heads * self.head_dim, embed_size)
+
+    def forward(self, values, keys, query, mask):
+        # Get number of training examples
+        N = query.shape[0]
+        value_len, key_len, query_len = values.shape[1], keys.shape[1], query.shape[1]
+
+        # Split the embedding into self.num_heads different pieces
+        values = values.reshape(N, value_len, self.num_heads, self.head_dim)
+        keys = keys.reshape(N, key_len, self.num_heads, self.head_dim)
+        queries = query.reshape(N, query_len, self.num_heads, self.head_dim)
+
+        values = self.values(values)
+        keys = self.keys(keys)
+        queries = self.queries(queries)
+
+        energy = torch.einsum("nqhd,nkhd->nhqk", [queries, keys])
+
+        if mask is not None:
+            energy = energy.masked_fill(mask == 0, float("-1e20"))
+
+        attention = torch.nn.functional.softmax(energy / (self.head_dim ** (1 / 2)), dim=3)
+
+        out = torch.einsum("nhql,nlhd->nqhd", [attention, values]).reshape(
+            N, query_len, self.num_heads * self.head_dim
+        )
+
+        out = self.fc_out(out)
+        return out
+
+
+class MultiModalAttentionFusionModel(nn.Module):
+    def __init__(self, net, num_class, modality1_channels, modality2_channels, num_heads=4):
+        super(MultiModalAttentionFusionModel, self).__init__()
+
+        # 提取 ResNet50 的前半部分作为特征提取器
+        self.features = nn.Sequential(*list(net.children())[:-2])
+
+        # 修改第一个卷积层，使其适应多模态输入
+        self.features[0] = nn.Conv2d(modality1_channels + modality2_channels, 64, kernel_size=(7, 7), stride=(2, 2),
+                                     padding=(3, 3), bias=False)
+
+        # 全局平均池化层
+        self.global_avg_pooling = nn.AdaptiveAvgPool2d(1)
+
+        # 多头注意力机制
+        self.attention = MultiHeadAttention(embed_size=2048, num_heads=num_heads)
+
+        # 分类层
+        self.classifier = nn.Linear(2048, num_class, bias=True)
+
+    def forward(self, x1, x2):
+        # 拼接两个模态的输入
+        x = torch.cat((x1, x2), dim=1)
+        # 提取特征
+        features = self.features(x)
+
+        # 使用多头注意力机制
+        attention_weights = self.attention(features, features, features, mask=None)
+        fused_features = torch.sum(features * attention_weights.view(-1, features.shape[2], 1, 1), dim=(2, 3))
+        # 使用 fused_features
+        output = self.classifier(fused_features)
+        return output
+
+
 def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
     if 'eca' in model_name:  # ECA（Efficient Channel Attention）
         model = model_dict[model_name]()
@@ -365,7 +443,7 @@ def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
     'fusion'
     # model = EarlyCatFusionModel(model)
     # model = LateCatFusionModel(model, category_num)
-    # model = AttentionFusionModel(model, category_num, 3, 3)
+    # model = MultiModalAttentionFusionModel(model, category_num, 3, 3, num_heads=8)
 
     # 多GPU
     if torch.cuda.device_count() > 1:
@@ -431,3 +509,24 @@ class EarlyStopping:
         path = os.path.join(self.save_path, 'best_network.pth')
         torch.save(model.state_dict(), path)  # 这里会存储迄今最优模型的参数
         self.val_loss_min = val_loss
+
+
+class BalanceDataSampler(Sampler):
+    def __init__(self, dataset_targets, max_class=None):
+        self.prob = []
+        count = np.histogram(dataset_targets, len(set(dataset_targets)))[0]
+
+        if max_class is None:
+            max_class = count.max()
+
+        modulos = max_class % count
+
+        for key, y in enumerate(dataset_targets):
+            self.prob += [key for i in range(max_class // count[y] + (modulos[y] > 0))]
+        modulos[y] -= 1
+
+    def __len__(self):
+        return len(self.prob)
+
+    def __iter__(self):
+        return iter(np.array(self.prob)[np.random.permutation(len(self.prob))].tolist())

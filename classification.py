@@ -10,8 +10,9 @@ import os
 import numpy as np
 import torch
 from sklearn.metrics import confusion_matrix, classification_report
-from classification_util import ClassificationDataset, image_transforms, prepare_model, EarlyStopping, FusionDataset
-from torch.utils.data import DataLoader, WeightedRandomSampler
+from classification_util import ClassificationDataset, image_transforms, prepare_model, EarlyStopping, \
+    BalanceDataSampler
+from torch.utils.data import DataLoader
 import matplotlib
 import matplotlib.pyplot as plt
 import torch.multiprocessing
@@ -52,7 +53,8 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
         # 创建WeightedRandomSampler
         # train_sampler = WeightedRandomSampler(weights=class_weights, num_samples=train_size, replacement=True)
         # train_loader = DataLoader(train_dataset, bs, shuffle=False, num_workers=4, sampler=train_sampler)
-        train_loader = DataLoader(train_dataset, bs, shuffle=True, num_workers=4)
+        train_loader = DataLoader(train_dataset, bs, shuffle=False, num_workers=4,
+                                  sampler=BalanceDataSampler(train_dataset.labels))
         valid_loader = DataLoader(valid_dataset, bs, shuffle=False, num_workers=4)
         test_loader = DataLoader(test_dataset, bs, shuffle=False, num_workers=4)
         'model, optimizer, scheduler, warmup, loss_function '
@@ -177,16 +179,16 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
 
 
 def classification():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "2"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "0"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model_name = 'sknet50'   # 'resnet50_cbam'  # 'eca_resnext50'     # 'SENet_resnet50'
-    data_dir = '/media/user/Disk1/caoxu/dataset/kidney/20231220-classify-dataset-fusion/'
-    # 'D:/med_dataset/kidney/20231220-classify-dataset-fusion/'
+    model_name = 'resnext50'
+    data_dir = '/media/user/Disk1/caoxu/dataset/kidney/20231220-classify-dataset/'
+    # 'D:/med_dataset/kidney/20231220-classify-dataset/'
     category_num = 2
     bs = 128
     lr = 0.01
     num_epochs = 500
-    data = 'classification-model/20231220-dataset-sknet50-20231228-classify-'
+    data = 'classification-model/20231220-dataset-BalanceDataSampler-20231229-classify-'
     save_path = data + str(category_num) + 'class-' + model_name + '-bs' + str(bs) + '-lr' + str(lr) + '/'
     pt_dir = 'classification_model/' + save_path
     if not os.path.exists(pt_dir):
