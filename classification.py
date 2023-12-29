@@ -179,16 +179,16 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
 
 
 def classification():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "0"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "1"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model_name = 'resnext50'
-    data_dir = '/media/user/Disk1/caoxu/dataset/kidney/20231220-classify-dataset/'
+    data_dir = '/media/user/Disk1/caoxu/dataset/kidney/20231228-zhongshan-classify-5fold/'
     # 'D:/med_dataset/kidney/20231220-classify-dataset/'
     category_num = 2
     bs = 128
     lr = 0.01
     num_epochs = 500
-    data = 'classification-model/20231220-dataset-BalanceDataSampler-20231229-classify-'
+    data = 'classification-model/20231228-dataset-BalanceDataSampler-20231229-classify-'
     save_path = data + str(category_num) + 'class-' + model_name + '-bs' + str(bs) + '-lr' + str(lr) + '/'
     pt_dir = 'classification_model/' + save_path
     if not os.path.exists(pt_dir):
