@@ -172,7 +172,7 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
 
 
 def segment():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "2"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "0"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     data_dir = '/media/user/Disk1/caoxu/dataset/kidney/20231228-segment-mass-5fold/'
     """
@@ -201,7 +201,7 @@ def segment():
     bs = 6
     lr = 1e-4
     epochs = 5000
-    save_dir = "mass-segment/20231228-dataset-mass-segment-" + encoder_name + '/'
+    save_dir = "mass-segment/20231228-dataset-mass-segment-20240102-" + encoder_name + '/'
     train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device)
 
 
