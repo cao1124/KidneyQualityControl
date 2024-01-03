@@ -31,8 +31,8 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
         valid_path = [data_dir + fold_list[i]]
         fold_list.remove(fold_list[i])
         if i == 4:
-            test_path = [data_dir + fold_list[0]]
-            fold_list.remove(fold_list[0])
+            test_path = [data_dir + fold_list[-1]]
+            fold_list.remove(fold_list[-1])
         else:
             test_path = [data_dir + fold_list[i]]
             fold_list.remove(fold_list[i])

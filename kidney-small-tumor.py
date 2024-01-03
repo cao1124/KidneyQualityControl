@@ -17,19 +17,21 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         os.makedirs(save_dir1, exist_ok=True)
         print('五折交叉验证 第{}次实验:'.format(i))
         fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/']
-        valid_path = [data_dir + fold_list[i],
-                      data_dir + fold_list[i + 1]]
-        valid_mask = [data_dir.replace('image', 'mask') + fold_list[i],
-                      data_dir.replace('image', 'mask') + fold_list[i + 1]]
+        valid_path = [os.path.join(data_dir, fold_list[i])]
+        valid_mask = [os.path.join(data_dir.replace('image', 'renal_mass'), fold_list[i])]
         fold_list.remove(fold_list[i])
-        fold_list.remove(fold_list[i + 1])
-        test_path = [data_dir + fold_list[i]]
-        test_mask = [data_dir.replace('image', 'mask') + fold_list[i]]
-        fold_list.remove(fold_list[i])
+        if i == 4:
+            test_path = [os.path.join(data_dir, fold_list[0])]
+            test_mask = [os.path.join(data_dir.replace('image', 'renal_mass'), fold_list[0])]
+            fold_list.remove(fold_list[0])
+        else:
+            test_path = [os.path.join(data_dir, fold_list[i])]
+            test_mask = [os.path.join(data_dir.replace('image', 'renal_mass'), fold_list[i])]
+            fold_list.remove(fold_list[i])
         train_path, train_mask = [], []
         for x in range(len(fold_list)):
-            train_path.append(data_dir + fold_list[x])
-            train_mask.append(data_dir.replace('image', 'mask') + fold_list[x])
+            train_path.append(os.path.join(data_dir, fold_list[x]))
+            train_mask.append(os.path.join(data_dir.replace('image', 'renal_mass'), fold_list[x]))
 
         train_dataset = KidneyMassDataset(train_path, train_mask, augmentation=training_augmentation())
         valid_dataset = KidneyMassDataset(valid_path, valid_mask, augmentation=valid_augmentation())
