@@ -203,7 +203,7 @@ def segment():
     bs = 6
     lr = 1e-4
     epochs = 5000
-    save_dir = "mass-segment/20231228-dataset-mass-segment-20240102-" + encoder_name + '/'
+    save_dir = "mass-segment/20231228-dataset-mass-segment-20240104-" + encoder_name + '/'
     train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device)
 
 

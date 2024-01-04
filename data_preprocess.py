@@ -199,10 +199,10 @@ def mead_split_patient():
 
     # 设置５折实验
 
-    org_path = 'D:/med_dataset/kidney/20231228-zhongshan/'
-    out_path = 'D:/med_dataset/kidney/20231228-zhongshan-5fold/'
+    org_path = 'D:/med_dataset/heart/'
+    out_path = 'D:/med_dataset/heart-5fold/'
 
-    for cla in ['0', '1']:  # ['benign', 'malignant']
+    for cla in ['0']:  # ['benign', 'malignant']
         in_path = os.path.join(org_path, cla)
         img_list = []
         patient_list = []
@@ -356,8 +356,8 @@ if __name__ == '__main__':
     # dataset_count()
     # kfold_split()
     # img2video()
-    # mead_split_patient()
-    get_mask_by_json()
+    mead_split_patient()
+    # get_mask_by_json()
     # dataset_augment()
     # image_json_compare()
 
