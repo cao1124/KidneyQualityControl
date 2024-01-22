@@ -146,10 +146,12 @@ class RenalMassDataset(BaseDataset):
             multi_scale=False,
     ):
         self.images, self.masks = [], []
-        for i in range(len(images_dir)):
-            for img_name in [x for x in os.listdir(images_dir[i]) if not x.endswith('.json')]:
-                self.images.append(os.path.join(base_dir, img_name))
-                self.masks.append(os.path.join(base_dir.replace('classify', 'segment'), img_name))
+        for f in images_dir:
+            for c in os.listdir(os.path.join(base_dir, f)):
+                for p in os.listdir(os.path.join(base_dir, f, c)):
+                    for img_name in [x for x in os.listdir(os.path.join(base_dir, f, c, p)) if not x.endswith('.json')]:
+                        self.images.append(os.path.join(base_dir, f, c, p, img_name))
+                        self.masks.append(os.path.join(base_dir.replace('classify', 'segment'), f, c, img_name))
         self.augmentation = augmentation
         self.preprocessing = preprocessing
         self.multi_scale = multi_scale

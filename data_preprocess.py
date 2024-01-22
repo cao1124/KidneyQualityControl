@@ -252,7 +252,10 @@ def get_mask_by_json():
                 os.makedirs(os.path.join(segment_mask, f, c, p), exist_ok=True)
                 img_json_list = [x for x in os.listdir(os.path.join(base_dir, f, c, p)) if x.endswith('.json')]
                 for img_json in img_json_list:
-                    img = cv_read(os.path.join(base_dir, f, c, p, img_json.replace('.json', '.jpg')))
+                    if os.path.exists(os.path.join(base_dir, f, c, p, img_json.replace('.json', '.jpg'))):
+                        img = cv_read(os.path.join(base_dir, f, c, p, img_json.replace('.json', '.jpg')))
+                    else:
+                        img = cv_read(os.path.join(base_dir, f, c, p, img_json.replace('.json', '.JPG')))
                     'mass'
                     seg_img = np.zeros((img.shape[0], img.shape[1], 1), dtype=np.uint8)
 
@@ -267,7 +270,11 @@ def get_mask_by_json():
                             points = np.array(json_data['shapes'][i]['points'], np.int32)
                             cv2.fillConvexPoly(seg_img, points, 255)
                     'mass'
-                    cv_write(os.path.join(segment_mask, f, c, p, img_json.replace('.json', '.jpg')), seg_img)
+                    if os.path.exists(os.path.join(base_dir, f, c, p, img_json.replace('.json', '.jpg'))):
+                        cv_write(os.path.join(segment_mask, f, c, p, img_json.replace('.json', '.jpg')), seg_img)
+                    else:
+                        cv_write(os.path.join(segment_mask, f, c, p, img_json.replace('.json', '.JPG')), seg_img)
+
 
 
 def dataset_augment():
