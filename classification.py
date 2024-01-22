@@ -60,7 +60,7 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
         test_loader = DataLoader(test_dataset, bs, shuffle=False, num_workers=4)
         'model, optimizer, scheduler, warmup, loss_function '
         model, optimizer, scheduler, warmup, loss_func = prepare_model(category_num, model_name, lr, num_epochs, device,
-                                                                       class_weights)
+                                                                       weights=torch.tensor(class_weights))
         'EarlyStopping'
         early_stopping = EarlyStopping(pt_dir, patience=100)
         best_test_acc, best_valid_acc, best_valid_recall, best_epoch = 0.0, 0.0, 0.0, 0
