@@ -228,7 +228,8 @@ class KidneyMassDataset(BaseDataset):
         target_height = 512
         if image.shape[:2] != [target_height, target_width]:
             image = cv2.resize(image, (target_width, target_height), interpolation=cv2.INTER_NEAREST)
-            mask = cv2.resize(mask, (target_width, target_height), interpolation=cv2.INTER_NEAREST)
+            # mask = cv2.resize(mask, (target_width, target_height), interpolation=cv2.INTER_NEAREST)
+            mask = np.resize()
             _, mask = cv2.threshold(mask, 1, 255, cv2.THRESH_BINARY)
 
         # apply augmentations
@@ -242,7 +243,7 @@ class KidneyMassDataset(BaseDataset):
             image, mask = sample['image'], sample['mask']
         image = image / 255.0
         mask[mask == 128] = 1
-        mask[mask == 255] = 1
+        mask[mask == 255] = 2
 
         image = image.transpose(2, 0, 1).astype('float32')
         mask = mask.transpose(2, 0, 1).astype('float32')

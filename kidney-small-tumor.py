@@ -1,5 +1,7 @@
 import collections
 import os
+from enum import Enum
+
 import cv2
 import torch
 import numpy as np
@@ -11,9 +13,9 @@ from segment_util import KidneyMassDataset, training_augmentation, valid_augment
     add_weighted_multi, combine_image, get_iou, get_f1
 
 
-def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device):
+def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device, target_list):
     for i in range(5):
-        save_dir1 = save_dir + "fold" + str(i) + '/'
+        save_dir1 = os.path.join(save_dir, "fold" + str(i))
         os.makedirs(save_dir1, exist_ok=True)
         print('五折交叉验证 第{}次实验:'.format(i))
         fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/']
@@ -194,15 +196,19 @@ def segment():
     os.environ['CUDA_VISIBLE_DEVICES'] = "0"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     data_dir = '/media/user/Disk1/caoxu/dataset/kidney/20231204-segment-dataset/image-5fold/'
-    encoder_name = "efficientnet-b7"  # "efficientnet-b7"  'resnext50_32x4d'
-    encoder_activation = "softmax2d"  # could be None for logits or 'softmax2d' for multiclass segmentation
-    # encoder_weights = "imagenet"
-    # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
+    encoder_name = "efficientnet-b7"
+    encoder_activation = "softmax2d"
+    target_list = [x.name for x in RenalMass]
     bs = 6
     lr = 1e-4
     epochs = 10000
     save_dir = "kidney-mass-segment/20231205-unet-segment-" + encoder_name + '/'
-    train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device)
+    train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device, target_list)
+
+
+class RenalMass(Enum):
+    renal = 1
+    mass = 2
 
 
 if __name__ == '__main__':

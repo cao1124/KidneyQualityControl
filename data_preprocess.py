@@ -173,22 +173,24 @@ def kfold_split():
 
 
 def img2video():
-    fps = 12
-    img_dir = 'D:/PycharmProjects/us_reconstruction/video_to_image/kidney/'
-    img_list = os.listdir(img_dir)
+    fps = 2
+    img_dir = r'D:\med_project\中山医院-肾脏\20231228-dataset-mass-segment\good'
+    img_list = [x for x in os.listdir(img_dir) if x.lower().endswith('.jpg')]
     # img_key = lambda i: int(i.split('.')[-1])  # .split('frame')[1]
     # img_list = sorted(os.listdir(img_dir), key=img_key)
-    img1 = cv2.imread(os.path.join(img_dir, img_list[0]))
+    img1 = cv_read(os.path.join(img_dir, img_list[0]))
     img_size = (img1.shape[1], img1.shape[0])
-    video_dir = 'D:/PycharmProjects/us_reconstruction/video_to_image/'
+    video_dir = r'D:\med_project\中山医院-肾脏\20231228-dataset-mass-segment'
     os.makedirs(video_dir, exist_ok=True)
-    video = cv2.VideoWriter(video_dir + 'kidney_ultrasound.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), fps,
-                            img_size)
+    # MJPG --> .avi   mp4v -->.mp4
+    video = cv2.VideoWriter(os.path.join(video_dir, 'renal-mass-segment.avi'),
+                            cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), fps, img_size)
     for i in range(0, len(img_list) - 1):
-        img = cv2.imread(os.path.join(img_dir, img_list[i]))
+        img = cv_read(os.path.join(img_dir, img_list[i]))
+        if (img.shape[1], img.shape[0]) != img_size:
+            img = cv2.resize(img, img_size)
         video.write(img)
     video.release()
-    cv2.destroyAllWindows()
 
 
 def mead_split_patient():
@@ -199,10 +201,10 @@ def mead_split_patient():
 
     # 设置５折实验
 
-    org_path = 'D:/med_dataset/heart/'
-    out_path = 'D:/med_dataset/heart-5fold/'
+    org_path = 'D:/med_project/上海十院肾囊肿疾病/肾囊性病变/'
+    out_path = 'D:/med_dataset/kidney/240122-renal-cystic-classify-5fold/'
 
-    for cla in ['0']:  # ['benign', 'malignant']
+    for cla in ['恶性', '良性']:
         in_path = os.path.join(org_path, cla)
         img_list = []
         patient_list = []
@@ -242,64 +244,30 @@ def cv_write(file_path, file):
 
 
 def get_mask_by_json():
-    base_dir = 'D:/med_dataset/kidney/20231228-zhongshan-classify-json-5fold/'
-    # segment_mask_img = r'D:\med dataset\kidney\20231220-segment-dataset\mask-5fold'
-    # renal_mask_path = r'D:\med dataset\kidney\20231220-segment-dataset\renal-5fold'
-    mass_mask_path = 'D:/med_dataset/kidney/20231228-segment-mass-5fold/'
+    base_dir = 'D:/med_dataset/kidney/240122-renal-cystic-classify-5fold/'
+    segment_mask = 'D:/med_dataset/kidney/240122-renal-cystic-segment-5fold/'
     for f in os.listdir(base_dir):
         for c in os.listdir(os.path.join(base_dir, f)):
             for p in os.listdir(os.path.join(base_dir, f, c)):
-                # os.makedirs(os.path.join(segment_mask_img, f, c, p), exist_ok=True)
-                # os.makedirs(os.path.join(renal_mask_path, f, c, p), exist_ok=True)
-                os.makedirs(os.path.join(mass_mask_path, f, c, p), exist_ok=True)
+                os.makedirs(os.path.join(segment_mask, f, c, p), exist_ok=True)
                 img_json_list = [x for x in os.listdir(os.path.join(base_dir, f, c, p)) if x.endswith('.json')]
                 for img_json in img_json_list:
-                    if os.path.exists(os.path.join(base_dir, f, c, p, img_json.replace('.json', '.jpg'))):
-                        img = cv_read(os.path.join(base_dir, f, c, p, img_json.replace('.json', '.jpg')))
-                    else:
-                        img = cv_read(os.path.join(base_dir, f, c, p, img_json.replace('.json', '.JPG')))
+                    img = cv_read(os.path.join(base_dir, f, c, p, img_json.replace('.json', '.jpg')))
                     'mass'
-                    mass_img = np.zeros((img.shape[0], img.shape[1], 1), dtype=np.uint8)
-                    'renal'
-                    # renal_img = np.zeros((img.shape[0], img.shape[1], 1), dtype=np.uint8)
-                    'renal+mass 2通道'
-                    # mask_img = np.zeros((img.shape[0], img.shape[1], 2), dtype=np.uint8)
-                    # renal_img, mass_img = cv2.split(mask_img)  # 拆分为 BGR 独立通道
-                    'renal+mass 3通道'
-                    # mask_img = np.zeros(img.shape, dtype=np.uint8)
-                    # renal_img, mass_img, _ = cv2.split(mask_img)  # 拆分为 BGR 独立通道
+                    seg_img = np.zeros((img.shape[0], img.shape[1], 1), dtype=np.uint8)
 
                     with open(os.path.join(base_dir, f, c, p, img_json), 'r', encoding='utf-8') as fp:
                         json_data = json.load(fp)
-                    # for i in range(len(json_data['shapes'])):
-                    #     if json_data['shapes'][i]['label'].lower() in ['renal', 'kidney']:
-                    #         points = np.array(json_data['shapes'][i]['points'], np.int32)
-                    #         cv2.fillConvexPoly(renal_img, points, 128)
-                    # for i in range(len(json_data['shapes'])):
-                    #     if json_data['shapes'][i]['label'] == 'Reference':
-                    #         points = np.array(json_data['shapes'][i]['points'], np.int32)
-                    #         cv2.fillConvexPoly(gImg, points, 64)
                     for i in range(len(json_data['shapes'])):
-                        if json_data['shapes'][i]['label'].lower() in ['mass', 'tumor']:
+                        if json_data['shapes'][i]['label'] == '肾脏':
                             points = np.array(json_data['shapes'][i]['points'], np.int32)
-                            cv2.fillConvexPoly(mass_img, points, 255)
-                            # cv2.fillConvexPoly(img, points, (255, 255, 255))
-                    # else:
-                    #     print('error label in:', f, '-', p, '-', img_json)
+                            cv2.fillConvexPoly(seg_img, points, 128)
+                    for i in range(len(json_data['shapes'])):
+                        if json_data['shapes'][i]['label'] in ['良性', '恶性']:
+                            points = np.array(json_data['shapes'][i]['points'], np.int32)
+                            cv2.fillConvexPoly(seg_img, points, 255)
                     'mass'
-                    cv_write(os.path.join(mass_mask_path, f, c, p, img_json.replace('.json', '.jpg')), mass_img)
-                    'renal'
-                    # cv_write(os.path.join(renal_mask_path, f, c, p, img_json.replace('.json', '.jpg')), renal_img)
-                    'renal+mass 2通道'
-                    # imgMerge = cv2.merge([renal_img, mass_img])
-                    # np.save(os.path.join(segment_mask_img, f, c, p, img_json.replace('.json', '.npy')), imgMerge)
-                    # cv_write(os.path.join(segment_mask_img, f, c, p, img_json.replace('.json', '.jpg')),
-                    #          cv2.merge([renal_img, mass_img, np.zeros(mass_img.shape).astype(np.uint8)]))
-                    'renal+mass 3通道'
-                    # imgMerge = cv2.merge([renal_img, mass_img, _])
-                    # cv_write(os.path.join(renal_mask_path, f, img_json.replace('.json', '.jpg')), renal_img)
-                    # cv_write(os.path.join(mass_mask_path, f, img_json.replace('.json', '.jpg')), mass_img)
-                    # cv_write(os.path.join(renal_mass_mask_path, f, img_json.replace('.json', '.jpg')), imgMerge)
+                    cv_write(os.path.join(segment_mask, f, c, p, img_json.replace('.json', '.jpg')), seg_img)
 
 
 def dataset_augment():
@@ -356,8 +324,8 @@ if __name__ == '__main__':
     # dataset_count()
     # kfold_split()
     # img2video()
-    mead_split_patient()
-    # get_mask_by_json()
+    # mead_split_patient()
+    get_mask_by_json()
     # dataset_augment()
     # image_json_compare()
 
@@ -372,9 +340,15 @@ if __name__ == '__main__':
     # imgMerge = cv2.merge([renal_img, reference_img, mass_img])
     # cv2.imwrite('test.png', imgMerge)
 
-    # base_dir = 'D:\med dataset\kidney\zhongshan-kidney-json-20231204'
+    # base_dir = r'D:\med_project\上海十院肾囊肿疾病\肾囊性病变'
     # for c in os.listdir(base_dir):
     #     for p in os.listdir(os.path.join(base_dir, c)):
-    #         imgs = os.listdir(os.path.join(base_dir, c, p))
-    #         if (len(imgs) % 2) != 0:
+    #         files = os.listdir(os.path.join(base_dir, c, p))
+    #         # if (len(files) % 2) != 0:
+    #         #     print(c, p)
+    #         json_list = [x for x in os.listdir(os.path.join(base_dir, c, p)) if x.endswith('.json')]
+    #         img_list = [x for x in os.listdir(os.path.join(base_dir, c, p)) if not x.endswith('.json')]
+    #         if len(img_list) + len(json_list) != len(files):
+    #             print(c, p)
+    #         if len(img_list) != len(json_list):
     #             print(c, p)

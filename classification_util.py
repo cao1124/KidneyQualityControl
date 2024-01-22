@@ -96,38 +96,30 @@ def augment_compose(prob):
 class ClassificationDataset(Dataset):
     def __init__(self,
                  img_path,
-                 category_num,
-                 train=False,
-                 test=False,
                  transforms=None):
 
         self.img_path = img_path
-        self.train = train
         self.transforms = transforms
         self.albu_transforms = augment_compose(0.5)
-        self.test = test
 
         self.img_name = []
         self.labels = []
-        if self.train:
-            for img_fold in self.img_path:
-                for cla in os.listdir(img_fold):
-                    for p in os.listdir(os.path.join(img_fold, cla)):
-                        for img_name in os.listdir(os.path.join(img_fold, cla, p)):
-                            self.img_name.append(os.path.join(img_fold, cla, p, img_name))
-                            self.labels.append(int(cla))
+        for img_fold in self.img_path:
+            for cla in os.listdir(img_fold):
+                for p in os.listdir(os.path.join(img_fold, cla)):
+                    # for img_name in os.listdir(os.path.join(img_fold, cla, p)):
+                    for img_name in [x for x in os.listdir(os.path.join(img_fold, cla, p)) if not x.endswith('.json')]:
+                        self.img_name.append(os.path.join(img_fold, cla, p, img_name))
+                        # self.labels.append(int(cla))
+                        if cla == '良性':
+                            self.labels.append(0)
+                        else:
+                            self.labels.append(1)
         self.length = len(self.labels)
 
     def __getitem__(self, index):
         # print(self.labels[index])
         img = Image.open(self.img_name[index]).convert('RGB')
-        if self.transforms is not None:
-            try:
-                img = self.transforms(img)
-            except:
-                print("Cannot transform image: {}".format(
-                    self.img_name[index]))
-        return (img, self.labels[index], self.img_name[index])
 
         # if self.albu_transforms is not None:
         #     try:
@@ -135,6 +127,14 @@ class ClassificationDataset(Dataset):
         #     except Exception as e:
         #         print("Cannot transform image: {}".format(self.img_name[index]), ': for error in ', e)
         # return image_transforms['valid'](img['image']), self.labels[index], self.img_name[index]
+
+        if self.transforms is not None:
+            try:
+                img = self.transforms(img)
+            except:
+                print("Cannot transform image: {}".format(
+                    self.img_name[index]))
+        return img, self.labels[index], self.img_name[index]
 
     def __len__(self):
         return self.length

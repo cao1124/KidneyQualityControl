@@ -28,27 +28,28 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
     for i in range(5):
         print('五折交叉验证 第{}次实验:'.format(i))
         fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/']
-        valid_path = [data_dir + fold_list[i]]
+        valid_path = [os.path.join(data_dir, fold_list[i])]
         fold_list.remove(fold_list[i])
         if i == 4:
-            test_path = [data_dir + fold_list[-1]]
-            fold_list.remove(fold_list[-1])
+            test_path = [os.path.join(data_dir, fold_list[0])]
+            fold_list.remove(fold_list[0])
         else:
-            test_path = [data_dir + fold_list[i]]
+            test_path = [os.path.join(data_dir, fold_list[i])]
             fold_list.remove(fold_list[i])
-        train_path = [data_dir + fold_list[0], data_dir + fold_list[1], data_dir + fold_list[2]]
+        train_path = []
+        for x in range(len(fold_list)):
+            train_path.append(os.path.join(data_dir, fold_list[x]))
 
-        train_dataset = ClassificationDataset(img_path=train_path, category_num=category_num, train=True,
-                                              transforms=image_transforms['train'])
-        valid_dataset = ClassificationDataset(img_path=valid_path, category_num=category_num, train=True,
-                                              transforms=image_transforms['valid'])
-        test_dataset = ClassificationDataset(img_path=test_path, category_num=category_num, train=True,
-                                             transforms=image_transforms['valid'])
+        train_dataset = ClassificationDataset(img_path=train_path, transforms=image_transforms['train'])
+        valid_dataset = ClassificationDataset(img_path=valid_path, transforms=image_transforms['valid'])
+        test_dataset = ClassificationDataset(img_path=test_path, transforms=image_transforms['valid'])
         train_size, valid_size, test_size = train_dataset.length, valid_dataset.length, test_dataset.length
         print('train_size:{}, valid_size:{}, test_size:{}'.format(train_size, valid_size, test_size))
         'class weight'
         label_count = Counter(train_dataset.labels)
-        class_weights = torch.tensor([1 / label_count.get(0), 1 / label_count.get(1)])
+        class_weights = []
+        for cla in label_count:
+            class_weights.append(1/label_count.get(cla))
         'dataloader'
         # 创建WeightedRandomSampler
         # train_sampler = WeightedRandomSampler(weights=class_weights, num_samples=train_size, replacement=True)
@@ -61,7 +62,7 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
         model, optimizer, scheduler, warmup, loss_func = prepare_model(category_num, model_name, lr, num_epochs, device,
                                                                        class_weights)
         'EarlyStopping'
-        early_stopping = EarlyStopping(pt_dir, patience=200)
+        early_stopping = EarlyStopping(pt_dir, patience=100)
         best_test_acc, best_valid_acc, best_valid_recall, best_epoch = 0.0, 0.0, 0.0, 0
         history = []
         error_sample = []
@@ -103,9 +104,6 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
                     labels = batch[1].to(device)
 
                     outputs = model(inputs)
-                    # for r in range(len(torch.eq(outputs.argmax(dim=1), labels))):
-                    #     if torch.eq(outputs.argmax(dim=1), labels)[r].item() is False:
-                    #         error_sample.append(img_name[r] + ',' + str(labels[r].item()))
                     loss_step = loss_func(outputs, labels)
                     valid_loss += loss_step.item()
                     num_correct += torch.eq(outputs.argmax(dim=1), labels).sum().float().item()
