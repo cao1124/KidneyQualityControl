@@ -180,11 +180,13 @@ class RenalMassDataset(BaseDataset):
         image = image / 255.0
 
         mask = mask[np.newaxis, :, :]
+        mask[mask == 128] = 1
+        mask[mask == 255] = 2
         label_true = torch.LongTensor(mask)
         try:
             one_hot = torch.zeros(self.num_classes, mask.shape[1], mask.shape[2]).scatter_(0, label_true, 1)
-        except:
-            print(self.images[i])
+        except Exception as e:
+            print(self.images[i], e)
         image = image.transpose(2, 0, 1).astype('float32')
         return image, one_hot
 
