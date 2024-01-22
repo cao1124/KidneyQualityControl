@@ -15,7 +15,7 @@ from KidneySmallTumor import train as segment_train
 
 
 def classify():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "0"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "4"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model_name = 'resnext50'
     data_dir = '/media/user/Disk1/caoxu/dataset/kidney/240122-renal-cystic-classify-5fold/'
