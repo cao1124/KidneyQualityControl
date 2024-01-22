@@ -1,4 +1,5 @@
 import collections
+import copy
 import os
 from enum import Enum
 
@@ -9,8 +10,9 @@ from torch.utils.data import DataLoader
 import segmentation_models_pytorch as smp
 
 from data_preprocess import cv_read, cv_write
-from segment_util import KidneyMassDataset, training_augmentation, valid_augmentation, save_seg_history, \
-    add_weighted_multi, combine_image, get_iou, get_f1
+from multi_class_loss import MulticlassDiceLoss
+from segment_util import RenalMassDataset, training_augmentation, valid_augmentation, save_seg_history, \
+    add_weighted_multi, combine_image, get_iou, get_f1, add_weighted
 
 
 def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device, target_list):
@@ -19,43 +21,36 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         os.makedirs(save_dir1, exist_ok=True)
         print('五折交叉验证 第{}次实验:'.format(i))
         fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/']
-        valid_path = [os.path.join(data_dir, fold_list[i])]
-        valid_mask = [os.path.join(data_dir.replace('image', 'renal_mass'), fold_list[i])]
+        valid_path = [fold_list[i]]
         fold_list.remove(fold_list[i])
         if i == 4:
-            test_path = [os.path.join(data_dir, fold_list[0])]
-            test_mask = [os.path.join(data_dir.replace('image', 'renal_mass'), fold_list[0])]
+            test_path = [fold_list[0]]
             fold_list.remove(fold_list[0])
         else:
-            test_path = [os.path.join(data_dir, fold_list[i])]
-            test_mask = [os.path.join(data_dir.replace('image', 'renal_mass'), fold_list[i])]
+            test_path = [fold_list[i]]
             fold_list.remove(fold_list[i])
-        train_path, train_mask = [], []
+        train_path = []
         for x in range(len(fold_list)):
-            train_path.append(os.path.join(data_dir, fold_list[x]))
-            train_mask.append(os.path.join(data_dir.replace('image', 'renal_mass'), fold_list[x]))
+            train_path.append(fold_list[x])
 
-        train_dataset = KidneyMassDataset(train_path, train_mask, augmentation=training_augmentation())
-        valid_dataset = KidneyMassDataset(valid_path, valid_mask, augmentation=valid_augmentation())
-        test_dataset = KidneyMassDataset(test_path, test_mask, augmentation=valid_augmentation())
+        train_dataset = RenalMassDataset(data_dir, train_path, len(target_list) + 1, augmentation=training_augmentation())
+        valid_dataset = RenalMassDataset(data_dir, valid_path, len(target_list) + 1, augmentation=valid_augmentation())
+        test_dataset = RenalMassDataset(data_dir, test_path, len(target_list) + 1, augmentation=valid_augmentation())
         print('train size:{}, valid:{}, test:{}'.format(len(train_dataset), len(valid_dataset), len(test_dataset)))
         train_loader = DataLoader(train_dataset, batch_size=bs, shuffle=True, num_workers=4, pin_memory=True)
         valid_loader = DataLoader(valid_dataset, batch_size=bs, shuffle=False, num_workers=4)
 
         # build model
         model = smp.Unet(encoder_name=encoder_name,
-                         classes=2,
+                         classes=len(target_list) + 1,
                          activation=encoder_activation,
                          in_channels=3,
                          encoder_weights="imagenet")
-        # print(model)
-        loss_fn = smp.utils.losses.DiceLoss() + smp.utils.losses.BCELoss()
-        # for image segmentation dice loss could be the best first choice
-        # loss_fn = smp.losses.DiceLoss(smp.losses.BINARY_MODE, from_logits=True)
+        loss_fn = MulticlassDiceLoss()
 
         metrics = [
-            smp.utils.metrics.IoU(threshold=0.5),
-            smp.utils.metrics.Fscore()
+            smp.utils.metrics.IoU(threshold=0.5, ignore_channels=[0]),
+            smp.utils.metrics.Fscore(ignore_channels=[0])
         ]
 
         optimizer = torch.optim.Adam([
@@ -121,75 +116,66 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
                 print('Decrease decoder learning rate. lr:', optimizer.param_groups[0]['lr'])
 
         'test'
-        # colors = [("renal", [255, 0, 255]), ("mass", [128, 0, 255]), ("reference", [255, 0, 128])]
-        # colors_mask = [("renal", [64, 64, 64]), ("mass", [128, 128, 128]), ("reference", [160, 160, 160])]
+        color_list = ['BG', 'GR']
         iou_list, dice_list = [], []
         renal_iou_list, renal_dice_list = [], []
         mass_iou_list, mass_dice_list = [], []
-        print('load model name:', [x for x in os.listdir(save_dir1) if x.endswith('.pth')][-1])
-        model = torch.load(save_dir1 + [x for x in os.listdir(save_dir1) if x.endswith('.pth')][-1])
-        # model = torch.load('C:/Users/user/Desktop/0731-segment-efficientnet-b7/fold0/best_0.6564.pth')
         model.eval()
         torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
         with torch.no_grad():
             for k in range(len(test_dataset)):
+                img_iou, img_dice = [], []
                 image, gt_mask2 = test_dataset[k]
-                gt_mask2 = gt_mask2.squeeze().astype(np.uint8)
-                mask_ori = np.load(os.path.join(test_dataset.masks[k]))
-                # mask_ori = cv_read(os.path.join(test_dataset.masks[k]))
-                [orig_h, orig_w, orig_c] = mask_ori.shape
+                gt_mask = cv_read(os.path.join(data_dir.replace('classify', 'segment'),
+                                               test_dataset.images[k].split('/')[-1]))
+                image_ori = cv_read(test_dataset.images[k], 1)
+                [orig_h, orig_w, _] = image_ori.shape
+
                 x_tensor = torch.from_numpy(image).to(device).unsqueeze(0)
-                pred_mask2 = model(x_tensor)
-                pred_mask2 = (pred_mask2.squeeze().cpu().numpy().round().astype(np.uint8))
-                pred_mask2[pred_mask2 < 0.5] = 0
-                pred_mask2[pred_mask2 >= 0.5] = 1
-                pred_draw = np.zeros([orig_h, orig_w, 3]).astype(np.uint8)
-                gt_draw = np.zeros([orig_h, orig_w, 3]).astype(np.uint8)
-                for c in range(orig_c):
-                    gt_mask = gt_mask2[c]
-                    pred_mask = pred_mask2[c]
+                img_pred = copy.deepcopy(image_ori)
+                img_gt = copy.deepcopy(image_ori)
+                with torch.no_grad():
+                    pr_mask = model(x_tensor).squeeze(0).cpu().numpy()
+                for c in range(1, len(target_list) + 1):
+                    mask_gt = copy.deepcopy(gt_mask)
+                    mask_gt[mask_gt != c] = 0
+                    mask_gt[mask_gt == c] = 255
 
-                    if np.sum(mask_ori) == 0 and np.sum(pred_mask) == 0:
-                        iou = 1
-                        dice = 1
-                    else:
-                        iou = get_iou(gt_mask, pred_mask)
-                        dice = get_f1(gt_mask, pred_mask)
-
-                    if c == 0:
-                        name = 'renal'
-                        renal_iou_list.append(np.round(iou, 4))
-                        renal_dice_list.append(np.round(dice, 4))
-                    elif c == 1:
-                        name = 'mass'
-                        mass_iou_list.append(np.round(iou, 4))
-                        mass_dice_list.append(np.round(dice, 4))
-                    print(test_dataset.images[k], "\t", name, ":dice:", dice, "\tiou:", iou)
-
-                    if pred_mask.shape != mask_ori.shape:
+                    pred_mask = pr_mask[c]
+                    pred_mask[pred_mask < 0.5] = 0
+                    pred_mask[pred_mask >= 0.5] = 255
+                    if pred_mask.shape != image_ori.shape:
                         pred_mask = cv2.resize(pred_mask, (orig_w, orig_h), cv2.INTER_NEAREST)
-                        gt_mask = cv2.resize(gt_mask, (orig_w, orig_h), cv2.INTER_NEAREST)
-                        pred_draw[:, :, c] = pred_mask
-                        gt_draw[:, :, c] = gt_mask
-                save_full_path = save_dir1 + os.path.split(test_dataset.images[k])[0].split('/')[-1] + '/' + \
-                                 os.path.split(test_dataset.images[k])[1]
-                print(save_full_path)
-                os.makedirs(os.path.split(save_full_path)[0], exist_ok=True)
-                # cv2.imwrite(save_full_path, pred_mask)
+                        _, pred_mask = cv2.threshold(pred_mask, 1, 255, cv2.THRESH_BINARY)
+                    img_pred = add_weighted(img_pred, pred_mask.astype('uint8'), color_list[c - 1])
 
-                img = cv_read(test_dataset.images[k], cv2.IMREAD_COLOR)
-                img_gt = add_weighted_multi(img, gt_draw, 'BGR')
-                img_pred = add_weighted_multi(img, pred_draw, 'BGR')
-                img_gt_pred = combine_image(img_gt, img_pred)
-                cv_write(save_full_path, img_gt_pred)
+                    # if np.sum(mask_gt) == 0 and np.sum(pred_mask) == 0:
+                    #     iou = 1
+                    #     dice = 1
+                    # else:
+                    #     iou = np.round(get_iou(mask_gt, pred_mask), 4)
+                    #     dice = np.round(get_f1(mask_gt, pred_mask), 4)
+                    if np.sum(mask_gt) != 0 or np.sum(pred_mask) != 0:
+                        iou = np.round(get_iou(gt_mask, pred_mask), 4)
+                        dice = np.round(get_f1(gt_mask, pred_mask), 4)
+                        iou_list.append(iou)
+                        dice_list.append(dice)
+                        img_iou.append(iou)
+                        img_dice.append(dice)
+                        if c == 1:
+                            renal_iou_list.append(iou)
+                            renal_dice_list.append(dice)
+                        elif c == 2:
+                            mass_iou_list.append(iou)
+                            mass_dice_list.append(dice)
+                    img_gt = add_weighted(img_gt, mask_gt.astype('uint8'), color_list[c - 1])
+                save_full_path = os.path.join(save_dir1, str(np.average(img_iou)) + "-" + test_dataset.images[k].split('/')[-1])
+                img_cat = np.concatenate((img_gt, img_pred), axis=1)
+                cv_write(save_full_path, img_cat)
 
-        print("\tRenal Mean Dice:", np.average(renal_dice_list))
-        print("\tRenal Mean IoU:", np.average(renal_iou_list))
-        print("\tMass Mean Dice:", np.average(mass_dice_list))
-        print("\tMass Mean IoU:", np.average(mass_iou_list))
-        # hist, bins = np.histogram(dice_list, bins=np.arange(0.0, 1.05, 0.1))
-        # print(hist)
-        # print(hist / len(test_dataset))
+        print("\tRenal Mean Dice: ", np.average(renal_dice_list), "Renal Mean IoU:", np.average(renal_iou_list))
+        print("\tMass Mean Dice: ", np.average(mass_dice_list), "Mass Mean IoU:", np.average(mass_iou_list))
+        print("\tAll Mean Dice: ", np.average(mass_dice_list), "All Mean IoU:", np.average(mass_iou_list))
 
 
 def segment():

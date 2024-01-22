@@ -11,6 +11,7 @@ from enum import Enum
 
 import torch
 from classification import train as classify_train
+from KidneySmallTumor import train as segment_train
 
 
 def classify():
@@ -44,7 +45,7 @@ def segment():
     lr = 1e-4
     epochs = 5000
     save_dir = "RenalCysticDiseaseModel/segment/240122-renal-cystic-segment-" + encoder_name + '/'
-    train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device)
+    segment_train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device)
 
 
 class RenalCystic(Enum):
