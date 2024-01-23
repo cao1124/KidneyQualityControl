@@ -80,7 +80,7 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         max_score = -1
         max_dice = 0
         best_epoch = 0
-        early_stops = 2000
+        early_stops = 500
 
         train_history = {'dice_loss + bce_loss': [], 'fscore': []}
         val_history = {'dice_loss + bce_loss': [], 'fscore': []}
@@ -126,8 +126,7 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
             for k in range(len(test_dataset)):
                 img_iou, img_dice = [], []
                 image, gt_mask2 = test_dataset[k]
-                gt_mask = cv_read(os.path.join(data_dir.replace('classify', 'segment'),
-                                               test_dataset.images[k].split('/')[-1]))
+                gt_mask = cv_read(os.path.splitext(test_dataset.images[k].replace('classify', 'segment'))[0] + '.jpg')
                 image_ori = cv_read(test_dataset.images[k], 1)
                 [orig_h, orig_w, _] = image_ori.shape
 
@@ -187,7 +186,7 @@ def segment():
     target_list = [x.name for x in RenalMass]
     bs = 6
     lr = 1e-4
-    epochs = 10000
+    epochs = 2000
     save_dir = "kidney-mass-segment/20231205-unet-segment-" + encoder_name + '/'
     train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device, target_list)
 

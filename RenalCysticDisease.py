@@ -43,7 +43,7 @@ def segment():
     target_list = [x.name for x in RenalCystic]
     bs = 6
     lr = 1e-4
-    epochs = 5000
+    epochs = 2000
     save_dir = "RenalCysticDiseaseModel/segment/240122-renal-cystic-segment-" + encoder_name + '/'
     segment_train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device, target_list)
 
