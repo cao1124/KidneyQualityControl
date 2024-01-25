@@ -244,9 +244,9 @@ def cv_write(file_path, file):
 
 
 def get_mask_by_json():
-    base_dir = r'D:\med_dataset\kidney\240125-zhongshan-renal\240125-zhongshan-classify-5fold'
-    crop_dir = r'D:\med_dataset\kidney\240125-zhongshan-renal\240125-zhongshan-crop-classify-5fold'
-    segment_mask = r'D:\med_dataset\kidney\240125-zhongshan-renal\240125-zhongshan-segment-5fold'
+    base_dir = r'D:\med_dataset\kidney\zhongshan-231228-renanl\231228-zhongshan-classify-5fold'
+    crop_dir = r'D:\med_dataset\kidney\zhongshan-231228-renanl\231228-zhongshan-crop-classify-5fold'
+    segment_mask = r'D:\med_dataset\kidney\zhongshan-231228-renanl\231228-zhongshan-segment-5fold'
     for f in os.listdir(base_dir):
         for c in os.listdir(os.path.join(base_dir, f)):
             for p in os.listdir(os.path.join(base_dir, f, c)):
@@ -255,18 +255,16 @@ def get_mask_by_json():
                 img_json_list = [x for x in os.listdir(os.path.join(base_dir, f, c, p)) if x.endswith('.json')]
                 for img_json in img_json_list:
                     img = cv_read(os.path.join(base_dir, f, c, p, img_json.replace('.json', '.jpg')))
-                    'mass'
                     seg_img = np.zeros((img.shape[0], img.shape[1], 1), dtype=np.uint8)
-
                     with open(os.path.join(base_dir, f, c, p, img_json), 'r', encoding='utf-8') as fp:
                         json_data = json.load(fp)
                     '中山肾癌'
                     for i in range(len(json_data['shapes'])):
-                        if json_data['shapes'][i]['label'] == 'renal':
+                        if json_data['shapes'][i]['label'].lower() in ['renal']:
                             points = np.array(json_data['shapes'][i]['points'], np.int32)
                             cv2.fillConvexPoly(seg_img, points, 128)
                     for i in range(len(json_data['shapes'])):
-                        if json_data['shapes'][i]['label'] == 'tumor':
+                        if json_data['shapes'][i]['label'].lower() in ['tumor', 'mass']:
                                 points = np.array(json_data['shapes'][i]['points'], np.int32)
                                 cv2.fillConvexPoly(seg_img, points, 255)
                                 '根据mask 裁剪小图'
