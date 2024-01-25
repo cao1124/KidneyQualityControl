@@ -280,6 +280,10 @@ def get_mask_by_json():
                         if json_data['shapes'][i]['label'] in ['良性', '恶性']:
                             points = np.array(json_data['shapes'][i]['points'], np.int32)
                             cv2.fillConvexPoly(seg_img, points, 255)
+                            '根据mask 裁剪小图'
+                            crop_img = img[int(min(points[:, 1] - 20)): int(max(points[:, 1] + 20)),
+                                           int(min(points[:, 0] - 20)): int(max(points[:, 0] + 20))]
+                            cv_write(os.path.join(crop_dir, f, c, p, img_json.replace('.json', '.png')), crop_img)
                     'mass'
                     cv_write(os.path.join(segment_mask, f, c, p, img_json.replace('.json', '.png')), seg_img)
 
