@@ -110,11 +110,11 @@ class ClassificationDataset(Dataset):
                     # for img_name in os.listdir(os.path.join(img_fold, cla, p)):
                     for img_name in [x for x in os.listdir(os.path.join(img_fold, cla, p)) if not x.endswith('.json')]:
                         self.img_name.append(os.path.join(img_fold, cla, p, img_name))
-                        self.labels.append(int(cla))
-                        # if cla == '良性':
-                        #     self.labels.append(0)
-                        # else:
-                        #     self.labels.append(1)
+                        # self.labels.append(int(cla))
+                        if cla == '良性':
+                            self.labels.append(0)
+                        else:
+                            self.labels.append(1)
         self.length = len(self.labels)
 
     def __getitem__(self, index):
