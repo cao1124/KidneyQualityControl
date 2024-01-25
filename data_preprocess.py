@@ -174,17 +174,17 @@ def kfold_split():
 
 def img2video():
     fps = 2
-    img_dir = r'D:\med_project\中山医院-肾脏\20231228-dataset-mass-segment\good'
+    img_dir = r'D:\med_project\上海十院肾囊肿疾病\fold0-model-pred\bad'
     img_list = [x for x in os.listdir(img_dir) if x.lower().endswith('.jpg')]
     # img_key = lambda i: int(i.split('.')[-1])  # .split('frame')[1]
     # img_list = sorted(os.listdir(img_dir), key=img_key)
     img1 = cv_read(os.path.join(img_dir, img_list[0]))
     img_size = (img1.shape[1], img1.shape[0])
-    video_dir = r'D:\med_project\中山医院-肾脏\20231228-dataset-mass-segment'
+    video_dir = r'D:\med_project\上海十院肾囊肿疾病\fold0-model-pred'
     os.makedirs(video_dir, exist_ok=True)
     # MJPG --> .avi   mp4v -->.mp4
-    video = cv2.VideoWriter(os.path.join(video_dir, 'renal-mass-segment.avi'),
-                            cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), fps, img_size)
+    video = cv2.VideoWriter(os.path.join(video_dir, 'renal-cystic-segment-bad.mp4'),
+                            cv2.VideoWriter_fourcc('m', 'p', '4', 'v'), fps, img_size)
     for i in range(0, len(img_list) - 1):
         img = cv_read(os.path.join(img_dir, img_list[i]))
         if (img.shape[1], img.shape[0]) != img_size:
@@ -201,10 +201,10 @@ def mead_split_patient():
 
     # 设置５折实验
 
-    org_path = 'D:/med_project/上海十院肾囊肿疾病/肾囊性病变/'
-    out_path = 'D:/med_dataset/kidney/240122-renal-cystic-classify-5fold/'
+    org_path = r'D:\med_dataset\kidney\240125-zhongshan-renal\复旦中山超声肾肿瘤20240122'
+    out_path = r'D:\med_dataset\kidney\240125-zhongshan-renal\240125-zhongshan-classify-5fold'
 
-    for cla in ['恶性', '良性']:
+    for cla in ['0', '1']:   # ['恶性', '良性']
         in_path = os.path.join(org_path, cla)
         img_list = []
         patient_list = []
@@ -244,37 +244,46 @@ def cv_write(file_path, file):
 
 
 def get_mask_by_json():
-    base_dir = 'D:/med_dataset/kidney/240122-renal-cystic-classify-5fold/'
-    segment_mask = 'D:/med_dataset/kidney/240122-renal-cystic-segment-5fold/'
+    base_dir = r'D:\med_dataset\kidney\240125-zhongshan-renal\240125-zhongshan-classify-5fold'
+    crop_dir = r'D:\med_dataset\kidney\240125-zhongshan-renal\240125-zhongshan-crop-classify-5fold'
+    segment_mask = r'D:\med_dataset\kidney\240125-zhongshan-renal\240125-zhongshan-segment-5fold'
     for f in os.listdir(base_dir):
         for c in os.listdir(os.path.join(base_dir, f)):
             for p in os.listdir(os.path.join(base_dir, f, c)):
                 os.makedirs(os.path.join(segment_mask, f, c, p), exist_ok=True)
+                os.makedirs(os.path.join(crop_dir, f, c, p), exist_ok=True)
                 img_json_list = [x for x in os.listdir(os.path.join(base_dir, f, c, p)) if x.endswith('.json')]
                 for img_json in img_json_list:
-                    if os.path.exists(os.path.join(base_dir, f, c, p, img_json.replace('.json', '.jpg'))):
-                        img = cv_read(os.path.join(base_dir, f, c, p, img_json.replace('.json', '.jpg')))
-                    else:
-                        img = cv_read(os.path.join(base_dir, f, c, p, img_json.replace('.json', '.JPG')))
+                    img = cv_read(os.path.join(base_dir, f, c, p, img_json.replace('.json', '.jpg')))
                     'mass'
                     seg_img = np.zeros((img.shape[0], img.shape[1], 1), dtype=np.uint8)
 
                     with open(os.path.join(base_dir, f, c, p, img_json), 'r', encoding='utf-8') as fp:
                         json_data = json.load(fp)
+                    '中山肾癌'
                     for i in range(len(json_data['shapes'])):
-                        if json_data['shapes'][i]['label'] == '肾脏':
+                        if json_data['shapes'][i]['label'] == 'renal':
                             points = np.array(json_data['shapes'][i]['points'], np.int32)
                             cv2.fillConvexPoly(seg_img, points, 128)
                     for i in range(len(json_data['shapes'])):
-                        if json_data['shapes'][i]['label'] in ['良性', '恶性']:
-                            points = np.array(json_data['shapes'][i]['points'], np.int32)
-                            cv2.fillConvexPoly(seg_img, points, 255)
+                        if json_data['shapes'][i]['label'] == 'tumor':
+                                points = np.array(json_data['shapes'][i]['points'], np.int32)
+                                cv2.fillConvexPoly(seg_img, points, 255)
+                                '根据mask 裁剪小图'
+                                crop_img = img[int(min(points[:, 1] - 20)): int(max(points[:, 1] + 20)),
+                                               int(min(points[:, 0] - 20)): int(max(points[:, 0] + 20))]
+                                cv2.imwrite(os.path.join(crop_dir, f, c, p, img_json.replace('.json', '.png')), crop_img)
+                    '肾囊肿'
+                    # for i in range(len(json_data['shapes'])):
+                    #     if json_data['shapes'][i]['label'] == '肾脏':
+                    #         points = np.array(json_data['shapes'][i]['points'], np.int32)
+                    #         cv2.fillConvexPoly(seg_img, points, 128)
+                    # for i in range(len(json_data['shapes'])):
+                    #     if json_data['shapes'][i]['label'] in ['良性', '恶性']:
+                    #         points = np.array(json_data['shapes'][i]['points'], np.int32)
+                    #         cv2.fillConvexPoly(seg_img, points, 255)
                     'mass'
-                    if os.path.exists(os.path.join(base_dir, f, c, p, img_json.replace('.json', '.jpg'))):
-                        cv_write(os.path.join(segment_mask, f, c, p, img_json.replace('.json', '.jpg')), seg_img)
-                    else:
-                        cv_write(os.path.join(segment_mask, f, c, p, img_json.replace('.json', '.JPG')), seg_img)
-
+                    cv_write(os.path.join(segment_mask, f, c, p, img_json.replace('.json', '.png')), seg_img)
 
 
 def dataset_augment():
@@ -359,3 +368,21 @@ if __name__ == '__main__':
     #             print(c, p)
     #         if len(img_list) != len(json_list):
     #             print(c, p)
+
+    # for i in range(5):
+    #     print('五折交叉验证 第{}次实验:'.format(i))
+    #     fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/']
+    #     valid_path = [fold_list[i]]
+    #     fold_list.remove(fold_list[i])
+    #     if i == 4:
+    #         test_path = [fold_list[0]]
+    #         fold_list.remove(fold_list[0])
+    #     else:
+    #         test_path = [fold_list[i]]
+    #         fold_list.remove(fold_list[i])
+    #     train_path = []
+    #     for x in range(len(fold_list)):
+    #         train_path.append(fold_list[x])
+    #     print('train:', train_path)
+    #     print('valid:', valid_path)
+    #     print('test:', test_path)
