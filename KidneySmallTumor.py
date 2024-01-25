@@ -122,55 +122,59 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         mass_iou_list, mass_dice_list = [], []
         model.eval()
         torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
-        with torch.no_grad():
-            for k in range(len(test_dataset)):
-                img_iou, img_dice = [], []
-                image, gt_mask2 = test_dataset[k]
-                gt_mask = cv_read(os.path.splitext(test_dataset.images[k].replace('classify', 'segment'))[0] + '.jpg')
-                image_ori = cv_read(test_dataset.images[k], 1)
-                [orig_h, orig_w, _] = image_ori.shape
 
-                x_tensor = torch.from_numpy(image).to(device).unsqueeze(0)
-                img_pred = copy.deepcopy(image_ori)
-                img_gt = copy.deepcopy(image_ori)
-                with torch.no_grad():
-                    pr_mask = model(x_tensor).squeeze(0).cpu().numpy()
-                for c in range(1, len(target_list) + 1):
-                    mask_gt = copy.deepcopy(gt_mask)
-                    mask_gt[mask_gt != c] = 0
-                    mask_gt[mask_gt == c] = 255
+        for k in range(len(test_dataset)):
+            img_iou, img_dice = [], []
+            image, gt_mask2 = test_dataset[k]
+            gt_mask = cv_read(os.path.splitext(test_dataset.images[k].replace('classify', 'segment'))[0] + '.jpg')
+            image_ori = cv_read(test_dataset.images[k], 1)
+            [orig_h, orig_w, _] = image_ori.shape
 
-                    pred_mask = pr_mask[c]
-                    pred_mask[pred_mask < 0.5] = 0
-                    pred_mask[pred_mask >= 0.5] = 255
-                    if pred_mask.shape != image_ori.shape:
-                        pred_mask = cv2.resize(pred_mask, (orig_w, orig_h), cv2.INTER_NEAREST)
-                        _, pred_mask = cv2.threshold(pred_mask, 1, 255, cv2.THRESH_BINARY)
-                    img_pred = add_weighted(img_pred, pred_mask.astype('uint8'), color_list[c - 1])
+            x_tensor = torch.from_numpy(image).to(device).unsqueeze(0)
+            img_pred = copy.deepcopy(image_ori)
+            img_gt = copy.deepcopy(image_ori)
+            with torch.no_grad():
+                pr_mask = model(x_tensor).squeeze(0).cpu().numpy()
+            for c in range(1, len(target_list) + 1):
+                mask_gt = copy.deepcopy(gt_mask)
+                if c == 1:
+                    mask_gt[mask_gt != 128] = 0
+                    mask_gt[mask_gt == 128] = 255
+                else:
+                    mask_gt[mask_gt != 255] = 0
+                    mask_gt[mask_gt == 255] = 255
 
-                    # if np.sum(mask_gt) == 0 and np.sum(pred_mask) == 0:
-                    #     iou = 1
-                    #     dice = 1
-                    # else:
-                    #     iou = np.round(get_iou(mask_gt, pred_mask), 4)
-                    #     dice = np.round(get_f1(mask_gt, pred_mask), 4)
-                    if np.sum(mask_gt) != 0 or np.sum(pred_mask) != 0:
-                        iou = np.round(get_iou(gt_mask, pred_mask), 4)
-                        dice = np.round(get_f1(gt_mask, pred_mask), 4)
-                        iou_list.append(iou)
-                        dice_list.append(dice)
-                        img_iou.append(iou)
-                        img_dice.append(dice)
-                        if c == 1:
-                            renal_iou_list.append(iou)
-                            renal_dice_list.append(dice)
-                        elif c == 2:
-                            mass_iou_list.append(iou)
-                            mass_dice_list.append(dice)
-                    img_gt = add_weighted(img_gt, mask_gt.astype('uint8'), color_list[c - 1])
-                save_full_path = os.path.join(save_dir1, str(np.average(img_iou)) + "-" + test_dataset.images[k].split('/')[-1])
-                img_cat = np.concatenate((img_gt, img_pred), axis=1)
-                cv_write(save_full_path, img_cat)
+                pred_mask = pr_mask[c]
+                pred_mask[pred_mask < 0.5] = 0
+                pred_mask[pred_mask >= 0.5] = 255
+                if pred_mask.shape != image_ori.shape:
+                    pred_mask = cv2.resize(pred_mask, (orig_w, orig_h), cv2.INTER_NEAREST)
+                    _, pred_mask = cv2.threshold(pred_mask, 1, 255, cv2.THRESH_BINARY)
+                img_pred = add_weighted(img_pred, pred_mask.astype('uint8'), color_list[c - 1])
+
+                # if np.sum(mask_gt) == 0 and np.sum(pred_mask) == 0:
+                #     iou = 1
+                #     dice = 1
+                # else:
+                #     iou = np.round(get_iou(mask_gt, pred_mask), 4)
+                #     dice = np.round(get_f1(mask_gt, pred_mask), 4)
+                if np.sum(mask_gt) != 0 or np.sum(pred_mask) != 0:
+                    iou = np.round(get_iou(mask_gt, pred_mask), 4)
+                    dice = np.round(get_f1(mask_gt, pred_mask), 4)
+                    iou_list.append(iou)
+                    dice_list.append(dice)
+                    img_iou.append(iou)
+                    img_dice.append(dice)
+                    if c == 1:
+                        renal_iou_list.append(iou)
+                        renal_dice_list.append(dice)
+                    elif c == 2:
+                        mass_iou_list.append(iou)
+                        mass_dice_list.append(dice)
+                img_gt = add_weighted(img_gt, mask_gt.astype('uint8'), color_list[c - 1])
+            save_full_path = os.path.join(save_dir1, str(np.average(img_iou)) + "-" + test_dataset.images[k].split('/')[-1])
+            img_cat = np.concatenate((img_gt, img_pred), axis=1)
+            cv_write(save_full_path, img_cat)
 
         print("\tRenal Mean Dice: ", np.average(renal_dice_list), "Renal Mean IoU:", np.average(renal_iou_list))
         print("\tMass Mean Dice: ", np.average(mass_dice_list), "Mass Mean IoU:", np.average(mass_iou_list))
