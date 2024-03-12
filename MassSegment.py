@@ -176,7 +176,7 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
 def segment():
     os.environ['CUDA_VISIBLE_DEVICES'] = "4,5,6"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    data_dir = '/media/user/Disk1/caoxu/dataset/kidney/zhongshan/20240312-mass-segment-5fold/'
+    data_dir = '/media/user/Disk1/caoxu/dataset/kidney/zhongshan/20240312-kidney-5fold/'
     """
     分割网络选择：
     Unet、Linknet、FPN、PSPNet、PAN、DeepLabV3、UnetPlusPlus
