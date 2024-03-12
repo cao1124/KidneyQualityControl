@@ -15,20 +15,20 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         print('五折交叉验证 第{}次实验:'.format(i))
         fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/']
         valid_path = [os.path.join(data_dir, fold_list[i])]
-        valid_mask = [os.path.join(data_dir.replace('classify', 'mass-mask'), fold_list[i])]
+        valid_mask = [os.path.join(data_dir.replace('kidney', 'mask'), fold_list[i])]
         fold_list.remove(fold_list[i])
         if i == 4:
             test_path = [os.path.join(data_dir, fold_list[0])]
-            test_mask = [os.path.join(data_dir.replace('classify', 'mass-mask'), fold_list[0])]
+            test_mask = [os.path.join(data_dir.replace('kidney', 'mask'), fold_list[0])]
             fold_list.remove(fold_list[0])
         else:
             test_path = [os.path.join(data_dir, fold_list[i])]
-            test_mask = [os.path.join(data_dir.replace('classify', 'mass-mask'), fold_list[i])]
+            test_mask = [os.path.join(data_dir.replace('kidney', 'mask'), fold_list[i])]
             fold_list.remove(fold_list[i])
         train_path, train_mask = [], []
         for x in range(len(fold_list)):
             train_path.append(os.path.join(data_dir, fold_list[x]))
-            train_mask.append(os.path.join(data_dir.replace('classify', 'mass-mask'), fold_list[x]))
+            train_mask.append(os.path.join(data_dir.replace('kidney', 'mask'), fold_list[x]))
 
         train_dataset = RenalDataset(train_path, train_mask, augmentation=training_augmentation())
         valid_dataset = RenalDataset(valid_path, valid_mask, augmentation=valid_augmentation())
@@ -174,9 +174,9 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
 
 
 def segment():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "0"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "4,5,6"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    data_dir = '/media/user/Disk1/caoxu/dataset/kidney/20231228-zhongshan-classify-5fold/'
+    data_dir = '/media/user/Disk1/caoxu/dataset/kidney/zhongshan/20240312-mass-segment-5fold/'
     """
     分割网络选择：
     Unet、Linknet、FPN、PSPNet、PAN、DeepLabV3、UnetPlusPlus
@@ -200,10 +200,10 @@ def segment():
     encoder_name = "efficientnet-b7"
     encoder_activation = "sigmoid"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
-    bs = 6
+    bs = 20
     lr = 1e-4
     epochs = 5000
-    save_dir = "mass-segment/20231228-dataset-mass-segment-20240104-" + encoder_name + '/'
+    save_dir = "mass-segment/20240312-mass-segment-zhongshan-" + encoder_name + '/'
     train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device)
 
 

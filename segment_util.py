@@ -211,9 +211,9 @@ class RenalDataset(BaseDataset):
                     for img_name in os.listdir(os.path.join(images_dir[i], cla, p)):
                         self.images.append(os.path.join(images_dir[i], cla, p, img_name))
                         if '.JPG' in img_name:
-                            self.masks.append(os.path.join(masks_dir[i], cla, p, img_name.replace('.JPG', '.jpg')))
+                            self.masks.append(os.path.join(masks_dir[i], cla, p, img_name.replace('.JPG', '.png')))
                         else:
-                            self.masks.append(os.path.join(masks_dir[i], cla, p, img_name))
+                            self.masks.append(os.path.join(masks_dir[i], cla, p, img_name.replace('.jpg', '.png')))
         self.augmentation = augmentation
         self.preprocessing = preprocessing
         self.multi_scale = multi_scale
