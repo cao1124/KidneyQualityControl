@@ -201,8 +201,8 @@ def mead_split_patient():
 
     # 设置５折实验
 
-    org_path = r'D:\med_dataset\kidney\240125-zhongshan-renal\复旦中山超声肾肿瘤20240122'
-    out_path = r'D:\med_dataset\kidney\240125-zhongshan-renal\240125-zhongshan-classify-5fold'
+    org_path = r'F:\med_dataset\kidney_dataset\kidney-zhongshan\20240312-kidney'
+    out_path = r'F:\med_dataset\kidney_dataset\kidney-zhongshan\20240312-kidney-5fold'
 
     for cla in ['0', '1']:   # ['恶性', '良性']
         in_path = os.path.join(org_path, cla)
@@ -244,48 +244,52 @@ def cv_write(file_path, file):
 
 
 def get_mask_by_json():
-    base_dir = r'D:\med_dataset\kidney\shiyuan-240122-renal-cystic-classify-5fold'
-    crop_dir = r'D:\med_dataset\kidney\shiyuan-240122-renal-cystic-crop-classify-5fold'
-    segment_mask = r'D:\med_dataset\kidney\shiyuan-240122-renal-cystic-segment-5fold'
-    for f in os.listdir(base_dir):
-        for c in os.listdir(os.path.join(base_dir, f)):
-            for p in os.listdir(os.path.join(base_dir, f, c)):
-                os.makedirs(os.path.join(segment_mask, f, c, p), exist_ok=True)
-                os.makedirs(os.path.join(crop_dir, f, c, p), exist_ok=True)
-                img_json_list = [x for x in os.listdir(os.path.join(base_dir, f, c, p)) if x.endswith('.json')]
-                for img_json in img_json_list:
-                    img = cv_read(os.path.join(base_dir, f, c, p, img_json.replace('.json', '.jpg')))
-                    seg_img = np.zeros((img.shape[0], img.shape[1], 1), dtype=np.uint8)
-                    with open(os.path.join(base_dir, f, c, p, img_json), 'r', encoding='utf-8') as fp:
-                        json_data = json.load(fp)
-                    '中山肾癌'
-                    # for i in range(len(json_data['shapes'])):
-                    #     if json_data['shapes'][i]['label'].lower() in ['renal']:
-                    #         points = np.array(json_data['shapes'][i]['points'], np.int32)
-                    #         cv2.fillConvexPoly(seg_img, points, 128)
-                    # for i in range(len(json_data['shapes'])):
-                    #     if json_data['shapes'][i]['label'].lower() in ['tumor', 'mass']:
-                    #             points = np.array(json_data['shapes'][i]['points'], np.int32)
-                    #             cv2.fillConvexPoly(seg_img, points, 255)
-                    #             '根据mask 裁剪小图'
-                    #             crop_img = img[int(min(points[:, 1] - 20)): int(max(points[:, 1] + 20)),
-                    #                            int(min(points[:, 0] - 20)): int(max(points[:, 0] + 20))]
-                    #             cv2.imwrite(os.path.join(crop_dir, f, c, p, img_json.replace('.json', '.png')), crop_img)
-                    '肾囊肿'
-                    for i in range(len(json_data['shapes'])):
-                        if json_data['shapes'][i]['label'] == '肾脏':
-                            points = np.array(json_data['shapes'][i]['points'], np.int32)
-                            cv2.fillConvexPoly(seg_img, points, 128)
-                    for i in range(len(json_data['shapes'])):
-                        if json_data['shapes'][i]['label'] in ['良性', '恶性']:
-                            points = np.array(json_data['shapes'][i]['points'], np.int32)
-                            cv2.fillConvexPoly(seg_img, points, 255)
-                            '根据mask 裁剪小图'
-                            crop_img = img[int(min(points[:, 1] - 20)): int(max(points[:, 1] + 20)),
-                                           int(min(points[:, 0] - 20)): int(max(points[:, 0] + 20))]
-                            cv_write(os.path.join(crop_dir, f, c, p, img_json.replace('.json', '.png')), crop_img)
-                    'mass'
-                    cv_write(os.path.join(segment_mask, f, c, p, img_json.replace('.json', '.png')), seg_img)
+    base_dir = r'F:\med_dataset\kidney_dataset\kidney-zhongshan\20240312-kidney'
+    crop_dir = r'F:\med_dataset\kidney_dataset\kidney-zhongshan\20240312-mass-crop-classify'
+    segment_mask = r'F:\med_dataset\kidney_dataset\kidney-zhongshan\20240312-mass-segment'
+    for p in os.listdir(base_dir):
+        os.makedirs(os.path.join(segment_mask, p), exist_ok=True)
+        os.makedirs(os.path.join(crop_dir, p), exist_ok=True)
+        img_json_list = [x for x in os.listdir(os.path.join(base_dir, p)) if x.endswith('.json')]
+        for img_json in img_json_list:
+            if os.path.exists(os.path.join(base_dir, p, img_json.replace('.json', '.jpg'))):
+                img = cv_read(os.path.join(base_dir, p, img_json.replace('.json', '.jpg')))
+            else:
+                img = cv_read(os.path.join(base_dir, p, img_json.replace('.json', '.JPG')))
+            seg_img = np.zeros((img.shape[0], img.shape[1], 1), dtype=np.uint8)
+            with open(os.path.join(base_dir, p, img_json), 'r', encoding='utf-8') as fp:
+                json_data = json.load(fp)
+            '中山肾癌'
+            for i in range(len(json_data['shapes'])):
+                if json_data['shapes'][i]['label'].lower() in ['renal', 'kidney']:
+                    points = np.array(json_data['shapes'][i]['points'], np.int32)
+                    cv2.fillConvexPoly(seg_img, points, 128)
+            for i in range(len(json_data['shapes'])):
+                if json_data['shapes'][i]['label'].lower() in ['tumor', 'mass']:
+                        points = np.array(json_data['shapes'][i]['points'], np.int32)
+                        cv2.fillConvexPoly(seg_img, points, 255)
+                        '根据mask 裁剪小图'
+                        crop_img = img[int(min(points[:, 1] - 20)): int(max(points[:, 1] + 20)),
+                                       int(min(points[:, 0] - 20)): int(max(points[:, 0] + 20))]
+                        try:
+                            cv_write(os.path.join(crop_dir, p, img_json.replace('.json', '.png')), crop_img)
+                        except:
+                            print(p, img_json)
+            # '肾囊肿'
+            # for i in range(len(json_data['shapes'])):
+            #     if json_data['shapes'][i]['label'] == '肾脏':
+            #         points = np.array(json_data['shapes'][i]['points'], np.int32)
+            #         cv2.fillConvexPoly(seg_img, points, 128)
+            # for i in range(len(json_data['shapes'])):
+            #     if json_data['shapes'][i]['label'] in ['良性', '恶性']:
+            #         points = np.array(json_data['shapes'][i]['points'], np.int32)
+            #         cv2.fillConvexPoly(seg_img, points, 255)
+            #         '根据mask 裁剪小图'
+            #         crop_img = img[int(min(points[:, 1] - 20)): int(max(points[:, 1] + 20)),
+            #                        int(min(points[:, 0] - 20)): int(max(points[:, 0] + 20))]
+            #         cv_write(os.path.join(crop_dir, f, c, p, img_json.replace('.json', '.png')), crop_img)
+            'mass'
+            cv_write(os.path.join(segment_mask, p, img_json.replace('.json', '.png')), seg_img)
 
 
 def dataset_augment():
@@ -342,8 +346,8 @@ if __name__ == '__main__':
     # dataset_count()
     # kfold_split()
     # img2video()
-    # mead_split_patient()
-    get_mask_by_json()
+    mead_split_patient()
+    # get_mask_by_json()
     # dataset_augment()
     # image_json_compare()
 
