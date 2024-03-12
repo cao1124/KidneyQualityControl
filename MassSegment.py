@@ -85,7 +85,7 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         max_score = -1
         max_dice = 0
         best_epoch = 0
-        early_stops = 1000
+        early_stops = 200
 
         train_history = {'dice_loss + bce_loss': [], 'fscore': []}
         val_history = {'dice_loss + bce_loss': [], 'fscore': []}
@@ -207,7 +207,7 @@ def segment():
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
     bs = 18
     lr = 1e-4
-    epochs = 5000
+    epochs = 1000
     save_dir = "mass-segment/20240312-mass-segment-zhongshan-" + encoder_name + '/'
     train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device)
 
