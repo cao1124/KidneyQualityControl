@@ -3,6 +3,7 @@ import cv2
 import torch
 import numpy as np
 import segmentation_models_pytorch as smp
+from torch import nn
 from torch.utils.data import DataLoader
 from segment_util import RenalDataset, training_augmentation, valid_augmentation, save_seg_history, get_iou, get_f1, \
     add_weighted, combine_image
@@ -43,6 +44,10 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
                          activation=encoder_activation,
                          in_channels=3,
                          encoder_weights="imagenet")
+        # 多GPU
+        if torch.cuda.device_count() > 1:
+            model = nn.DataParallel(model)
+
         # print(model)
         loss_fn = smp.utils.losses.DiceLoss() + smp.utils.losses.BCELoss()
         # for image segmentation dice loss could be the best first choice
@@ -200,7 +205,7 @@ def segment():
     encoder_name = "efficientnet-b7"
     encoder_activation = "sigmoid"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
-    bs = 18
+    bs = 16
     lr = 1e-4
     epochs = 5000
     save_dir = "mass-segment/20240312-mass-segment-zhongshan-" + encoder_name + '/'
