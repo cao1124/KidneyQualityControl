@@ -182,7 +182,7 @@ def classification():
     model_name = 'densenet161'
     data_dir = '/media/user/Disk1/caoxu/dataset/kidney/zhongshan/20240312-mass-crop-classify-5fold/'
     category_num = 2
-    bs = 100
+    bs = 86
     lr = 0.01
     num_epochs = 500
     data = 'classification-model/20240314-mass-crop-classify-'
