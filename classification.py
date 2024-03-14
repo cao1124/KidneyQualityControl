@@ -177,12 +177,12 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
 
 
 def classification():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "0"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "3"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model_name = 'resnet50'
+    model_name = 'resnet18'
     data_dir = '/media/user/Disk1/caoxu/dataset/kidney/zhongshan/20240312-mass-crop-classify-5fold/'
     category_num = 2
-    bs = 128
+    bs = 256
     lr = 0.01
     num_epochs = 500
     data = 'classification-model/20240314-mass-crop-classify-'
