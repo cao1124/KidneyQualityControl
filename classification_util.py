@@ -419,7 +419,7 @@ def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
                       'wide_resnet101', 'eca_resnet50', 'eca_resnext50', 'resnet50_cbam', 'resnet101_cbam',
                       'resnet152_cbam', 'sknet50', 'sknet101']:
         model.fc = nn.Linear(in_features=2048, out_features=category_num, bias=True)
-    elif model_name == ['resnet18', 'resnet18_cbam']:
+    elif model_name in ['resnet18', 'resnet18_cbam']:
         model.fc = nn.Linear(in_features=512, out_features=category_num, bias=True)
     elif model_name == 'densenet121':
         model.classifier = nn.Linear(in_features=1024, out_features=category_num, bias=True)
