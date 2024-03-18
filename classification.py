@@ -185,7 +185,7 @@ def classification():
     bs = 256
     lr = 0.01
     num_epochs = 500
-    data = 'classification-model/20240318-kidney-blood-fusion-classify-'
+    data = 'classification-model/20240318-kidney-classify-'
     save_path = data + str(category_num) + 'class-' + model_name + '-bs' + str(bs) + '-lr' + str(lr) + '/'
     pt_dir = 'classification_model/' + save_path
     if not os.path.exists(pt_dir):
