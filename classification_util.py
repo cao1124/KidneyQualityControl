@@ -413,9 +413,9 @@ class MultiHeadAttention(nn.Module):
         return attn, output
 
 
-class MultiHeadResnet(nn.Module):
+class MultiHeadAttentionResnet(nn.Module):
     def __init__(self, net, num_heads, num_classes_per_head):
-        super(MultiHeadResnet, self).__init__()
+        super(MultiHeadAttentionResnet, self).__init__()
         self.num_heads = num_heads
         self.num_classes_per_head = num_classes_per_head
         # Load pre-trained ResNet
@@ -496,8 +496,8 @@ def prepare_model(category_num, model_name, lr, num_epochs, device, weights, bs=
 
     'fusion'
     # model = EarlyCatFusionModel(model)
-    model = LateCatFusionModel(model, category_num)
-    # model = MultiHeadResnet(model, num_heads=8, num_classes_per_head=category_num)
+    # model = LateCatFusionModel(model, category_num)
+    model = MultiHeadAttentionResnet(model, num_heads=8, num_classes_per_head=category_num)
 
     # 多GPU
     if torch.cuda.device_count() > 1:
