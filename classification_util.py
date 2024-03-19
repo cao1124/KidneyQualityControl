@@ -14,6 +14,7 @@ from warmup_scheduler import GradualWarmupScheduler
 from CBAM_ResNet import CBAM_Resnext, resnet18_cbam, resnet34_cbam, resnet50_cbam, resnet101_cbam, resnet152_cbam
 from ECA_ResNet import eca_resnet50, eca_resNeXt50_32x4d
 from SK_ResNet import SKNet50, SKNet101
+import torch.nn.functional as F
 
 model_dict = {
     'efficientnet_b0': models.efficientnet_b0,
@@ -242,7 +243,8 @@ class LateCatFusionModel(nn.Module):
     def __init__(self, net, num_class):
         super(LateCatFusionModel, self).__init__()
         self.net = net
-        self.fc = nn.Linear(in_features=4096, out_features=num_class, bias=True)
+        self.fc = nn.Linear(in_features=1024, out_features=num_class, bias=True)
+        # resnet18-1024 resnet50-4096
 
     def forward(self, x1, x2):
         x1 = self.net.conv1(x1)
@@ -320,85 +322,137 @@ class AttentionFusionModel(nn.Module):
         return output
 
 
-class MultiHeadAttention(nn.Module):
-    def __init__(self, embed_size, num_heads):
-        super(MultiHeadAttention, self).__init__()
-        self.num_heads = num_heads
-        self.head_dim = embed_size // num_heads
+class SelfAttention(nn.Module):
+    """ Self-Attention """
 
-        assert (
-                self.head_dim * num_heads == embed_size
-        ), "Embedding size needs to be divisible by num_heads"
+    def __init__(self, n_head, d_k, d_v, d_x, d_o):
+        self.wq = nn.Parameter(torch.Tensor(d_x, d_k))
+        self.wk = nn.Parameter(torch.Tensor(d_x, d_k))
+        self.wv = nn.Parameter(torch.Tensor(d_x, d_v))
 
-        self.values = nn.Linear(embed_size, embed_size, bias=False)
-        self.keys = nn.Linear(embed_size, embed_size, bias=False)
-        self.queries = nn.Linear(embed_size, embed_size, bias=False)
-        self.fc_out = nn.Linear(num_heads * self.head_dim, embed_size)
+        self.mha = MultiHeadAttention(n_head=n_head, d_k_=d_k, d_v_=d_v, d_k=d_k, d_v=d_v, d_o=d_o)
 
-    def forward(self, values, keys, query, mask):
-        # Get number of training examples
-        N = query.shape[0]
-        value_len, key_len, query_len = values.shape[1], keys.shape[1], query.shape[1]
+        self.init_parameters()
 
-        # Split the embedding into self.num_heads different pieces
-        values = values.reshape(N, value_len, self.num_heads, self.head_dim)
-        keys = keys.reshape(N, key_len, self.num_heads, self.head_dim)
-        queries = query.reshape(N, query_len, self.num_heads, self.head_dim)
+    def init_parameters(self):
+        for param in self.parameters():
+            stdv = 1. / np.power(param.size(-1), 0.5)
+            param.data.uniform_(-stdv, stdv)
 
-        values = self.values(values)
-        keys = self.keys(keys)
-        queries = self.queries(queries)
+    def forward(self, x, mask=None):
+        q = torch.matmul(x, self.wq)
+        k = torch.matmul(x, self.wk)
+        v = torch.matmul(x, self.wv)
 
-        energy = torch.einsum("nqhd,nkhd->nhqk", [queries, keys])
+        attn, output = self.mha(q, k, v, mask=mask)
+
+        return attn, output
+
+
+class ScaledDotProductAttention(nn.Module):
+    """ Scaled Dot-Product Attention """
+
+    def __init__(self, scale):
+        super().__init__()
+
+        self.scale = scale
+        self.softmax = nn.Softmax(dim=2)
+
+    def forward(self, q, k, v, mask=None):
+        u = torch.bmm(q, k.transpose(1, 2))  # 1.Matmul
+        u = u / self.scale  # 2.Scale
 
         if mask is not None:
-            energy = energy.masked_fill(mask == 0, float("-1e20"))
+            u = u.masked_fill(mask, -np.inf)  # 3.Mask
 
-        attention = torch.nn.functional.softmax(energy / (self.head_dim ** (1 / 2)), dim=3)
+        attn = self.softmax(u)  # 4.Softmax
+        output = torch.bmm(attn, v)  # 5.Output
 
-        out = torch.einsum("nhql,nlhd->nqhd", [attention, values]).reshape(
-            N, query_len, self.num_heads * self.head_dim
-        )
-
-        out = self.fc_out(out)
-        return out
+        return attn, output
 
 
-class MultiModalAttentionFusionModel(nn.Module):
-    def __init__(self, net, num_class, modality1_channels, modality2_channels, num_heads=4):
-        super(MultiModalAttentionFusionModel, self).__init__()
+class MultiHeadAttention(nn.Module):
+    """ Multi-Head Attention """
 
-        # 提取 ResNet50 的前半部分作为特征提取器
-        self.features = nn.Sequential(*list(net.children())[:-2])
+    def __init__(self, n_head, d_k_, d_v_, d_k, d_v, d_o):
+        super().__init__()
 
-        # 修改第一个卷积层，使其适应多模态输入
-        self.features[0] = nn.Conv2d(modality1_channels + modality2_channels, 64, kernel_size=(7, 7), stride=(2, 2),
-                                     padding=(3, 3), bias=False)
+        self.n_head = n_head
+        self.d_k = d_k
+        self.d_v = d_v
 
-        # 全局平均池化层
-        self.global_avg_pooling = nn.AdaptiveAvgPool2d(1)
+        self.fc_q = nn.Linear(d_k_, n_head * d_k)
+        self.fc_k = nn.Linear(d_k_, n_head * d_k)
+        self.fc_v = nn.Linear(d_v_, n_head * d_v)
 
-        # 多头注意力机制
-        self.attention = MultiHeadAttention(embed_size=2048, num_heads=num_heads)
+        self.attention = ScaledDotProductAttention(scale=np.power(d_k, 0.5))
 
-        # 分类层
-        self.classifier = nn.Linear(2048, num_class, bias=True)
+        self.fc_o = nn.Linear(n_head * d_v, d_o)
+
+    def forward(self, q, k, v, mask=None):
+        n_head, d_q, d_k, d_v = self.n_head, self.d_k, self.d_k, self.d_v
+
+        batch, n_q, d_q_ = q.size()
+        batch, n_k, d_k_ = k.size()
+        batch, n_v, d_v_ = v.size()
+
+        q = self.fc_q(q)  # 1.单头变多头
+        k = self.fc_k(k)
+        v = self.fc_v(v)
+        q = q.view(batch, n_q, n_head, d_q).permute(2, 0, 1, 3).contiguous().view(-1, n_q, d_q)
+        k = k.view(batch, n_k, n_head, d_k).permute(2, 0, 1, 3).contiguous().view(-1, n_k, d_k)
+        v = v.view(batch, n_v, n_head, d_v).permute(2, 0, 1, 3).contiguous().view(-1, n_v, d_v)
+
+        if mask is not None:
+            mask = mask.repeat(n_head, 1, 1)
+        attn, output = self.attention(q, k, v, mask=mask)  # 2.当成单头注意力求输出
+
+        output = output.view(n_head, batch, n_q, d_v).permute(1, 2, 0, 3).contiguous().view(batch, n_q, -1)  # 3.Concat
+        output = self.fc_o(output)  # 4.仿射变换得到最终输出
+
+        return attn, output
+
+
+class MultiHeadResnet(nn.Module):
+    def __init__(self, net, num_heads, num_classes_per_head):
+        super(MultiHeadResnet, self).__init__()
+        self.num_heads = num_heads
+        self.num_classes_per_head = num_classes_per_head
+        # Load pre-trained ResNet
+        resnet = net
+        # Exclude the last two layers (pooling and fully connected)
+        self.resnet = nn.Sequential(*list(resnet.children())[:-2])
+        self.resnet[0] = nn.Conv2d(6, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
+        # Define the multi-head attention layer
+        self.attention = MultiHeadAttention(n_head=num_heads, d_k_=49, d_v_=49, d_k=256, d_v=128, d_o=128)
+
+        # Define the multi-head classification layer
+        self.classifier = nn.ModuleList([nn.Linear(1024, num_classes_per_head) for _ in range(num_heads)])
+        # 每个头的输出维度
+        self.fc = nn.Linear(num_heads * 128, num_classes_per_head)
 
     def forward(self, x1, x2):
-        # 拼接两个模态的输入
-        x = torch.cat((x1, x2), dim=1)
-        # 提取特征
-        features = self.features(x)
+        # Concatenate the two input images along the channel dimension
+        x = torch.cat((x1, x2), 1)
+        # Pass the concatenated image through ResNet
+        x = self.resnet(x)
+        b, c, h, w = x.size()
+        # Reshape to (batch_size, num_channels, num_elements)
+        x = x.view(b, c, h * w)
+        # Apply multi-head attention
+        _, attn_output = self.attention(x, x, x, None)  # No mask is used
+        # Reshape the attention output to be compatible with the classifier
+        attn_output = attn_output.view(b, -1, self.num_heads * self.attention.d_v)
+        # Apply the multi-head classification
+        outputs = [F.log_softmax(head(attn_output), dim=1) for head in self.classifier]
+        # 将所有头的输出展平并拼接
+        combined_output = torch.cat(outputs, dim=1)
+        # 通过分类层
+        res = self.fc(combined_output.view(b, -1))
+        return res
 
-        # 使用多头注意力机制
-        attention_weights = self.attention(features, features, features, mask=None)
-        fused_features = torch.sum(features * attention_weights.view(-1, features.shape[2], 1, 1), dim=(2, 3))
-        # 使用 fused_features
-        output = self.classifier(fused_features)
-        return output
 
-
-def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
+def prepare_model(category_num, model_name, lr, num_epochs, device, weights, bs=None):
     if 'eca' in model_name:  # ECA（Efficient Channel Attention）
         model = model_dict[model_name]()
     elif 'sknet' in model_name:
@@ -441,9 +495,9 @@ def prepare_model(category_num, model_name, lr, num_epochs, device, weights):
         model.layer7 = nn.Linear(in_features=2048, out_features=category_num, bias=True)
 
     'fusion'
-    # model = EarlyCatFusionModel(model)
+    model = EarlyCatFusionModel(model)
     # model = LateCatFusionModel(model, category_num)
-    # model = MultiModalAttentionFusionModel(model, category_num, 3, 3, num_heads=8)
+    # model = MultiHeadResnet(model, num_heads=8, num_classes_per_head=category_num)
 
     # 多GPU
     if torch.cuda.device_count() > 1:
