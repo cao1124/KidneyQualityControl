@@ -495,8 +495,8 @@ def prepare_model(category_num, model_name, lr, num_epochs, device, weights, bs=
         model.layer7 = nn.Linear(in_features=2048, out_features=category_num, bias=True)
 
     'fusion'
-    model = EarlyCatFusionModel(model)
-    # model = LateCatFusionModel(model, category_num)
+    # model = EarlyCatFusionModel(model)
+    model = LateCatFusionModel(model, category_num)
     # model = MultiHeadResnet(model, num_heads=8, num_classes_per_head=category_num)
 
     # 多GPU

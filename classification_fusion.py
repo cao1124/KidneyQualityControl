@@ -185,7 +185,7 @@ def classification():
     bs = 128
     lr = 0.01
     num_epochs = 500
-    data = 'classification-model/20240319-kidney-blood-EarlyCatFusionModel-classify-'
+    data = 'classification-model/20240319-kidney-blood-LateCatFusionModel-classify-'
     save_path = data + str(category_num) + 'class-' + model_name + '-bs' + str(bs) + '-lr' + str(lr) + '/'
     pt_dir = 'classification_model/' + save_path
     if not os.path.exists(pt_dir):
