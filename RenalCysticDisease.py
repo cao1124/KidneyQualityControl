@@ -20,15 +20,15 @@ from segment_util import add_weighted, get_iou, get_f1
 
 
 def classify():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "3"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "2"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model_name = 'resnext50'
-    data_dir = '/media/user/Disk1/caoxu/dataset/kidney/shiyuan-240122-renal-cystic-crop-classify-5fold/'
+    model_name = 'resnet50'
+    data_dir = '/media/user/Disk1/caoxu/dataset/kidney/20240408-renal-cystic-classify-5fold/'
     category_num = 2
     bs = 128
     lr = 0.01
     num_epochs = 500
-    data = 'RenalCysticDisease/240122-renal-cystic-crop-classify-'
+    data = '20240408-renal-cystic-image-classify-'
     save_path = data + str(category_num) + 'class-' + model_name + '-bs' + str(bs) + '-lr' + str(lr) + '/'
     pt_dir = 'RenalCysticDiseaseModel/classify/' + save_path
     if not os.path.exists(pt_dir):
