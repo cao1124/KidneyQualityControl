@@ -152,7 +152,7 @@ class RenalMassDataset(BaseDataset):
                     for img_name in [x for x in os.listdir(os.path.join(base_dir, f, c, p)) if not x.endswith('.json')]:
                         self.images.append(os.path.join(base_dir, f, c, p, img_name))
                         self.masks.append(os.path.join(base_dir.replace('classify', 'segment'), f, c, p,
-                                                       os.path.splitext(img_name)[0] + '.jpg'))
+                                                       os.path.splitext(img_name)[0] + '.png'))
         self.augmentation = augmentation
         self.preprocessing = preprocessing
         self.multi_scale = multi_scale
