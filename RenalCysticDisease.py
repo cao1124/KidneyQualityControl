@@ -25,7 +25,7 @@ def classify():
     model_name = 'resnet50'
     data_dir = '/media/user/Disk1/caoxu/dataset/kidney/shiyuan/20240408-renal-cystic-crop-classify-5fold/'
     category_num = 2
-    bs = 128
+    bs = 256
     lr = 0.01
     num_epochs = 500
     data = '20240408-renal-cystic-image-crop-classify-'
@@ -136,6 +136,6 @@ def segment_test():
 
 
 if __name__ == '__main__':
-    # classify()
-    segment()
+    classify()
+    # segment()
     # segment_test()

@@ -25,12 +25,12 @@ warnings.filterwarnings("ignore")
 
 
 def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr):
-    for i in range(5):
+    for i in range(4):
         print('五折交叉验证 第{}次实验:'.format(i))
         test_path = [os.path.join(data_dir, 'fold4/')]
         fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/']
         valid_path = [os.path.join(data_dir, fold_list[3 - i])]
-        train_path = [os.path.join(data_dir, x) for x in fold_list if x != valid_path[0]]
+        train_path = [os.path.join(data_dir, x) for x in fold_list if x != fold_list[3 - i]]
         '随机test database'
         # fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/']
         # valid_path = [os.path.join(data_dir, fold_list[i])]

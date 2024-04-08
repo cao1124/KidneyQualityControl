@@ -10,26 +10,34 @@ from segment_util import RenalDataset, training_augmentation, valid_augmentation
 
 
 def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device):
-    for i in range(5):
+    for i in range(4):
         save_dir1 = save_dir + "fold" + str(i) + '/'
         os.makedirs(save_dir1, exist_ok=True)
         print('五折交叉验证 第{}次实验:'.format(i))
-        fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/']
-        valid_path = [os.path.join(data_dir, fold_list[i])]
-        valid_mask = [os.path.join(data_dir.replace('kidney-5fold', 'mask-5fold'), fold_list[i])]
-        fold_list.remove(fold_list[i])
-        if i == 4:
-            test_path = [os.path.join(data_dir, fold_list[0])]
-            test_mask = [os.path.join(data_dir.replace('kidney-5fold', 'mask-5fold'), fold_list[0])]
-            fold_list.remove(fold_list[0])
-        else:
-            test_path = [os.path.join(data_dir, fold_list[i])]
-            test_mask = [os.path.join(data_dir.replace('kidney-5fold', 'mask-5fold'), fold_list[i])]
-            fold_list.remove(fold_list[i])
-        train_path, train_mask = [], []
-        for x in range(len(fold_list)):
-            train_path.append(os.path.join(data_dir, fold_list[x]))
-            train_mask.append(os.path.join(data_dir.replace('kidney-5fold', 'mask-5fold'), fold_list[x]))
+        test_path = [os.path.join(data_dir, 'fold4/')]
+        test_mask = [os.path.join(data_dir.replace('kidney-5fold', 'mask-5fold'), 'fold4/')]
+        fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/']
+        valid_path = [os.path.join(data_dir, fold_list[3 - i])]
+        valid_mask = [os.path.join(data_dir.replace('kidney-5fold', 'mask-5fold'), fold_list[3 - i])]
+        train_path = [os.path.join(data_dir, x) for x in fold_list if x != fold_list[3 - i]]
+        train_mask = [os.path.join(data_dir.replace('kidney-5fold', 'mask-5fold'), x) for x in fold_list if x != fold_list[3 - i]]
+        '随机test database'
+        # fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/']
+        # valid_path = [os.path.join(data_dir, fold_list[i])]
+        # valid_mask = [os.path.join(data_dir.replace('kidney-5fold', 'mask-5fold'), fold_list[i])]
+        # fold_list.remove(fold_list[i])
+        # if i == 4:
+        #     test_path = [os.path.join(data_dir, fold_list[0])]
+        #     test_mask = [os.path.join(data_dir.replace('kidney-5fold', 'mask-5fold'), fold_list[0])]
+        #     fold_list.remove(fold_list[0])
+        # else:
+        #     test_path = [os.path.join(data_dir, fold_list[i])]
+        #     test_mask = [os.path.join(data_dir.replace('kidney-5fold', 'mask-5fold'), fold_list[i])]
+        #     fold_list.remove(fold_list[i])
+        # train_path, train_mask = [], []
+        # for x in range(len(fold_list)):
+        #     train_path.append(os.path.join(data_dir, fold_list[x]))
+        #     train_mask.append(os.path.join(data_dir.replace('kidney-5fold', 'mask-5fold'), fold_list[x]))
 
         train_dataset = RenalDataset(train_path, train_mask, augmentation=training_augmentation())
         valid_dataset = RenalDataset(valid_path, valid_mask, augmentation=valid_augmentation())
