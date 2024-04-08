@@ -20,18 +20,23 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         save_dir1 = os.path.join(save_dir, "fold" + str(i))
         os.makedirs(save_dir1, exist_ok=True)
         print('五折交叉验证 第{}次实验:'.format(i))
-        fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/']
-        valid_path = [fold_list[i]]
-        fold_list.remove(fold_list[i])
-        if i == 4:
-            test_path = [fold_list[0]]
-            fold_list.remove(fold_list[0])
-        else:
-            test_path = [fold_list[i]]
-            fold_list.remove(fold_list[i])
-        train_path = []
-        for x in range(len(fold_list)):
-            train_path.append(fold_list[x])
+        test_path = [os.path.join(data_dir, 'fold4/')]
+        fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/']
+        valid_path = [os.path.join(data_dir, fold_list[3 - i])]
+        train_path = [os.path.join(data_dir, x) for x in fold_list if x != valid_path[0]]
+        '随机test database'
+        # fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/']
+        # valid_path = [os.path.join(data_dir, fold_list[i])]
+        # fold_list.remove(fold_list[i])
+        # if i == 4:
+        #     test_path = [os.path.join(data_dir, fold_list[0])]
+        #     fold_list.remove(fold_list[0])
+        # else:
+        #     test_path = [os.path.join(data_dir, fold_list[i])]
+        #     fold_list.remove(fold_list[i])
+        # train_path = []
+        # for x in range(len(fold_list)):
+        #     train_path.append(os.path.join(data_dir, fold_list[x]))
 
         train_dataset = RenalMassDataset(data_dir, train_path, len(target_list) + 1, augmentation=training_augmentation())
         valid_dataset = RenalMassDataset(data_dir, valid_path, len(target_list) + 1, augmentation=valid_augmentation())
