@@ -23,7 +23,7 @@ def classify():
     os.environ['CUDA_VISIBLE_DEVICES'] = "3"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model_name = 'resnet50'
-    data_dir = '/media/user/Disk1/caoxu/dataset/kidney/shiyuan/20240122-renal-cystic-crop-classify-5fold/'
+    data_dir = '/media/user/Disk1/caoxu/dataset/kidney/shiyuan/20240408-renal-cystic-crop-classify-5fold/'
     category_num = 2
     bs = 128
     lr = 0.01
