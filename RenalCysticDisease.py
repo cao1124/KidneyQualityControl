@@ -43,7 +43,7 @@ def segment():
     os.environ['CUDA_VISIBLE_DEVICES'] = "4"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     data_dir = '/media/user/Disk1/caoxu/dataset/kidney/shiyuan/20240408-renal-cystic-segment-5fold/'
-    encoder_name = "efficientnet-b1"
+    encoder_name = "efficientnet-b0"
     encoder_activation = "softmax2d"
     target_list = [x.name for x in RenalCystic]
     bs = 6

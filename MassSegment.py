@@ -202,7 +202,7 @@ def segment():
     timm-efficientnet-l2
     replknet-31b
     """
-    encoder_name = "efficientnet-b1"
+    encoder_name = "efficientnet-b0"
     encoder_activation = "sigmoid"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
     bs = 18
