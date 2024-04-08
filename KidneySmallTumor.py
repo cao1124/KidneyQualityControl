@@ -185,7 +185,7 @@ def segment():
     os.environ['CUDA_VISIBLE_DEVICES'] = "0"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     data_dir = '/media/user/Disk1/caoxu/dataset/kidney/20231204-segment-dataset/image-5fold/'
-    encoder_name = "efficientnet-b7"
+    encoder_name = "efficientnet-b0"
     encoder_activation = "softmax2d"
     target_list = [x.name for x in RenalMass]
     bs = 6
