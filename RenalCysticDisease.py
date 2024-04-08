@@ -46,7 +46,7 @@ def segment():
     encoder_name = "efficientnet-b0"
     encoder_activation = "softmax2d"
     target_list = [x.name for x in RenalCystic]
-    bs = 20
+    bs = 24
     lr = 1e-4
     epochs = 2000
     save_dir = "RenalCysticDiseaseModel/segment/20240408-renal-cystic-segment-" + encoder_name + '/'
