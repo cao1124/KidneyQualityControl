@@ -131,7 +131,7 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         for k in range(len(test_dataset)):
             img_iou, img_dice = [], []
             image, gt_mask2 = test_dataset[k]
-            gt_mask = cv_read(os.path.splitext(test_dataset.images[k].replace('classify', 'segment'))[0] + '.jpg')
+            gt_mask = cv_read(os.path.splitext(test_dataset.images[k].replace('classify', 'segment'))[0] + '.png')
             image_ori = cv_read(test_dataset.images[k], 1)
             [orig_h, orig_w, _] = image_ori.shape
 
