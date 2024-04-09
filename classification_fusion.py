@@ -2,9 +2,9 @@
 # -*-coding:utf-8 -*-
 # @Time    : 2023/05/04  9:33
 # @Author  : Cao Xu
-# @FileName: classification.py
+# @FileName: classification_fusion.py
 """
-Description:   kidney classification
+Description:   kidney classification fusion
 """
 import os
 import numpy as np
