@@ -42,14 +42,14 @@ def classify():
 def segment():
     os.environ['CUDA_VISIBLE_DEVICES'] = "0"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    data_dir = '/media/user/Disk1/caoxu/dataset/kidney/shiyuan/20240408-renal-cystic-segment-5fold/'
+    data_dir = '/media/user/Disk1/caoxu/dataset/kidney/shiyuan/20240408-renal-cystic-classify-5fold/'
     encoder_name = "efficientnet-b0"
     encoder_activation = "softmax2d"
     target_list = [x.name for x in RenalCystic]
     bs = 24
     lr = 1e-4
     epochs = 2000
-    save_dir = "RenalCysticDiseaseModel/segment/20240409-renal-cystic-segment-" + encoder_name + '/'
+    save_dir = "RenalCysticDiseaseModel/segment/20240410-renal-cystic-segment-" + encoder_name + '/'
     segment_train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device, target_list)
 
 
@@ -62,14 +62,14 @@ def segment_test():
     os.environ['CUDA_VISIBLE_DEVICES'] = "0"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     test_list = []
-    test_img_dir = r'D:\med_dataset\kidney\240122-renal-cystic-classify-5fold\fold2'
+    test_img_dir = r'D:\med_dataset\kidney\20240408-shiyuan-kidney\20240408-renal-cystic-classify-5fold\fold4'
     for c in os.listdir(test_img_dir):
         for p in os.listdir(os.path.join(test_img_dir, c)):
             for img_path in [x for x in os.listdir(os.path.join(test_img_dir, c, p)) if not x.endswith('json')]:
                 test_list.append(os.path.join(test_img_dir, c, p, img_path))
-    save_dir = r'D:\med_project\上海十院肾囊肿疾病\fold1-model-pred'
+    save_dir = r'D:\med_project\上海十院肾囊肿疾病\20240410-renal-cystic-segment-pred'
     os.makedirs(save_dir, exist_ok=True)
-    model = torch.load('D:/med_project/上海十院肾囊肿疾病/fold1-best_0.599.pth')
+    model = torch.load(r'D:\med_project\上海十院肾囊肿疾病\20240409-renal-cystic-segment-efficientnet-b0/fold2best_0.9965.pth')
     model.eval()
     torch.cuda.empty_cache()
     target_list = [x.name for x in RenalCystic]
@@ -80,7 +80,7 @@ def segment_test():
     for k in range(len(test_list)):
         img_iou, img_dice = [], []
         image_ori = cv_read(test_list[k])
-        gt_mask = cv_read(os.path.splitext(test_list[k].replace('classify', 'segment'))[0] + '.jpg')
+        gt_mask = cv_read(os.path.splitext(test_list[k].replace('classify', 'segment'))[0] + '.png')
         [orig_h, orig_w, _] = image_ori.shape
         image = cv2.resize(image_ori, (512, 512), interpolation=cv2.INTER_NEAREST)
         image = image / 255.0
