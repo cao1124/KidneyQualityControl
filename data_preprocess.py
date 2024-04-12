@@ -395,8 +395,14 @@ if __name__ == '__main__':
     # kfold_split()
     # img2video()
     # mead_split_patient()
-    get_mask_by_json()
+    # get_mask_by_json()
     # dataset_augment()
     # image_json_compare()
     # backup_code()
-
+    base_dir = r'D:\med_dataset\kidney\20240408-shiyuan-kidney\20240408-renal-cystic-classify-5fold'
+    for f in os.listdir(base_dir):
+        for c in os.listdir(os.path.join(base_dir, f)):
+            for p in os.listdir(os.path.join(base_dir, f, c)):
+                file_len = os.listdir(os.path.join(base_dir, f, c, p))
+                if len(file_len) % 2 != 0:
+                    print(os.path.join(base_dir, f, c, p))

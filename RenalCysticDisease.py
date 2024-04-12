@@ -40,7 +40,7 @@ def classify():
 
 
 def segment():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "0"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "1"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     data_dir = '/media/user/Disk1/caoxu/dataset/kidney/shiyuan/20240408-renal-cystic-classify-5fold/'
     encoder_name = "efficientnet-b0"
@@ -49,7 +49,7 @@ def segment():
     bs = 24
     lr = 1e-4
     epochs = 2000
-    save_dir = "RenalCysticDiseaseModel/segment/20240410-renal-cystic-segment-" + encoder_name + '/'
+    save_dir = "RenalCysticDiseaseModel/segment/20240411-renal-cystic-segment-" + encoder_name + '/'
     segment_train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device, target_list)
 
 
