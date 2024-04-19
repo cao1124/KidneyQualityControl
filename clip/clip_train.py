@@ -98,16 +98,16 @@ def train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, dev
 
             # 反向传播
             cur_loss = (loss_img(logits_per_image, ground_truth) + loss_txt(logits_per_text, ground_truth)) / 2
-            total_loss += cur_loss
+
             optimizer.zero_grad()
-            total_loss.backward()
+            cur_loss.backward()
             if device == "cpu":
                 optimizer.step()
             else:
                 convert_models_to_fp32(model)
                 optimizer.step()
                 clip_model.convert_weights(model)
-
+            total_loss += cur_loss
         print('epoch [%d] loss: %.3f' % (i + 1, total_loss))
     torch.save(model, os.path.join(save_path, '20240419-clip-classify-model.pt'))
 
