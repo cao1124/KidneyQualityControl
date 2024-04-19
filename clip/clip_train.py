@@ -114,7 +114,7 @@ def train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, dev
 
 def main():
     epoch = 100
-    batch_size = 16
+    batch_size = 80
     learning_rate = 5e-5
     image_path = '/home/ai999/dataset/kidney/20240312-kidney-5fold'
     excel_path = '复旦中山医院肾肿瘤病理编号1-600共508例.csv'
