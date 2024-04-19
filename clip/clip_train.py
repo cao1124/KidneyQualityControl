@@ -118,7 +118,7 @@ def main():
     learning_rate = 5e-5
     image_path = '/home/ai999/dataset/kidney/20240312-kidney-5fold'
     excel_path = '/home/ai999/dataset/kidney/复旦中山医院肾肿瘤病理编号1-600共508例.xlsx'
-    excel_df = pd.read_excel(excel_path, encoding='utf-8')
+    excel_df = pd.read_excel(excel_path, encoding='utf-8', engine='openpyxl')
     save_path = 'clip-model'
     os.makedirs(save_path, exist_ok=True)
 
