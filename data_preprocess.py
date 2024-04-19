@@ -174,16 +174,16 @@ def kfold_split():
 
 def img2video():
     fps = 2
-    img_dir = r'D:\med_project\上海十院肾囊肿疾病\fold0-model-pred\bad'
+    img_dir = r'D:\med_project\上海十院肾囊肿疾病\20240411-fold3\IOU大于0.7'
     img_list = [x for x in os.listdir(img_dir) if x.lower().endswith('.jpg')]
     # img_key = lambda i: int(i.split('.')[-1])  # .split('frame')[1]
     # img_list = sorted(os.listdir(img_dir), key=img_key)
     img1 = cv_read(os.path.join(img_dir, img_list[0]))
     img_size = (img1.shape[1], img1.shape[0])
-    video_dir = r'D:\med_project\上海十院肾囊肿疾病\fold0-model-pred'
+    video_dir = r'D:\med_project\上海十院肾囊肿疾病\20240411-fold3'
     os.makedirs(video_dir, exist_ok=True)
     # MJPG --> .avi   mp4v -->.mp4
-    video = cv2.VideoWriter(os.path.join(video_dir, 'renal-cystic-segment-bad.mp4'),
+    video = cv2.VideoWriter(os.path.join(video_dir, 'renal-cystic-segment-good.mp4'),
                             cv2.VideoWriter_fourcc('m', 'p', '4', 'v'), fps, img_size)
     for i in range(0, len(img_list) - 1):
         img = cv_read(os.path.join(img_dir, img_list[i]))
@@ -393,16 +393,17 @@ def backup_code():
 if __name__ == '__main__':
     # dataset_count()
     # kfold_split()
-    # img2video()
+    img2video()
     # mead_split_patient()
     # get_mask_by_json()
     # dataset_augment()
     # image_json_compare()
     # backup_code()
-    base_dir = r'D:\med_dataset\kidney\20240408-shiyuan-kidney\20240408-renal-cystic-classify-5fold'
-    for f in os.listdir(base_dir):
-        for c in os.listdir(os.path.join(base_dir, f)):
-            for p in os.listdir(os.path.join(base_dir, f, c)):
-                file_len = os.listdir(os.path.join(base_dir, f, c, p))
-                if len(file_len) % 2 != 0:
-                    print(os.path.join(base_dir, f, c, p))
+
+    # base_dir = r'D:\med_dataset\kidney\20240408-shiyuan-kidney\20240408-renal-cystic-classify-5fold'
+    # for f in os.listdir(base_dir):
+    #     for c in os.listdir(os.path.join(base_dir, f)):
+    #         for p in os.listdir(os.path.join(base_dir, f, c)):
+    #             file_len = os.listdir(os.path.join(base_dir, f, c, p))
+    #             if len(file_len) % 2 != 0:
+    #                 print(os.path.join(base_dir, f, c, p))
