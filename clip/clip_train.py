@@ -34,13 +34,13 @@ class image_caption_dataset(Dataset):
 def load_data(image_path, excel_df, batch_size, preprocess):
     df = {'image': [], 'caption': []}
     num_list = excel_df.iloc[:, 0].tolist()
-    for f in image_path:
+    for f in os.listdir(image_path):
         if f != 'fold4':
-            for c in os.listdir(f):
-                for p in os.listdir(os.path.join(f, c)):
+            for c in os.listdir(os.path.join(image_path, f)):
+                for p in os.listdir(os.path.join(image_path, f, c)):
                     idx = num_list.index(int(p))
-                    for n in os.listdir(os.path.join(f, c, p)):
-                        df['image'].append(os.path.join(f, c, p, n))
+                    for n in os.listdir(os.path.join(image_path, f, c, p)):
+                        df['image'].append(os.path.join(image_path, f, c, p, n))
                         # cla = excel_df.iloc[idx][1]
                         # cla_type = excel_df.iloc[idx][2]
                         # sex = excel_df.iloc[idx][3]
