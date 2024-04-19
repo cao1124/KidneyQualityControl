@@ -116,13 +116,13 @@ def main():
     epoch = 100
     batch_size = 16
     learning_rate = 5e-5
-    image_path = '/mnt/data/caoxu/dataset/20240312-kidney-5fold'
-    excel_path = '/mnt/data/caoxu/dataset/复旦中山医院肾肿瘤病理编号1-600共508例.xlsx'
+    image_path = '/home/ai999/dataset/kidney/20240312-kidney-5fold'
+    excel_path = '/home/ai999/dataset/kidney/复旦中山医院肾肿瘤病理编号1-600共508例.xlsx'
     excel_df = pd.read_excel(excel_path, encoding='utf-8')
     save_path = 'clip-model'
     os.makedirs(save_path, exist_ok=True)
 
-    os.environ['CUDA_VISIBLE_DEVICES'] = "1"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "0"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, device)
 
