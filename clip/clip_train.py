@@ -8,6 +8,8 @@
 """
 from torch.utils.data import Dataset, DataLoader
 import torch
+from tqdm import tqdm
+
 import clip
 import clip_model
 from torch import nn, optim
@@ -56,7 +58,7 @@ def load_data(image_path, excel_df, batch_size, preprocess):
                         df['caption'].append("a photo of {} kidney cancer image in a {}-year-old {}.".format(cla, year, sex))
 
     dataset = image_caption_dataset(df, preprocess)
-    train_dataloader = DataLoader(dataset, batch_size=batch_size)
+    train_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, drop_last=True)
     return train_dataloader
 
 
@@ -87,7 +89,7 @@ def train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, dev
     loss_txt = nn.CrossEntropyLoss().to(device)
     optimizer = optim.Adam(model.parameters(), lr=learning_rate, betas=(0.9, 0.98), eps=1e-6, weight_decay=0.2)
 
-    for i in range(epoch):
+    for i in tqdm(range(epoch)):
         total_loss = 0
         for images, texts in train_dataloader:
             texts = clip.tokenize(texts).to(device)
