@@ -187,9 +187,9 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
 
 
 def segment():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "4,5,6"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "1,2,3"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    data_dir = '/media/user/Disk1/caoxu/dataset/kidney/zhongshan/20240312-kidney-5fold/'
+    data_dir = '/home/ai999/dataset/kidney/20240312-kidney-5fold/'
     """
     分割网络选择：
     Unet、Linknet、FPN、PSPNet、PAN、DeepLabV3、UnetPlusPlus
@@ -213,10 +213,10 @@ def segment():
     encoder_name = "efficientnet-b0"
     encoder_activation = "sigmoid"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
-    bs = 18
+    bs = 64
     lr = 1e-4
     epochs = 1000
-    save_dir = "mass-segment/20240312-mass-segment-zhongshan-" + encoder_name + '/'
+    save_dir = "mass-segment/20240422-mass-segment-zhongshan-" + encoder_name + '/'
     train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device)
 
 
