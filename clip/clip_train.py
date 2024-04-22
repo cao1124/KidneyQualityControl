@@ -117,7 +117,7 @@ def train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, dev
                 optimizer.step()
                 clip_model.convert_weights(model)
             total_loss += cur_loss
-        print('epoch [%d] loss: %.3f' % (i + 1, total_loss))
+        # print('epoch [%d] loss: %.3f' % (i + 1, total_loss))
         history.append(total_loss)
     torch.save(model, os.path.join(save_path, '20240419-clip-classify-model.pt'))
     history = np.array(history)
