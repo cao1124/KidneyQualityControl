@@ -6,16 +6,22 @@
 @Author  : cao xu
 @Time    : 2024/4/19 13:54
 """
+import matplotlib
+import numpy as np
+from matplotlib import pyplot as plt
 from torch.utils.data import Dataset, DataLoader
 import torch
 from tqdm import tqdm
-
 import clip
 import clip_model
 from torch import nn, optim
 import pandas as pd
 from PIL import Image
 import os
+import warnings
+matplotlib.use('AGG')
+torch.multiprocessing.set_sharing_strategy('file_system')
+warnings.filterwarnings("ignore")
 
 
 class image_caption_dataset(Dataset):
@@ -55,7 +61,8 @@ def load_data(image_path, excel_df, batch_size, preprocess):
                         else:
                             sex = 'man'
                         year = int(excel_df.iloc[idx][4])
-                        df['caption'].append("a photo of {} kidney cancer image in a {}-year-old {}.".format(cla, year, sex))
+                        df['caption'].append(
+                            "a photo of {} kidney cancer image in a {}-year-old {}.".format(cla, year, sex))
 
     dataset = image_caption_dataset(df, preprocess)
     train_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, drop_last=True)
@@ -88,7 +95,7 @@ def train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, dev
     loss_img = nn.CrossEntropyLoss().to(device)
     loss_txt = nn.CrossEntropyLoss().to(device)
     optimizer = optim.Adam(model.parameters(), lr=learning_rate, betas=(0.9, 0.98), eps=1e-6, weight_decay=0.2)
-
+    history = []
     for i in tqdm(range(epoch)):
         total_loss = 0
         for images, texts in train_dataloader:
@@ -111,7 +118,16 @@ def train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, dev
                 clip_model.convert_weights(model)
             total_loss += cur_loss
         print('epoch [%d] loss: %.3f' % (i + 1, total_loss))
+        history.append(total_loss)
     torch.save(model, os.path.join(save_path, '20240419-clip-classify-model.pt'))
+    history = np.array(history)
+    plt.clf()  # 清图
+    plt.plot(history)
+    plt.legend('Tr Loss')
+    plt.xlabel('Epoch Number')
+    plt.ylabel('Loss')
+    plt.ylim(0, np.max(history))
+    plt.savefig(save_path + 'loss_curve.png')
 
 
 def main():
