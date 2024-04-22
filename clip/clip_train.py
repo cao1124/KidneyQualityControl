@@ -131,7 +131,7 @@ def train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, dev
 
 
 def main():
-    epoch = 100
+    epoch = 500
     batch_size = 256
     learning_rate = 1e-3
     image_path = '/home/ai999/dataset/kidney/20240312-kidney-5fold'
