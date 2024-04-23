@@ -96,7 +96,7 @@ def train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, dev
     loss_txt = nn.CrossEntropyLoss().to(device)
     optimizer = optim.Adam(model.parameters(), lr=learning_rate, betas=(0.9, 0.98), eps=1e-6, weight_decay=0.2)
     history = []
-    for i in tqdm(range(epoch)):
+    for i in range(epoch):
         total_loss = 0
         for images, texts in train_dataloader:
             texts = clip.tokenize(texts).to(device)
@@ -117,7 +117,7 @@ def train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, dev
                 optimizer.step()
                 clip_model.convert_weights(model)
             total_loss += cur_loss.cpu().item()
-        # print('epoch [%d] loss: %.3f' % (i + 1, total_loss))
+        print('epoch [%d] loss: %.3f' % (i + 1, total_loss))
         history.append(total_loss)
     torch.save(model, os.path.join(save_path, '20240423-clip-classify-model.pt'))
     history = np.array(history)
@@ -133,7 +133,7 @@ def train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, dev
 def main():
     epoch = 200
     batch_size = 256
-    learning_rate = 1e-3
+    learning_rate = 1e-4
     image_path = '/home/ai999/dataset/kidney/20240312-kidney-5fold'
     excel_path = '复旦中山医院肾肿瘤病理编号1-600共508例.csv'
     excel_df = pd.read_csv(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'
