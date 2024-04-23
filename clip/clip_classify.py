@@ -22,7 +22,7 @@ def clip_classify():
     # Load CLIP model and processor
     os.environ['CUDA_VISIBLE_DEVICES'] = "0"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    clip_model, processor = load_pretrian_model(r'D:\PycharmProjects\kidney-quality-control\clip\clip-model\20240419-clip-classify-model.pt', device)
+    clip_model, processor = load_pretrian_model(r'D:\PycharmProjects\kidney-quality-control\clip\clip-model\20240422-clip-classify-model.pt', device)
 
     # Define image preprocessing pipeline
     image_transform = Compose([
@@ -75,7 +75,7 @@ def clip_classify():
                 label_list.append("a photo of {} kidney cancer image in a {}-year-old {}.".format(cla, year, sex))
     columns = ['图像输入', '文本标签', '预测结果']
     data = []
-    excel_file = r'clip预测结果.xlsx'
+    excel_file = r'20240422-clip预测结果.xlsx'
     for i in tqdm(range(len(img_list))):
         image_path = img_list[i]
         text = label_list[i]
