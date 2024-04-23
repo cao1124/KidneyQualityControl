@@ -133,11 +133,11 @@ def train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, dev
 def main():
     epoch = 200
     batch_size = 256
-    learning_rate = 1e-4
+    learning_rate = 5e-5
     image_path = '/home/ai999/dataset/kidney/20240312-kidney-5fold'
     excel_path = '复旦中山医院肾肿瘤病理编号1-600共508例.csv'
     excel_df = pd.read_csv(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'
-    save_path = '20240423-clip-model-RN50'
+    save_path = '20240423-clip-model-RN50-lr5e5'
     os.makedirs(save_path, exist_ok=True)
 
     os.environ['CUDA_VISIBLE_DEVICES'] = "0"
