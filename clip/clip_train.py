@@ -86,7 +86,7 @@ def load_pretrian_model(model_path, device):
 
 def train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, device):
     # 加载模型
-    model, preprocess = load_pretrian_model('RN50', device)   # ViT-B/32
+    model, preprocess = load_pretrian_model('ViT-B/32', device)   # ViT-B/32
 
     # 加载数据集
     train_dataloader = load_data(image_path, excel_df, batch_size, preprocess)
@@ -118,7 +118,8 @@ def train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, dev
                 clip_model.convert_weights(model)
             total_loss += cur_loss.cpu().item()
         print('epoch [%d] loss: %.3f' % (i + 1, total_loss))
-        history.append(total_loss)
+        if total_loss != 'nan':
+            history.append(total_loss)
     torch.save(model, os.path.join(save_path, '20240423-clip-classify-model.pt'))
     history = np.array(history)
     plt.clf()  # 清图
@@ -137,10 +138,10 @@ def main():
     image_path = '/home/ai999/dataset/kidney/20240312-kidney-5fold'
     excel_path = '复旦中山医院肾肿瘤病理编号1-600共508例.csv'
     excel_df = pd.read_csv(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'
-    save_path = '20240423-clip-model-RN50-lr5e5'
+    save_path = '20240424-clip-model-ViT-B-32-lr5e5'
     os.makedirs(save_path, exist_ok=True)
 
-    os.environ['CUDA_VISIBLE_DEVICES'] = "0"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "1"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, device)
 
