@@ -133,7 +133,7 @@ def train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, dev
 
 def main():
     epoch = 200
-    batch_size = 600
+    batch_size = 256
     learning_rate = 5e-5
     image_path = '/home/ai999/dataset/kidney/20240312-kidney-5fold'
     excel_path = '复旦中山医院肾肿瘤病理编号1-600共508例.csv'
@@ -141,10 +141,9 @@ def main():
     save_path = '20240424-clip-model-ViT-B-32-lr5e5'
     os.makedirs(save_path, exist_ok=True)
 
-    os.environ['CUDA_VISIBLE_DEVICES'] = "1"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "0"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    with torch.cuda.device(1):
-        train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, device)
+    train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, device)
 
 
 if __name__ == '__main__':
