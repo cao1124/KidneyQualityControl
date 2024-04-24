@@ -141,10 +141,10 @@ def main():
     save_path = '20240424-clip-model-ViT-B-32-lr5e5'
     os.makedirs(save_path, exist_ok=True)
 
-    os.environ['CUDA_VISIBLE_DEVICES'] = "1"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, device)
 
 
 if __name__ == '__main__':
+    os.environ['CUDA_VISIBLE_DEVICES'] = "1"
     main()
