@@ -165,8 +165,8 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
                 optimizer.step()
                 lr_scheduler.step()
 
-            train_loss /= len(train_dataloader)
-            train_acc = num_correct / len(train_dataloader)
+            train_loss /= train_size
+            train_acc = num_correct / train_size
             print("Train Epoch: {}, Loss: {:.4f}, Acc: {:.4f}".format(epoch + 1, train_loss, train_acc))
 
             'validation'
@@ -192,8 +192,8 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
                     valid_true.extend(label.cpu().numpy())
                     valid_pred.extend(output.argmax(dim=1).cpu().numpy())
 
-            valid_loss /= len(valid_dataloader)
-            valid_acc = num_correct / len(valid_dataloader)
+            valid_loss /= valid_size
+            valid_acc = num_correct / valid_size
             print("Val Epoch: {}, Loss: {:.4f}, Acc: {:.4f}".format(epoch + 1, valid_loss, valid_acc))
             'best acc save checkpoint'
             if best_valid_acc < valid_acc:
@@ -236,7 +236,7 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
                 num_correct += torch.eq(output.argmax(dim=1), label).sum().float().item()
                 test_true.extend(label.cpu().numpy())
                 test_pred.extend(output.argmax(dim=1).cpu().numpy())
-            test_acc = num_correct / len(test_dataloader)
+            test_acc = num_correct / test_size
             print("test accuracy: {:.4f}".format(test_acc))
             print('confusion_matrix:\n{}'.format(confusion_matrix(test_true, test_pred)))
             print('classification_report:\n{}'.format(classification_report(test_true, test_pred, digits=4)))
