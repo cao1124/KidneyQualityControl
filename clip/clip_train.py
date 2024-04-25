@@ -21,7 +21,7 @@ from PIL import Image
 import os
 import warnings
 
-
+os.environ['CUDA_VISIBLE_DEVICES'] = "1"
 matplotlib.use('AGG')
 torch.multiprocessing.set_sharing_strategy('file_system')
 warnings.filterwarnings("ignore")
@@ -244,9 +244,7 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
 
 
 def main():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "1"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
     epoch = 200
     batch_size = 256
     learning_rate = 1e-3
