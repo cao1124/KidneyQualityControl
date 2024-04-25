@@ -133,8 +133,8 @@ def train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, dev
 
 def main():
     epoch = 200
-    batch_size = 16
-    learning_rate = 1e-4
+    batch_size = 256
+    learning_rate = 1e-2
     image_path = '/home/ai999/dataset/kidney/20240312-kidney-5fold'
     excel_path = '复旦中山医院肾肿瘤病理编号1-600共508例.csv'
     excel_df = pd.read_csv(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'
