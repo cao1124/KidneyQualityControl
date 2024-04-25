@@ -11,7 +11,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from torch.utils.data import Dataset, DataLoader
 import torch
-from tqdm import tqdm
+from torchvision import transforms
 import clip
 import clip_model
 from torch import nn, optim
@@ -20,11 +20,27 @@ from PIL import Image
 import os
 import warnings
 
-from classification_util import image_transforms
-
 matplotlib.use('AGG')
 torch.multiprocessing.set_sharing_strategy('file_system')
 warnings.filterwarnings("ignore")
+
+mass_mean, mass_std = [0.29003, 0.29385, 0.31377], [0.18866, 0.19251, 0.19958]
+# 数据增强
+image_transforms = {
+    'train': transforms.Compose([
+        transforms.Resize([224, 224]),
+        transforms.RandomHorizontalFlip(p=0.5),
+        transforms.RandomVerticalFlip(p=0.5),
+        transforms.RandomRotation(90),
+        transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5, hue=0.5),
+        transforms.ToTensor(),
+        transforms.Normalize(mass_mean, mass_std)]),
+    'valid': transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Resize([224, 224]),
+        transforms.Normalize(mass_mean, mass_std)
+    ])
+}
 
 
 class image_caption_dataset(Dataset):
@@ -89,7 +105,7 @@ def load_pretrian_model(model_path, device):
 
 def train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, device):
     # 加载模型
-    model, preprocess = load_pretrian_model('ViT-B/32', device)   # ViT-B/32
+    model, preprocess = load_pretrian_model('ViT-B/32', device)  # ViT-B/32
     preprocess = image_transforms['train']
     # 加载数据集
     train_dataloader = load_data(image_path, excel_df, batch_size, preprocess)
