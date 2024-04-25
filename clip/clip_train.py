@@ -21,7 +21,7 @@ from PIL import Image
 import os
 import warnings
 
-os.environ['CUDA_VISIBLE_DEVICES'] = "1"
+
 matplotlib.use('AGG')
 torch.multiprocessing.set_sharing_strategy('file_system')
 warnings.filterwarnings("ignore")
@@ -87,7 +87,7 @@ def load_data(image_path, excel_df, batch_size, preprocess):
 
     dataset = image_caption_dataset(df, preprocess)
     train_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, drop_last=True)
-    return train_dataloader
+    return train_dataloader, len(dataset.images)
 
 
 def convert_models_to_fp32(model):
@@ -131,11 +131,10 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
         lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=num_epochs, eta_min=0.005)
 
         # 加载数据集
-        train_dataloader = load_data(train_path, excel_df, batch_size, image_transforms['train'])
-        valid_dataloader = load_data(valid_path, excel_df, batch_size, image_transforms['valid'])
-        test_dataloader = load_data(test_path, excel_df, batch_size, image_transforms['valid'])
-        print('train_size:{}, valid_size:{}, test_size:{}'.format(len(train_dataloader), len(valid_dataloader),
-                                                                  len(test_dataloader)))
+        train_dataloader, train_size = load_data(train_path, excel_df, batch_size, image_transforms['train'])
+        valid_dataloader, valid_size = load_data(valid_path, excel_df, batch_size, image_transforms['valid'])
+        test_dataloader, test_size = load_data(test_path, excel_df, batch_size, image_transforms['valid'])
+        print('train_size:{}, valid_size:{}, test_size:{}'.format(train_size, valid_size, test_size))
         # 训练
         best_test_acc, best_valid_acc, best_valid_recall, best_epoch = 0.0, 0.0, 0.0, 0
         history = []
@@ -203,7 +202,7 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
                     'classification_report:\n{}'.format(classification_report(valid_true, valid_pred, digits=4)))
                 best_valid_acc = valid_acc
                 best_epoch = epoch + 1
-                torch.save(model_classify, save_path + 'fold' + str(i) + '-best-acc-model.pt')
+                torch.save(model_classify, os.path.join(save_path, 'fold' + str(i) + '-best-model.pt'))
             print("Epoch: {:03d}, Train Loss: {:.4f}, Acc: {:.4f}, Valid Loss: {:.4f}, Acc:{:.4f}"
                   .format(epoch + 1, train_loss, train_acc, valid_loss, valid_acc))
             print("validation best: {:.4f} at epoch {}".format(best_valid_acc, best_epoch))
@@ -215,10 +214,10 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
         plt.xlabel('Epoch Number')
         plt.ylabel('Loss')
         plt.ylim(0, np.max(history))
-        plt.savefig(save_path + 'loss_curve' + str(i) + '.png')
+        plt.savefig(os.path.join(save_path, 'loss_curve' + str(i) + '.png'))
 
         'test'
-        model_classify = torch.load(save_path + 'fold' + str(i) + '-best-acc-model.pt')  # best-recall-model.pt
+        model_classify = torch.load(os.path.join(save_path, 'fold' + str(i) + '-best-model.pt'))
         num_correct = 0
         test_true, test_pred = [], []
         model_classify.eval()
@@ -244,7 +243,9 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
 
 
 def main():
+    os.environ['CUDA_VISIBLE_DEVICES'] = "1"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
     epoch = 200
     batch_size = 256
     learning_rate = 1e-3
