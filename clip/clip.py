@@ -73,7 +73,7 @@ def _convert_image_to_rgb(image):
 
 def _transform(n_px):
     return Compose([
-        Resize(n_px, interpolation=BICUBIC),
+        Resize([n_px, n_px]),
         RandomHorizontalFlip(p=0.5),
         RandomVerticalFlip(p=0.5),
         ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5, hue=0.5),
