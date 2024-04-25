@@ -86,7 +86,7 @@ def load_data(image_path, excel_df, batch_size, preprocess):
                         "a photo of {} kidney cancer image in a {}-year-old {}.".format(cla, year, sex))
 
     dataset = image_caption_dataset(df, preprocess)
-    train_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, drop_last=True)
+    train_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, drop_last=True, num_workers=4)
     return train_dataloader, len(dataset.images)
 
 
