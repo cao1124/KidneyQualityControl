@@ -19,6 +19,9 @@ import pandas as pd
 from PIL import Image
 import os
 import warnings
+
+from classification_util import image_transforms
+
 matplotlib.use('AGG')
 torch.multiprocessing.set_sharing_strategy('file_system')
 warnings.filterwarnings("ignore")
@@ -87,7 +90,7 @@ def load_pretrian_model(model_path, device):
 def train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, device):
     # 加载模型
     model, preprocess = load_pretrian_model('ViT-B/32', device)   # ViT-B/32
-
+    preprocess = image_transforms['train']
     # 加载数据集
     train_dataloader = load_data(image_path, excel_df, batch_size, preprocess)
 
@@ -133,8 +136,8 @@ def train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, dev
 
 def main():
     epoch = 200
-    batch_size = 256
-    learning_rate = 1e-2
+    batch_size = 64
+    learning_rate = 1e-3
     image_path = '/home/ai999/dataset/kidney/20240312-kidney-5fold'
     excel_path = '复旦中山医院肾肿瘤病理编号1-600共508例.csv'
     excel_df = pd.read_csv(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'
