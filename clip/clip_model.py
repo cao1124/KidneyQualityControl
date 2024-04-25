@@ -362,14 +362,14 @@ class CLIP(nn.Module):
         # normalized features
         image_features = image_features / image_features.norm(dim=1, keepdim=True)
         text_features = text_features / text_features.norm(dim=1, keepdim=True)
-
-        # cosine similarity as logits
-        logit_scale = self.logit_scale.exp()
-        logits_per_image = logit_scale * image_features @ text_features.t()
-        logits_per_text = logits_per_image.t()
-
-        # shape = [global_batch_size, global_batch_size]
-        return logits_per_image, logits_per_text
+        return image_features, text_features
+        # # cosine similarity as logits
+        # logit_scale = self.logit_scale.exp()
+        # logits_per_image = logit_scale * image_features @ text_features.t()
+        # logits_per_text = logits_per_image.t()
+        #
+        # # shape = [global_batch_size, global_batch_size]
+        # return logits_per_image, logits_per_text
 
 
 def convert_weights(model: nn.Module):

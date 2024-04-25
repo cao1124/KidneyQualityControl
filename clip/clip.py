@@ -6,7 +6,7 @@ from typing import Any, Union, List
 
 import torch
 from PIL import Image
-from torchvision.transforms import *
+from torchvision.transforms import Compose, Resize, CenterCrop, ToTensor, Normalize
 from tqdm import tqdm
 
 from clip_model import build_model
@@ -73,14 +73,11 @@ def _convert_image_to_rgb(image):
 
 def _transform(n_px):
     return Compose([
-        Resize([n_px, n_px]),
-        RandomHorizontalFlip(p=0.5),
-        RandomVerticalFlip(p=0.5),
-        ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5, hue=0.5),
-        # CenterCrop(n_px),
+        Resize(n_px, interpolation=BICUBIC),
+        CenterCrop(n_px),
         _convert_image_to_rgb,
         ToTensor(),
-        Normalize((0.29003, 0.29385, 0.31377), (0.18866, 0.19251, 0.19958)),
+        Normalize((0.48145466, 0.4578275, 0.40821073), (0.26862954, 0.26130258, 0.27577711)),
     ])
 
 
