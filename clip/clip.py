@@ -76,7 +76,6 @@ def _transform(n_px):
         Resize(n_px, interpolation=BICUBIC),
         RandomHorizontalFlip(p=0.5),
         RandomVerticalFlip(p=0.5),
-        RandomRotation(90),
         ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5, hue=0.5),
         # CenterCrop(n_px),
         _convert_image_to_rgb,
