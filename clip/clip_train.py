@@ -83,7 +83,9 @@ def load_data(image_path, excel_df, batch_size, preprocess):
                         sex = 'man'
                     year = int(excel_df.iloc[idx][4])
                     df['caption'].append(
-                        "a photo of kidney cancer image in a {}-year-old {}.".format(year, sex))
+                        "a photo of kidney cancer image in a {}-year-old.".format(year))
+                    # df['caption'].append(
+                    #     "a photo of {} kidney cancer image in a {}-year-old {}.".format(cla, year, sex))
 
     dataset = image_caption_dataset(df, preprocess)
     train_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, drop_last=True, num_workers=4)
@@ -252,7 +254,7 @@ def main():
     image_path = '/media/user/Disk1/caoxu/dataset/kidney/zhongshan/20240312-kidney-5fold'
     excel_path = '复旦中山医院肾肿瘤病理编号1-600共508例.csv'
     excel_df = pd.read_csv(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'
-    save_path = '20240426-clip-resnet50-classify'
+    save_path = '20240426-clip-resnet50-classify-only-year'
     os.makedirs(save_path, exist_ok=True)
     train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, device)
 
