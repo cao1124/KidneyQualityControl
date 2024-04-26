@@ -206,7 +206,7 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
             print("Epoch: {:03d}, Train Loss: {:.4f}, Acc: {:.4f}, Valid Loss: {:.4f}, Acc:{:.4f}"
                   .format(epoch + 1, train_loss, train_acc, valid_loss, valid_acc))
             print("validation best: {:.4f} at epoch {}".format(best_valid_acc, best_epoch))
-
+            history.append([train_loss, valid_loss])
         history = np.array(history)
         plt.clf()  # 清图
         plt.plot(history)
@@ -252,7 +252,7 @@ def main():
     image_path = '/media/user/Disk1/caoxu/dataset/kidney/zhongshan/20240312-kidney-5fold'
     excel_path = '复旦中山医院肾肿瘤病理编号1-600共508例.csv'
     excel_df = pd.read_csv(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'
-    save_path = '20240425-clip-resnet50-classify'
+    save_path = '20240426-clip-resnet50-classify'
     os.makedirs(save_path, exist_ok=True)
     train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, device)
 
