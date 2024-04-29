@@ -248,12 +248,12 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     epoch = 500
-    batch_size = 128
+    batch_size = 256
     learning_rate = 1e-3
     image_path = '/media/user/Disk1/caoxu/dataset/kidney/zhongshan/20240312-kidney-5fold'
     excel_path = '复旦中山医院肾肿瘤病理编号1-600共508例.csv'
     excel_df = pd.read_csv(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'
-    save_path = '20240429-clip-resnext50-classify'
+    save_path = 'res/20240429-clip-resnext50-classify'
     os.makedirs(save_path, exist_ok=True)
     train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, device)
 
