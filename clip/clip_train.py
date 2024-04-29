@@ -82,8 +82,7 @@ def load_data(image_path, excel_df, batch_size, preprocess):
                     else:
                         sex = 'man'
                     year = int(excel_df.iloc[idx][4])
-                    df['caption'].append(
-                        "a photo of {} kidney cancer image.".format(sex))
+                    df['caption'].append("A photo of a {}-year-old {} with kidney cancer.".format(year, sex))
                     # df['caption'].append(
                     #     "a photo of {} kidney cancer image in a {}-year-old {}.".format(cla, year, sex))
 
@@ -119,7 +118,7 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
         train_path = [os.path.join(image_path, x) for x in fold_list if x != fold_list[3 - i]]
 
         # 加载模型
-        model_classify = models.resnet50(pretrained=True)
+        model_classify = models.resnext50_32x4d(pretrained=True)
         model_classify.conv1 = nn.Conv2d(1024, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
         model_classify.fc = nn.Linear(in_features=2048, out_features=2, bias=True)
         if torch.cuda.device_count() > 1:
@@ -248,13 +247,13 @@ def main():
     os.environ['CUDA_VISIBLE_DEVICES'] = "4"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    epoch = 200
+    epoch = 500
     batch_size = 256
     learning_rate = 1e-3
     image_path = '/media/user/Disk1/caoxu/dataset/kidney/zhongshan/20240312-kidney-5fold'
     excel_path = '复旦中山医院肾肿瘤病理编号1-600共508例.csv'
     excel_df = pd.read_csv(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'
-    save_path = '20240426-clip-resnet50-classify-only-sex'
+    save_path = '20240429-clip-resnext50-classify'
     os.makedirs(save_path, exist_ok=True)
     train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, device)
 
