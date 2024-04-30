@@ -117,9 +117,13 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
         valid_path = [os.path.join(image_path, fold_list[3 - i])]
         train_path = [os.path.join(image_path, x) for x in fold_list if x != fold_list[3 - i]]
 
-        # 加载模型
+        # 加载模型  resnet
+        # model_classify = models.resnext50(pretrained=True)
+        # model_classify.conv1 = nn.Conv2d(1024, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
+        # model_classify.fc = nn.Linear(in_features=2048, out_features=2, bias=True)
+        # 加载模型  densenet
         model_classify = models.densenet161(pretrained=True)
-        model_classify.conv1 = nn.Conv2d(1024, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
+        model_classify.conv1 = nn.Conv2d(1024, 96, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
         model_classify.fc = nn.Linear(in_features=2208, out_features=2, bias=True)
         if torch.cuda.device_count() > 1:
             model_classify = nn.DataParallel(model_classify)
