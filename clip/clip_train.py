@@ -118,13 +118,11 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
         train_path = [os.path.join(image_path, x) for x in fold_list if x != fold_list[3 - i]]
 
         # 加载模型  resnet
-        # model_classify = models.resnext50(pretrained=True)
-        # model_classify.conv1 = nn.Conv2d(1024, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
-        # model_classify.fc = nn.Linear(in_features=2048, out_features=2, bias=True)
+        model_classify = models.resnext50_32x4d(pretrained=True)
+        model_classify.fc = nn.Linear(in_features=2048, out_features=2, bias=True)
         # 加载模型  densenet
-        model_classify = models.densenet161(pretrained=True)
-        model_classify.features.conv0 = nn.Conv2d(1024, 96, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
-        model_classify.classifier = nn.Linear(in_features=2208, out_features=2, bias=True)
+        # model_classify = models.densenet161(pretrained=True)
+        # model_classify.classifier = nn.Linear(in_features=2208, out_features=2, bias=True)
         if torch.cuda.device_count() > 1:
             model_classify = nn.DataParallel(model_classify)
         model_classify.to(device)
@@ -158,7 +156,10 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
                 img_feature, text_feature = model_clip(img, text)
                 img_with_text = torch.cat((img_feature, text_feature), dim=1).float()
                 img_with_text = img_with_text.view(img_with_text.size(0), -1, 1, 1)
-                output = model_classify(img_with_text)
+                # 使用一个全连接层将特征映射到一个更高维度的空间
+                fc_layer = torch.nn.Linear(1024, 3 * 224 * 224).to(device)
+                img_with_text_mapped = fc_layer(img_with_text.view(-1, 1024)).view(batch_size, 3, 224, 224)
+                output = model_classify(img_with_text_mapped)
 
                 loss_step = loss_func(output, label)
                 train_loss += loss_step.item()
@@ -248,13 +249,14 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
 
 
 def main():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "4"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "0"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     epoch = 500
-    batch_size = 256
+    batch_size = 2
     learning_rate = 1e-3
-    image_path = '/media/user/Disk1/caoxu/dataset/kidney/zhongshan/20240312-kidney-5fold'
+    image_path = 'E:/med_dataset/kidney_dataset/kidney-zhongshan/20240312-kidney-5fold'
+    # '/media/user/Disk1/caoxu/dataset/kidney/zhongshan/20240312-kidney-5fold'
     excel_path = '复旦中山医院肾肿瘤病理编号1-600共508例.csv'
     excel_df = pd.read_csv(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'
     save_path = 'res/20240430-clip-densenet161-classify'
