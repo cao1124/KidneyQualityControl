@@ -123,8 +123,8 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
         # model_classify.fc = nn.Linear(in_features=2048, out_features=2, bias=True)
         # 加载模型  densenet
         model_classify = models.densenet161(pretrained=True)
-        model_classify.conv0 = nn.Conv2d(1024, 96, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
-        model_classify.fc = nn.Linear(in_features=2208, out_features=2, bias=True)
+        model_classify.features.conv0 = nn.Conv2d(1024, 96, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
+        model_classify.classifier = nn.Linear(in_features=2208, out_features=2, bias=True)
         if torch.cuda.device_count() > 1:
             model_classify = nn.DataParallel(model_classify)
         model_classify.to(device)
