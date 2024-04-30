@@ -139,6 +139,7 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
         test_dataloader, test_size = load_data(test_path, excel_df, batch_size, image_transforms['valid'])
         print('train_size:{}, valid_size:{}, test_size:{}'.format(train_size, valid_size, test_size))
         # 训练
+        fc_layer = torch.nn.Linear(1024, 3 * 224 * 224).to(device)
         best_test_acc, best_valid_acc, best_valid_recall, best_epoch = 0.0, 0.0, 0.0, 0
         history = []
         for epoch in range(num_epochs):
@@ -157,7 +158,6 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
                 img_with_text = torch.cat((img_feature, text_feature), dim=1).float()
                 img_with_text = img_with_text.view(img_with_text.size(0), -1, 1, 1)
                 # 使用一个全连接层将特征映射到一个更高维度的空间
-                fc_layer = torch.nn.Linear(1024, 3 * 224 * 224).to(device)
                 img_with_text_mapped = fc_layer(img_with_text.view(-1, 1024)).view(batch_size, 3, 224, 224)
                 output = model_classify(img_with_text_mapped)
 
@@ -253,12 +253,12 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     epoch = 500
-    batch_size = 128
+    batch_size = 100
     learning_rate = 1e-3
     image_path = '/media/user/Disk1/caoxu/dataset/kidney/zhongshan/20240312-kidney-5fold'
     excel_path = '复旦中山医院肾肿瘤病理编号1-600共508例.csv'
     excel_df = pd.read_csv(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'
-    save_path = 'res/20240430-clip-resnext50_32x4d-classify'
+    save_path = 'res/20240430-clip-resnext50-classify'
     os.makedirs(save_path, exist_ok=True)
     train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, device)
 
