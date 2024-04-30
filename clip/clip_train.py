@@ -253,7 +253,7 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     epoch = 500
-    batch_size = 256
+    batch_size = 128
     learning_rate = 1e-3
     image_path = '/media/user/Disk1/caoxu/dataset/kidney/zhongshan/20240312-kidney-5fold'
     excel_path = '复旦中山医院肾肿瘤病理编号1-600共508例.csv'
