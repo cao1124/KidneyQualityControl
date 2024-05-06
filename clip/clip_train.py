@@ -161,9 +161,6 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
                 img_with_text = img_with_text.view(img_with_text.size(0), -1, 1, 1)
                 # 使用一个全连接层将特征映射到一个更高维度的空间
                 img_with_text_mapped = fc_layer(img_with_text.view(-1, 1024)).view(batch_size, 3, 224, 224)
-                print('img_with_text_mapped.shape: ', img_with_text_mapped.shape)
-                if img_with_text_mapped.shape != (2,3,224,224):
-                    print('.')
                 output = model_classify(img_with_text_mapped)
 
                 loss_step = loss_func(output, label)
