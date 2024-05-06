@@ -161,6 +161,9 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
                 img_with_text = img_with_text.view(img_with_text.size(0), -1, 1, 1)
                 # 使用一个全连接层将特征映射到一个更高维度的空间
                 img_with_text_mapped = fc_layer(img_with_text.view(-1, 1024)).view(batch_size, 3, 224, 224)
+                print('img_with_text_mapped.shape: ', img_with_text_mapped.shape)
+                if img_with_text_mapped.shape != (2,3,224,224):
+                    print('error shape .', img_with_text_mapped.shape)
                 output = model_classify(img_with_text_mapped)
 
                 loss_step = loss_func(output, label)
@@ -255,7 +258,7 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     epoch = 500
-    batch_size = 128
+    batch_size = 64
     learning_rate = 1e-3
     image_path = '/media/user/Disk1/caoxu/dataset/kidney/zhongshan/20240312-kidney-5fold'
     # 'E:/med_dataset/kidney_dataset/kidney-zhongshan/20240312-kidney-5fold'
