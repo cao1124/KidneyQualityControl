@@ -5,7 +5,7 @@
 @File    : clip_train.py
 @Author  : cao xu
 @Time    : 2024/4/19 13:54
-clip model提取 img_feature和text_feature，concatenate后送入resnet分类
+clip model提取 text_feature，图像送入resnet提取img_feature, 在resnet分类的全连接层concatenate后分类
 """
 import matplotlib
 import numpy as np
@@ -74,18 +74,18 @@ def load_data(image_path, excel_df, batch_size, preprocess):
                     # cla = excel_df.iloc[idx][1]
                     # cla_type = excel_df.iloc[idx][2]
                     # sex = excel_df.iloc[idx][3]
-                    if c == '0':
-                        cla = 'benign'
-                    else:
-                        cla = 'malignant'
+                    # if c == '0':
+                    #     cla = 'benign'
+                    # else:
+                    #     cla = 'malignant'
+                    # df['caption'].append(
+                    #     "a photo of {} kidney cancer image in a {}-year-old {}.".format(cla, year, sex))
                     if excel_df.iloc[idx][3] == '女':
                         sex = 'woman'
                     else:
                         sex = 'man'
                     year = int(excel_df.iloc[idx][4])
                     df['caption'].append("A photo of a {}-year-old {} with kidney cancer.".format(year, sex))
-                    # df['caption'].append(
-                    #     "a photo of {} kidney cancer image in a {}-year-old {}.".format(cla, year, sex))
 
     dataset = image_caption_dataset(df, preprocess)
     train_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, drop_last=True, num_workers=4)
@@ -107,6 +107,20 @@ def load_pretrian_model(model_path, device):
     return model, preprocess
 
 
+class ClipCNNModel(nn.Module):
+    def __init__(self, net):
+        super(ClipCNNModel, self).__init__()
+        net.fc = nn.Sequential()
+        self.net = net
+        self.fc = nn.Linear(in_features=2560, out_features=2, bias=True)
+
+    def forward(self, x1, x2):
+        x1 = self.net(x1)
+        x = torch.cat((x1, x2), dim=1)
+        x = self.fc(x)
+        return x
+
+
 def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path, device):
     # 加载CLIP模型
     model_clip, _ = load_pretrian_model('ViT-B/32', device)  # ViT-B/32
@@ -119,21 +133,16 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
         train_path = [os.path.join(image_path, x) for x in fold_list if x != fold_list[3 - i]]
 
         # 加载模型  resnet
-        model_classify = models.resnext50_32x4d(pretrained=True)
-        model_classify.fc = nn.Linear(in_features=2048, out_features=2, bias=True)
-        # model_classify.conv1 = nn.Conv2d(1024, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
-        # 加载模型  densenet
-        # model_classify = models.densenet161(pretrained=True)
-        # model_classify.classifier = nn.Linear(in_features=2208, out_features=2, bias=True)
-        # model_classify.features.conv0 = nn.Conv2d(1024, 96, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
+        model = models.resnet50(pretrained=True)
+        model = ClipCNNModel(model)
+
         if torch.cuda.device_count() > 1:
-            model_classify = nn.DataParallel(model_classify)
-        model_classify.to(device)
+            model = nn.DataParallel(model)
+        model.to(device)
 
         # 损失函数和优化器
         loss_func = nn.CrossEntropyLoss().to(device)
-        optimizer = optim.NAdam(model_classify.parameters(), lr=learning_rate, betas=(0.8, 0.888), eps=1e-08,
-                                weight_decay=2e-4)
+        optimizer = optim.Adam(model.parameters(), lr=learning_rate, betas=(0.8, 0.888), eps=1e-08, weight_decay=2e-4)
         lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=num_epochs, eta_min=0.005)
 
         # 加载数据集
@@ -142,7 +151,6 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
         test_dataloader, test_size = load_data(test_path, excel_df, batch_size, image_transforms['valid'])
         print('train_size:{}, valid_size:{}, test_size:{}'.format(train_size, valid_size, test_size))
         # 训练
-        fc_layer = torch.nn.Linear(1024, 3 * 224 * 224).to(device)
         best_test_acc, best_valid_acc, best_valid_recall, best_epoch = 0.0, 0.0, 0.0, 0
         history = []
         for epoch in range(num_epochs):
@@ -150,19 +158,15 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
             train_loss, valid_loss, num_correct = 0.0, 0.0, 0
 
             'train'
-            model_classify.train()
+            model.train()
             torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
             for step, batch in enumerate(train_dataloader):
                 img = batch[0].to(device)
                 text = clip.tokenize(batch[1]).to(device)
                 label = batch[2].to(device)
 
-                img_feature, text_feature = model_clip(img, text)
-                img_with_text = torch.cat((img_feature, text_feature), dim=1).float()
-                img_with_text = img_with_text.view(img_with_text.size(0), -1, 1, 1)
-                # 使用一个全连接层将特征映射到一个更高维度的空间
-                img_with_text_mapped = fc_layer(img_with_text.view(-1, 1024)).view(batch_size, 3, 224, 224)
-                output = model_classify(img_with_text_mapped)
+                _, text_feature = model_clip(img, text)
+                output = model(img, text_feature)
 
                 loss_step = loss_func(output, label)
                 train_loss += loss_step.item()
@@ -181,7 +185,7 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
             'validation'
             num_correct = 0
             valid_true, valid_pred = [], []
-            model_classify.eval()
+            model.eval()
             torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
             with torch.no_grad():
                 for step, batch in enumerate(valid_dataloader):
@@ -189,13 +193,8 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
                     text = clip.tokenize(batch[1]).to(device)
                     label = batch[2].to(device)
 
-                    img_feature, text_feature = model_clip(img, text)
-                    img_with_text = torch.cat((img_feature, text_feature), dim=1).float()
-                    img_with_text = img_with_text.view(img_with_text.size(0), -1, 1, 1)
-                    # 使用一个全连接层将特征映射到一个更高维度的空间
-                    img_with_text_mapped = fc_layer(img_with_text.view(-1, 1024)).view(batch_size, 3, 224, 224)
-                    output = model_classify(img_with_text_mapped)
-
+                    _, text_feature = model_clip(img, text)
+                    output = model(img, text_feature)
                     loss_step = loss_func(output, label)
                     valid_loss += loss_step.item()
                     num_correct += torch.eq(output.argmax(dim=1), label).sum().float().item()
@@ -213,7 +212,7 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
                     'classification_report:\n{}'.format(classification_report(valid_true, valid_pred, digits=4)))
                 best_valid_acc = valid_acc
                 best_epoch = epoch + 1
-                torch.save(model_classify, os.path.join(save_path, 'fold' + str(i) + '-best-model.pt'))
+                torch.save(model, os.path.join(save_path, 'fold' + str(i) + '-best-model.pt'))
             print("Epoch: {:03d}, Train Loss: {:.4f}, Acc: {:.4f}, Valid Loss: {:.4f}, Acc:{:.4f}"
                   .format(epoch + 1, train_loss, train_acc, valid_loss, valid_acc))
             print("validation best: {:.4f} at epoch {}".format(best_valid_acc, best_epoch))
@@ -228,10 +227,10 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
         plt.savefig(os.path.join(save_path, 'loss_curve' + str(i) + '.png'))
 
         'test'
-        model_classify = torch.load(os.path.join(save_path, 'fold' + str(i) + '-best-model.pt'))
+        model = torch.load(os.path.join(save_path, 'fold' + str(i) + '-best-model.pt'))
         num_correct = 0
         test_true, test_pred = [], []
-        model_classify.eval()
+        model.eval()
         torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
         with torch.no_grad():
             for step, batch in enumerate(test_dataloader):
@@ -239,12 +238,8 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
                 text = clip.tokenize(batch[1]).to(device)
                 label = batch[2].to(device)
 
-                img_feature, text_feature = model_clip(img, text)
-                img_with_text = torch.cat((img_feature, text_feature), dim=1).float()
-                img_with_text = img_with_text.view(img_with_text.size(0), -1, 1, 1)
-                # 使用一个全连接层将特征映射到一个更高维度的空间
-                img_with_text_mapped = fc_layer(img_with_text.view(-1, 1024)).view(batch_size, 3, 224, 224)
-                output = model_classify(img_with_text_mapped)
+                _, text_feature = model_clip(img, text)
+                output = model(img, text_feature)
 
                 num_correct += torch.eq(output.argmax(dim=1), label).sum().float().item()
                 test_true.extend(label.cpu().numpy())
@@ -256,7 +251,7 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
 
 
 def main():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "1"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "2"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     epoch = 500
@@ -266,7 +261,7 @@ def main():
     # 'E:/med_dataset/kidney_dataset/kidney-zhongshan/20240312-kidney-5fold'
     excel_path = '复旦中山医院肾肿瘤病理编号1-600共508例.csv'
     excel_df = pd.read_csv(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'
-    save_path = 'res/20240506-clip-resnext50-classify'
+    save_path = 'res/20240515-clip-cnn-resnet50-classify'
     os.makedirs(save_path, exist_ok=True)
     train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, device)
 
