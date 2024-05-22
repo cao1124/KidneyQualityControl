@@ -148,20 +148,20 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
         train_path = [os.path.join(image_path, x) for x in fold_list if x != fold_list[3 - i]]
 
         # 加载模型  resnet
-        model = models.resnet50(pretrained=True)
+        # model = models.resnet50(pretrained=True)
         # model = MLPCNNModel(model)
         # # MLP模型
         # mlp_model = MLP().to(device)
         custom_model = FusionModel(num_classes_img=2)
 
         if torch.cuda.device_count() > 1:
-            model = nn.DataParallel(model)
-        model.to(device)
+            model = nn.DataParallel(custom_model)
+        custom_model.to(device)
 
         # 损失函数和优化器
         loss_func = nn.CrossEntropyLoss().to(device)
         # optimizer = optim.Adam(model.parameters(), lr=learning_rate, betas=(0.8, 0.888), eps=1e-08, weight_decay=2e-4)
-        optimizer = optim.SGD(model.parameters(), lr=learning_rate, weight_decay=2e-4, momentum=0.9, nesterov=True)
+        optimizer = optim.SGD(custom_model.parameters(), lr=learning_rate, weight_decay=2e-4, momentum=0.9, nesterov=True)
         lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=num_epochs, eta_min=0.005)
 
         # 加载数据集
@@ -177,12 +177,12 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
             train_loss, valid_loss, num_correct = 0.0, 0.0, 0
 
             'train'
-            model.train()
+            custom_model.train()
             torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
             for step, batch in enumerate(train_dataloader):
-                img_input = torch.randn(1, 3, 224, 224)  # 图像输入
-                gender_input = torch.randn(1, batch[1])  # 性别信息输入
-                age_input = torch.randn(1, batch[2])  # 年龄信息输入
+                img_input = batch[0].to(device)  # 图像输入
+                gender_input = batch[1].to(device)  # 性别信息输入
+                age_input = batch[2].to(device)  # 年龄信息输入
                 label = batch[3].to(device)
                 'mlp'
                 # img = batch[0].to(device)
@@ -208,13 +208,13 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
             'validation'
             num_correct = 0
             valid_true, valid_pred = [], []
-            model.eval()
+            custom_model.eval()
             torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
             with torch.no_grad():
                 for step, batch in enumerate(valid_dataloader):
-                    img_input = torch.randn(1, 3, 224, 224)  # 图像输入
-                    gender_input = torch.randn(1, batch[1])  # 性别信息输入
-                    age_input = torch.randn(1, batch[2])  # 年龄信息输入
+                    img_input = batch[0].to(device)  # 图像输入
+                    gender_input = batch[1].to(device)  # 性别信息输入
+                    age_input = batch[2].to(device)  # 年龄信息输入
                     label = batch[3].to(device)
                     'mlp'
                     # img = batch[0].to(device)
@@ -240,7 +240,7 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
                     'classification_report:\n{}'.format(classification_report(valid_true, valid_pred, digits=4)))
                 best_valid_acc = valid_acc
                 best_epoch = epoch + 1
-                torch.save(model, os.path.join(save_path, 'fold' + str(i) + '-best-model.pt'))
+                torch.save(custom_model, os.path.join(save_path, 'fold' + str(i) + '-best-model.pt'))
             print("Epoch: {:03d}, Train Loss: {:.4f}, Acc: {:.4f}, Valid Loss: {:.4f}, Acc:{:.4f}"
                   .format(epoch + 1, train_loss, train_acc, valid_loss, valid_acc))
             print("validation best: {:.4f} at epoch {}".format(best_valid_acc, best_epoch))
@@ -262,9 +262,9 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
         torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
         with torch.no_grad():
             for step, batch in enumerate(test_dataloader):
-                img_input = torch.randn(1, 3, 224, 224)  # 图像输入
-                gender_input = torch.randn(1, batch[1])  # 性别信息输入
-                age_input = torch.randn(1, batch[2])  # 年龄信息输入
+                img_input = batch[0].to(device)  # 图像输入
+                gender_input = batch[1].to(device)  # 性别信息输入
+                age_input = batch[2].to(device)  # 年龄信息输入
                 label = batch[3].to(device)
                 'mlp'
                 # img = batch[0].to(device)
@@ -283,14 +283,13 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
 
 
 def main():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "2"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "1"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     epoch = 500
     batch_size = 128
     learning_rate = 1e-3
-    image_path = '/media/user/Disk1/caoxu/dataset/kidney/zhongshan/20240312-kidney-5fold'
-    # 'E:/med_dataset/kidney_dataset/kidney-zhongshan/20240312-kidney-5fold'
+    image_path = 'F:/med_dataset/kidney_dataset/kidney-zhongshan/20240312-kidney-5fold'
     excel_path = '复旦中山医院肾肿瘤病理编号1-600共508例.csv'
     excel_df = pd.read_csv(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'
     save_path = 'res/20240522-FusionModel-classify'
