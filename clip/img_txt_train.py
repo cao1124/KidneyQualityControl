@@ -59,11 +59,11 @@ class image_caption_dataset(Dataset):
 
     def __getitem__(self, idx):
         images = self.preprocess(Image.open(self.images[idx]).convert("RGB"))
-        sex = self.sex[idx]
-        year = self.year[idx]
+        sex = torch.tensor(self.sex[idx], dtype=torch.float)
+        year = torch.tensor(self.year[idx], dtype=torch.float)
         # caption = self.caption[idx]
-        label = self.label[idx]
-        return images, torch.tensor(sex), torch.tensor(year), torch.tensor(label)
+        label = torch.tensor(self.label[idx], dtype=torch.float)
+        return images, sex, year, label
 
 
 def load_data(image_path, excel_df, batch_size, preprocess):
