@@ -14,14 +14,14 @@ class FusionModel(nn.Module):
         
         # 处理性别信息的部分
         self.gender_module = nn.Sequential(
-            nn.Linear(1, 128),
+            nn.Linear(2, 128),
             nn.ReLU(),
             nn.Linear(128, 128)
         )
         
         # 处理年龄信息的部分
         self.age_module = nn.Sequential(
-            nn.Linear(2, 128),
+            nn.Linear(5, 128),
             nn.ReLU(),
             nn.Linear(128, 128)
         )
