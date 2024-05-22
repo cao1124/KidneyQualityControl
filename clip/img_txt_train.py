@@ -22,7 +22,7 @@ from PIL import Image
 import os
 import warnings
 
-from clip.networks import FusionModel
+from networks import FusionModel
 
 matplotlib.use('AGG')
 torch.multiprocessing.set_sharing_strategy('file_system')
