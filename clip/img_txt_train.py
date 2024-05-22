@@ -87,10 +87,10 @@ def load_data(image_path, excel_df, batch_size, preprocess):
                     # df['caption'].append(
                     #     "a photo of {} kidney cancer image in a {}-year-old {}.".format(cla, year, sex))
                     if excel_df.iloc[idx][3] == '女':
-                        sex = 0     # 'woman'
+                        sex = "%03d" % 0     # 'woman'
                     else:
-                        sex = 1     # 'man'
-                    year = int(excel_df.iloc[idx][4])
+                        sex = "%03d" % 1     # 'man'
+                    year = "%03d" % int(excel_df.iloc[idx][4])
                     df['sex'].append(sex)
                     df['year'].append(year)
                     # df['caption'].append("A photo of a {}-year-old {} with kidney cancer.".format(year, sex))

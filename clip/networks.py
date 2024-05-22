@@ -21,7 +21,7 @@ class FusionModel(nn.Module):
         
         # 处理年龄信息的部分
         self.age_module = nn.Sequential(
-            nn.Linear(100, 128),
+            nn.Linear(3, 128),
             nn.ReLU(),
             nn.Linear(128, 128)
         )
