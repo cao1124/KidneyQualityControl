@@ -83,7 +83,6 @@ class FusionModel(nn.Module):
         # return self.base_model(img)
         # 提取图像特征
         img_features = self.base_model(img)
-        
         gender_features = self.gender_module(gender_info)
         age_features = self.age_module(age_info)
         # gene_features = self.gene_module(gene_info)

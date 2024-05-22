@@ -63,7 +63,7 @@ class image_caption_dataset(Dataset):
         year = self.year[idx]
         # caption = self.caption[idx]
         label = self.label[idx]
-        return images, sex, year, label
+        return images, torch.tensor(sex), torch.tensor(year), torch.tensor(label)
 
 
 def load_data(image_path, excel_df, batch_size, preprocess):
@@ -87,10 +87,20 @@ def load_data(image_path, excel_df, batch_size, preprocess):
                     # df['caption'].append(
                     #     "a photo of {} kidney cancer image in a {}-year-old {}.".format(cla, year, sex))
                     if excel_df.iloc[idx][3] == '女':
-                        sex = 0     # 'woman'
+                        sex = [0, 1]     # 'woman'
                     else:
-                        sex = 1     # 'man'
+                        sex = [1, 0]     # 'man'
                     year = int(excel_df.iloc[idx][4])
+                    if 0 < year <= 11:      # 儿童
+                        year = [1, 0, 0, 0, 0]
+                    elif 11 < year <= 18:   # 少年
+                        year = [0, 1, 0, 0, 0]
+                    elif 18 < year <= 35:   # 青年
+                        year = [0, 0, 1, 0, 0]
+                    elif 35 < year <= 59:   # 中年
+                        year = [0, 0, 0, 1, 0]
+                    elif 59 < year:         # 老年
+                        year = [0, 0, 0, 0, 1]
                     df['sex'].append(sex)
                     df['year'].append(year)
                     # df['caption'].append("A photo of a {}-year-old {} with kidney cancer.".format(year, sex))
@@ -180,10 +190,13 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
             custom_model.train()
             torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
             for step, batch in enumerate(train_dataloader):
-                img_input = batch[0].to(device)  # 图像输入
+                gender_input = torch.randn(1, 2)    # 性别信息输入
+                age_input = torch.randn(1, 5)       # 年龄信息输入
+                img_input = batch[0].to(device)     # 图像输入
                 gender_input = batch[1].to(device)  # 性别信息输入
-                age_input = batch[2].to(device)  # 年龄信息输入
+                age_input = batch[2].to(device)     # 年龄信息输入
                 label = batch[3].to(device)
+
                 'mlp'
                 # img = batch[0].to(device)
                 # text = clip.tokenize(batch[1]).to(device)
@@ -290,7 +303,7 @@ def main():
     batch_size = 128
     learning_rate = 1e-3
     image_path = '/media/user/Disk1/caoxu/dataset/kidney/zhongshan/20240312-kidney-5fold'
-    # 'E:/med_dataset/kidney_dataset/kidney-zhongshan/20240312-kidney-5fold'
+    # 'F:/med_dataset/kidney_dataset/kidney-zhongshan/20240312-kidney-5fold'
     excel_path = '复旦中山医院肾肿瘤病理编号1-600共508例.csv'
     excel_df = pd.read_csv(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'
     save_path = 'res/20240522-FusionModel-classify'
