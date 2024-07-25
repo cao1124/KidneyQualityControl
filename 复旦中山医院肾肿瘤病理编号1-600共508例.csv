@@ -1,0 +1,509 @@
+编号,病理1,病种en,性别,年龄,全切0部分1,左0右1,上0中1下2,最大径线,病种
+1,恶,transparent,男,54,1,0,0,35,透明
+3,恶,Transferable MT,女,76,1,1,0,16,转移性MT
+5,恶,Transparent Level 2,男,33,1,1,0,24,透明2级
+6,恶,transparent,男,66,0,0,1,25,透明
+7,恶,Papillary carcinoma,女,61,1,0,0,21,乳头状癌
+8,良,Hamartoma,女,68,1,0,2,35,错构瘤
+9,恶,Transparent Level 2,男,68,1,0,2,35,透明2级
+10,良,Hamartoma,男,39,0,1,2,86,错构瘤
+11,恶,Transparent Level 2,男,78,0,1,0,30,透明2级
+13,恶,transparent,男,64,1,1,1,14,透明
+14,恶,Transparent Level 2,男,47,1,1,0,28,透明2级
+15,恶,Transparent Level 2,男,71,0,1,1,32,透明2级
+16,恶,Chromophobe ,女,59,0,1,0,35,嫌色
+17,良,Epithelioid hamartoma,女,46,1,0,2,21,上皮样错构瘤
+18,恶,papilla,男,62,1,0,2,25,乳头
+19,恶,Transparent nipple grade 2,女,76,0,0,1,23,透明乳头2级
+20,恶,Nipple type 1,男,64,0,1,1,25,乳头1型
+21,恶,Transparent Level 2,男,68,1,1,0,38,透明2级
+22,良,Hamartoma,女,39,1,1,1,23,错构瘤
+23,恶,High grade urothelial carcinoma,男,83,0,0,0,37,高级别尿路上皮癌
+24,恶,evil,男,71,1,1,2,24,恶
+25,恶,Transparent Level 2,男,64,1,0,2,20,透明2级
+26,恶,Transparent Level 2,男,84,0,1,2,19,透明2级
+27,良,Hamartoma,女,56,1,1,1,22,错构瘤
+28,恶,evil,男,57,0,0,1,35,恶
+29,良,Hamartoma,男,59,1,1,2,17,错构瘤
+30,恶,evil,男,46,1,0,1,20,恶
+32,恶,Transparent Level 2,男,40,0,0,1,33,透明2级
+33,恶,Transparent Level 2,男,64,0,0,2,27,透明2级
+34,恶,Invasive urothelial carcinoma,男,67,0,0,1,29,浸润性尿路上皮癌
+35,恶,evil,女,71,0,1,2,24,恶
+36,恶,evil,男,64,1,0,2,32,恶
+37,恶,Invasive urothelial carcinoma,男,62,1,0,0,17,浸润性尿路上皮癌
+38,良,Benign hamartoma,女,68,1,0,0,52,良错构瘤
+39,良,Benign hamartoma,女,68,1,0,2,31,良错构瘤
+40,恶,Malignant G2 type neuroendocrine tumor,女,51,0,1,2,54,恶G2型神经内分泌肿瘤
+41,恶,transparent,女,39,1,1,0,36,透明
+42,恶,Malignant mesodermal renal cell tumor,女,24,0,1,2,72,恶中胚层肾细胞瘤
+43,恶,Transparent Level 2-3,男,58,0,0,2,35,透明2-3级
+44,恶,Chromophobe ,男,65,1,1,0,20,嫌色
+45,良,Hamartoma,男,37,1,1,1,30,错构瘤
+46,良,Hamartoma,女,41,1,1,0,12,错构瘤
+47,恶,Transparent Level 2,男,67,0,0,0,49,透明2级
+49,良,Benign hamartoma,女,50,1,0,1,10,良错构瘤
+52,恶,Transparent Level 2,男,65,0,1,2,21,透明2级
+54,恶,Transparent Level 2-3,男,72,0,0,2,32,透明2-3级
+56,恶,evil,男,50,1,0,2,19,恶
+58,恶,transparent,男,60,1,1,2,19,透明
+59,良,Focal fibrosis,男,66,1,0,2,18,局灶区纤维化
+60,良,Hemangioma,女,29,1,1,2,67,血管瘤
+61,恶,Transparent Level 2,男,70,0,0,2,35,透明2级
+62,恶,Transparent Level 2,男,31,0,0,1,28,透明2级
+64,良,Hamartoma,男,49,1,0,2,31,错构瘤
+66,恶,evil,男,58,1,0,1,14,恶
+69,恶,Transparent Level 1-2,女,87,1,1,1,25,透明1-2级
+71,恶,Transparent Level 2,男,36,0,1,2,30,透明2级
+75,恶,Hamartoma,男,82,1,0,2,26,错构瘤
+77,恶,Transparent Level 2-3,男,74,1,0,0,32,透明2-3级
+78,恶,Transparent Level 2,男,67,0,0,0,25,透明2级
+79,良,Hamartoma,女,41,0,0,1,28,错构瘤
+80,恶,transparent,女,61,1,1,2,18,透明
+81,恶,Grade 2 nipple,女,57,0,1,2,73,乳头2级
+82,恶,Transparent Level 2,女,83,0,0,2,45,透明2级
+83,恶,Transparent Level 2,男,59,0,1,2,60,透明2级
+85,良,Hamartoma,女,79,1,1,0,29,错构瘤
+86,恶,Transparent Level 3,男,64,0,0,1,19,透明3级
+87,良,good,女,48,1,1,1,10,良
+89,恶,Transparent Level 2,女,58,1,0,2,20,透明2级
+90,恶,evil,男,75,0,1,2,47,恶
+91,恶,Grade 1 multilocular cystic renal cell carcinoma,男,80,1,0,2,33,多房囊性肾癌1级
+92,恶,evil,男,78,1,0,0,40,恶
+93,良,Renal cyst swelling with bleeding,女,59,1,0,0,43,肾囊肿伴出血
+94,恶,Transparent Level 2,男,72,0,1,0,20,透明2级
+95,恶,evil,女,65,1,1,1,13,恶
+96,恶,Transparent Level 1-2,女,69,0,0,1,50,透明1-2级
+97,恶,Transparent Level 1-2,女,63,1,0,2,13,透明1-2级
+98,良,Benign hamartoma,女,41,1,0,0,14,良错构瘤
+99,恶,Disgusting color level 2-3,男,59,1,1,2,14,嫌色2-3级
+100,良,Solitary fibrotic tumor,女,63,0,0,0,26,孤立性纤维性肿瘤
+101,恶,transparent,男,44,1,0,0,30,透明
+106,恶,evil,男,51,0,1,1,12,恶
+107,恶,Transparent Level 2,女,57,1,1,2,20,透明2级
+108,恶,Transparent Level 2,女,70,0,1,1,50,透明2级
+109,良,Hamartoma,男,46,1,1,0,35,错构瘤
+111,恶,Squamous cell carcinoma,女,57,0,0,2,35,鳞癌
+112,良,Hamartoma,女,67,1,0,1,16,错构瘤
+113,恶,Cystic renal cell carcinoma,男,49,1,0,1,18,囊性肾癌
+114,恶,Transparent Level 2-3,女,46,0,1,2,53,透明2-3级
+115,良,Epithelioid hamartoma,女,60,1,0,2,17,上皮样错构瘤
+116,良,Hamartoma,女,58,1,0,1,18,错构瘤
+117,良,Hamartoma,男,58,1,0,0,38,错构瘤
+118,恶,Transparent Level 1-2,男,50,0,1,0,36,透明1-2级
+119,恶,Transparent Level 2,男,41,0,0,0,38,透明2级
+120,恶,Low grade malignant renal tubular epithelial tumor,男,36,1,0,1,12,低度恶性肾小管来源上皮性肿瘤
+121,恶,Transparent Level 2,男,63,0,1,0,91,透明2级
+122,恶,Transparent Level 2,男,45,0,1,1,39,透明2级
+123,良,Hamartoma,女,82,0,0,0,24,错构瘤
+124,恶,Papillary Type 1,男,53,1,0,0,17,乳头状1型
+126,恶,Transparent Level 2,男,69,0,1,1,43,透明2级
+127,恶,Transparent Level 2,男,45,0,1,1,21,透明2级
+128,恶,evil,男,46,1,1,0,14,恶
+131,恶,Evil transparency,女,51,1,1,0,10,恶透明
+132,恶,Evil transparency,女,51,1,0,2,28,恶透明
+133,恶,Transparent Level 2,女,79,0,0,2,59,透明2级
+134,恶,Transparent Level 1-2,男,60,0,0,0,70,透明1-2级
+135,恶,Transparent Level 2,男,74,0,0,2,38,透明2级
+136,恶,Transparent Level 2,男,64,0,1,2,22,透明2级
+137,恶,Transparent Level 2,男,61,0,0,0,30,透明2级
+138,恶,Chromophobe ,女,39,1,1,2,17,嫌色
+139,恶,evil,男,43,1,1,0,12,恶
+140,恶,Transparent Level 2,男,43,0,0,0,40,透明2级
+141,恶,Transparent Level 2,男,43,0,0,2,40,透明2级
+142,恶,evil,女,43,0,1,0,33,恶
+143,恶,Transparent Level 2-3,女,80,0,0,2,27,透明2-3级
+144,恶,Post Evil Transplantation,男,60,0,1,2,20,恶后移植
+145,恶,Transparent Level 3,男,55,0,0,0,77,透明3级
+146,恶,evil,男,56,0,0,0,16,恶
+148,恶,Disgusting nipples or disgust,男,22,1,1,2,42,恶乳头或嫌色
+149,恶,"Nipple type 2, grade 2",男,65,1,1,2,26,乳头2型2级
+150,恶,Transparent Level 2,女,66,0,0,2,27,透明2级
+152,良,Epithelioid hamartoma,男,64,0,1,2,40,上皮样错构瘤
+154,良,Hamartoma,男,29,1,1,1,32,错构瘤
+155,恶,Transparent Level 2,女,53,0,1,0,64,透明2级
+156,恶,Transparent Level 2,女,69,0,1,0,62,透明2级
+157,恶,evil,男,83,1,1,2,23,恶
+159,良,Hamartoma,女,70,1,1,1,8,错构瘤
+161,良,Hamartoma,女,29,1,1,2,6,错构瘤
+162,恶,Transparent Level 2,男,72,1,1,2,20,透明2级
+163,恶,Chromophobe ,男,59,0,0,1,45,嫌色
+164,恶,lymphoma,男,34,1,0,1,40,淋巴瘤
+166,良,Hamartoma,女,37,1,1,1,10,错构瘤
+167,良,Epithelioid hamartoma,女,53,1,0,0,27,上皮样错构瘤
+168,恶,Transparent Level 2,男,75,1,0,2,17,透明2级
+169,恶,Evil MT,女,33,0,1,1,59,恶MT
+172,良,Hamartoma,女,70,1,0,2,25,错构瘤
+174,良,Hamartoma,女,68,0,0,0,33,错构瘤
+176,恶,Transparent Level 1-2,女,59,1,0,0,13,透明1-2级
+177,恶,Transparent Level 2,男,73,0,1,2,31,透明2级
+178,良,Hamartoma,男,21,1,0,1,20,错构瘤
+179,恶,Transparent Level 2,女,73,0,1,0,40,透明2级
+180,恶,Transparent Level 2,男,74,0,0,2,40,透明2级
+181,恶,Chromophobe ,女,64,1,0,2,17,嫌色
+182,恶,Disgusting Color Type 2,女,64,1,1,0,10,嫌色2型
+183,恶,Papillary thyroid carcinoma with renal metastasis,女,54,0,0,0,87,甲状腺乳头状癌肾转移
+185,恶,Transparent Level 2,女,65,0,0,2,69,透明2级
+186,恶,Transparent Level 2,女,60,0,1,2,33,透明2级
+187,恶,Transparent Level 2,男,62,0,0,0,26,透明2级
+189,恶,Chromophobe ,女,62,0,1,0,27,嫌色
+190,恶,Transparent Level 2,男,39,0,0,2,55,透明2级
+191,恶,Transparent Level 2,女,70,0,0,1,25,透明2级
+192,恶,evil,男,44,0,0,2,57,恶
+193,恶,transparent,女,40,0,0,1,17,透明
+194,恶,Transparent Level 2,男,58,1,1,2,14,透明2级
+195,良,Hamartoma,女,56,1,1,2,18,错构瘤
+196,恶,Transparent Level 2,女,57,0,1,0,13,透明2级
+197,良,Hamartoma,男,61,1,1,1,21,错构瘤
+198,良,Hamartoma,女,70,1,0,0,23,错构瘤
+199,恶,Transparent Level 1-2,男,50,0,0,2,30,透明1-2级
+200,恶,Nipple grades 2-3,男,55,1,1,0,22,乳头2-3级
+201,恶,Transparent Level 2,男,59,0,1,2,35,透明2级
+202,恶,Transparent Level 2,男,38,0,1,1,30,透明2级
+203,恶,Transparent Level 1-2,女,55,1,1,1,11,透明1-2级
+205,恶,Transparent Level 2,男,52,1,0,2,12,透明2级
+206,恶,Transparent Level 2,男,73,1,0,1,23,透明2级
+207,恶,Transparent Level 2,男,74,1,1,2,15,透明2级
+208,恶,Transparent Level 2,女,26,0,0,1,40,透明2级
+209,恶,Transparent Level 2,男,55,0,0,2,89,透明2级
+210,恶,Transparent Level 2,女,32,0,1,0,53,透明2级
+211,良,Hamartoma,女,77,1,0,0,31,错构瘤
+212,恶,Transparent Level 2,男,45,1,1,0,28,透明2级
+213,恶,Transparent Level 2,女,56,1,0,2,22,透明2级
+214,恶,Transparent Level 2,男,58,0,1,2,67,透明2级
+215,良,Hamartoma,男,44,1,0,2,37,错构瘤
+217,恶,Transparent Level 2,女,58,1,0,2,15,透明2级
+218,恶,Evil transparency,女,52,1,1,2,23,恶透明
+219,良,Hamartoma,女,59,1,0,0,15,错构瘤
+220,恶,evil,男,64,1,1,2,28,恶
+221,恶,Transparent Level 2,女,67,0,0,2,29,透明2级
+222,恶,Transparent Level 2,女,48,1,0,1,29,透明2级
+223,良,Hamartoma,女,47,1,0,1,32,错构瘤
+224,恶,transparent,男,32,0,0,0,23,透明
+225,恶,Transparent Level 2,女,59,0,0,0,45,透明2级
+227,恶,Transparent Level 2-3,男,45,0,0,2,32,透明2-3级
+228,良,Hamartoma,男,62,1,0,0,27,错构瘤
+230,良,Hamartoma,女,49,1,0,0,23,错构瘤
+231,恶,Transparent Level 2,男,81,0,1,1,33,透明2级
+232,恶,Papillary urothelial carcinoma of the renal pelvis,男,55,0,1,1,25,肾盂乳头状尿路上皮癌
+233,恶,Transparent Level 2,男,68,0,1,1,34,透明2级
+234,恶,Transparent Level 2,男,28,0,1,0,26,透明2级
+235,良,Hamartoma,女,53,1,1,2,9,错构瘤
+236,恶,transparent,女,49,0,1,0,57,透明
+238,恶,transparent,女,81,0,1,2,26,透明
+239,恶,Transparent Level 2,男,51,1,0,2,18,透明2级
+240,恶,Transparent Level 2,女,69,0,1,2,40,透明2级
+241,恶,Nipple type 2,男,48,0,0,0,37,乳头2型 
+242,恶,Transparent Level 2,女,52,1,1,2,43,透明2级
+243,恶,Nipple type 2,男,34,0,0,0,35,乳头2型 
+244,恶,evil,男,78,0,1,1,15,恶
+246,恶,Multilocular cystic renal clear cell carcinoma,男,73,0,0,0,31,多房囊性肾透明细胞癌
+247,恶,Chromophobe ,男,47,1,1,1,34,嫌色
+248,恶,evil,男,44,0,1,2,26,恶
+249,恶,Transparent Level 2,女,44,0,1,0,35,透明2级
+250,恶,Nipple Type 1 Grade 2,女,66,1,1,0,33,乳头1型2级
+251,恶,Transparent Level 2,男,69,0,1,0,31,透明2级
+252,恶,Transparent Level 2,女,60,1,1,1,36,透明2级
+253,恶,Transparent Level 2,男,37,0,1,2,36,透明2级
+254,良,Hamartoma,女,38,1,0,2,39,错构瘤
+255,恶,Transparent Level 2,男,35,1,0,0,15,透明2级
+257,恶,Transparent Level 2,男,47,1,1,2,20,透明2级
+258,良,Hamartoma,女,26,1,0,2,14,错构瘤
+259,恶,Transparent Level 2,男,71,1,1,2,28,透明2级
+260,恶,Transparent Level 2,男,62,0,1,1,16,透明2级
+262,良,Hamartoma,女,46,1,0,1,12,错构瘤
+263,恶,renal carcinoma,男,75,1,0,1,29,肾癌
+264,良,Hamartoma,女,46,1,0,0,70,错构瘤
+265,恶,Transparent Level 2-3,男,60,0,0,0,32,透明2-3级
+266,恶,Transparent Level 2,男,24,0,0,0,37,透明2级
+267,良,Hamartoma,女,40,1,0,1,22,错构瘤
+269,良,Hamartoma,男,40,1,0,0,34,错构瘤
+270,良,Hamartoma,男,40,1,1,0,15,错构瘤
+271,恶,Transparent Level 2,男,42,0,1,2,60,透明2级
+272,恶,Chromophobe ,男,63,0,1,0,40,嫌色
+273,恶,Transparent Level 2,女,27,0,0,1,40,透明2级
+274,恶,Transparent Level 2,男,70,1,0,0,33,透明2级
+276,恶,Transparent Level 2,男,79,0,1,2,48,透明2级
+277,恶,Transparent Level 1-2,男,31,0,0,0,63,透明1-2级
+278,恶,Nipple Type 1 Grade 2,男,64,1,1,1,27,乳头1型2级
+279,恶,Transparent Level 2,男,56,1,1,0,29,透明2级
+280,良,Hamartoma,女,55,1,1,1,16,错构瘤
+281,恶,Transparent Level 2-3,男,71,0,1,1,39,透明2-3级
+283,良,Hamartoma,女,41,1,0,2,50,错构瘤
+284,良,Hamartoma,女,41,1,1,1,25,错构瘤
+285,恶,Transparent Level 2,男,48,1,1,2,18,透明2级
+286,恶,Transparent Level 2,男,46,0,0,1,39,透明2级
+287,恶,Evil transparency,男,47,0,1,1,20,恶透明
+288,恶,Transparent Level 2,女,69,0,1,2,40,透明2级
+289,良,Mixed epithelial mesenchymal tumor,男,24,1,0,2,28,混合性上皮间质肿瘤
+290,良,Hamartoma,女,30,1,0,2,60,错构瘤
+292,恶,Unclassified renal cell carcinoma,女,55,0,0,0,28,肾细胞癌未分类型
+293,恶,Transparent Level 2,男,54,1,0,0,29,透明2级
+296,恶,Transparent Level 2,男,52,0,0,0,37,透明2级
+297,良,Hamartoma,女,68,0,1,1,58,错构瘤
+298,恶,Renal pelvis invasive urothelial carcinoma,女,61,0,0,0,28,肾盂浸润性尿路上皮癌
+300,恶,Evil 62305895,男,57,0,0,2,26,恶62305895
+301,恶,Transparent Level 2,男,33,1,0,2,18,透明2级
+302,恶,evil,女,52,0,1,1,24,恶
+303,良,Hamartoma,男,47,1,0,2,18,错构瘤
+304,恶,Transparent Level 2,男,56,1,1,0,17,透明2级
+305,恶,Transparent Level 2,男,55,1,1,1,12,透明2级
+306,良,Hamartoma,男,61,1,0,1,12,错构瘤
+307,恶,evil,男,78,0,1,2,38,恶
+308,恶,Transparent Level 2,男,43,1,0,1,11,透明2级
+309,良,good,男,74,1,1,0,11,良
+311,恶,Renal cancer unclassified,男,53,0,0,1,46,肾癌未分类
+312,恶,Transparent Level 2,男,64,0,1,0,38,透明2级
+313,恶,mucinous tubular and spindle cell carcinoma ,女,33,0,1,0,50,黏液样小管状和梭形细胞癌
+314,恶,Invasive urothelial carcinoma,女,61,0,0,1,27,浸润性尿路上皮癌
+315,恶,Transparent Level 2-3,女,58,0,1,0,26,透明2-3级
+316,恶,evil,男,86,0,0,2,33,恶
+318,良,Hamartoma,男,44,1,1,1,26,错构瘤
+319,恶,Transparent Level 2,女,63,1,0,0,30,透明2级
+320,恶,Transparent Level 2,男,60,1,1,0,18,透明2级
+321,良,Hamartoma,男,66,1,1,0,10,错构瘤
+322,良,Hamartoma,男,47,1,0,2,16,错构瘤
+324,良,Eosinophilic cell tumor,女,44,1,1,0,28,嗜酸细胞瘤
+326,恶,Papillary Type 1 Grade 1,男,40,1,0,0,30,乳头状1型1级
+327,恶,Invasive urothelial carcinoma,男,68,0,0,0,68,浸润性尿路上皮癌
+328,恶,Carcinoid,男,43,1,0,1,44,类癌
+329,恶,Transparent Level 3,男,71,0,1,0,30,透明3级
+330,恶,Transparent Level 2,女,71,1,1,0,30,透明2级
+331,恶,Transparent Level 2,男,78,0,0,0,49,透明2级
+332,恶,Transparent 3-4 levels,男,85,0,1,1,16,透明3-4级
+333,恶,Renal cancer unclassified,男,55,0,0,0,30,肾癌未分类
+334,恶,Transparent Level 2,男,50,1,1,2,28,透明2级
+335,良,Hamartoma,男,35,1,0,2,35,错构瘤
+337,恶,Transparent Level 2,男,69,0,0,0,39,透明2级
+338,恶,Transparent Level 2,男,29,0,1,2,46,透明2级
+339,恶,Transparent Level 1-2,男,63,1,0,1,15,透明1-2级
+340,恶,Papillary Type 1,男,61,1,0,2,14,乳头状1型
+341,恶,evil,女,51,1,1,0,12,恶
+342,恶,Transparent Level 2,男,54,1,1,2,21,透明2级
+343,恶,evil,男,70,0,0,0,20,恶
+344,恶,Transparent Level 2,男,36,1,1,1,32,透明2级
+346,恶,Transparent Level 2,男,64,0,1,1,48,透明2级
+348,恶,Transparent Level 2,男,84,1,0,0,83,透明2级
+349,恶,Transparent Level 2-3,男,59,1,0,0,52,透明2-3级
+351,良,Eosinophilic adenoma,男,45,0,1,2,43,嗜酸细胞腺瘤
+352,恶,evil,男,39,0,1,2,19,恶
+353,恶,Transparent Level 2-3,男,61,1,1,2,34,透明2-3级
+354,恶,Transparent Level 2,男,65,1,0,1,25,透明2级
+355,恶,Transparent Level 2,女,64,1,1,2,21,透明2级
+356,恶,Transparent Level 3,男,61,0,0,2,67,透明3级
+357,恶,evil,男,60,0,0,1,25,恶
+358,恶,Invasive urothelial carcinoma,男,71,0,0,0,18,浸润性尿路上皮癌
+359,恶,Transparent Level 2,男,53,0,0,0,32,透明2级
+360,恶,Transparent Level 2,女,69,0,0,0,40,透明2级
+361,良,Hamartoma,女,48,1,0,2,55,错构瘤
+362,恶,Transparent Level 2,女,48,1,1,1,38,透明2级
+363,恶,Transparent Level 2,女,61,0,1,1,48,透明2级
+364,良,Eosinophilic adenoma,男,49,0,1,0,67,嗜酸细胞腺瘤
+365,恶,Transparent Level 2,男,41,0,0,2,44,透明2级
+366,恶,Transparent Level 2,男,50,0,0,2,45,透明2级
+367,恶,Transparent Level 2,男,69,0,1,2,56,透明2级
+368,恶,Transparent Level 2,女,62,1,1,1,29,透明2级
+369,恶,Transparent Level 2,男,53,1,1,2,19,透明2级
+370,恶,Transparent Level 2,男,47,0,1,2,36,透明2级
+371,恶,Transparent Level 2,男,64,1,1,1,30,透明2级
+372,恶,Transparent Level 2,男,63,1,1,2,27,透明2级
+373,恶,Evil excision,男,79,0,1,2,40,恶切除
+374,恶,Evil excision,男,52,0,1,1,60,恶切除
+375,良,Hamartoma,女,59,1,0,0,10,错构瘤
+376,恶,Transparent Level 2,女,55,0,1,2,30,透明2级
+377,恶,Transparent Level 2,男,52,0,0,0,35,透明2级
+378,良,Hamartoma,女,49,1,1,0,16,错构瘤
+379,恶,Transparent Level 2,男,40,0,1,1,29,透明2级
+380,恶,Transparent Level 2,男,56,0,0,2,32,透明2级
+381,恶,Transparent Level 3,男,52,0,1,2,80,透明3级
+382,恶,Transparent Level 2,男,37,1,0,2,24,透明2级
+384,恶,Transparent Level 2,男,56,0,1,1,19,透明2级
+385,恶,Chromophobe ,男,50,1,0,2,28,嫌色
+386,恶,Renal pelvis mt,男,71,0,0,2,37,肾盂mt
+387,良,Complex cyst,女,56,0,1,0,23,复杂性囊肿
+388,良,Hamartoma,女,27,1,1,1,64,错构瘤
+389,恶,Transparent Level 2,女,63,0,0,0,68,透明2级
+390,恶,Transparent Level 2,男,65,1,0,0,18,透明2级
+391,恶,Nipple type 1,男,39,0,0,0,56,乳头1型
+392,恶,Collecting duct cancer,男,56,0,0,0,37,集合管癌
+393,恶,Transparent Level 2,男,60,0,0,0,117,透明2级
+394,良,Hamartoma,女,51,1,0,2,119,错构瘤
+395,良,Hamartoma,女,47,1,0,2,12,错构瘤
+397,恶,Differentiated malignancy,女,76,0,1,0,42,差分化恶性
+398,良,Mixed epithelial mesenchymal tumor,女,39,0,1,1,33,混合性上皮间质肿瘤
+399,恶,Transparent Level 2,女,35,1,1,0,32,透明2级
+400,恶,MiT family translocation associated renal cell carcinoma,女,26,0,0,0,33,MiT家族易位相关性肾癌
+401,恶,Transparent Level 2,女,67,0,0,1,79,透明2级
+402,恶,Nipple Type 1 Grade 2,男,65,0,0,2,40,乳头1型2级
+403,恶,Transparent Level 2,男,48,1,0,1,18,透明2级
+404,恶,Xp11.2 translocation/MiTF family renal cell carcinoma,女,27,0,1,0,54,xp11.2易位/MiTF家族肾癌
+405,恶,Transparent Level 2,男,47,1,0,0,39,透明2级
+406,良,Schwannoma,女,38,1,1,0,30,神经鞘瘤
+407,良,Complex cyst,女,46,1,0,1,12,复杂性囊肿
+408,恶,MiT family translocation associated renal cell carcinoma,男,52,0,0,0,66,MiT家族易位相关性肾癌
+409,恶,Transparent Level 2,男,59,0,0,0,78,透明2级
+410,恶,Transparent Level 2,女,68,0,0,0,55,透明2级
+411,恶,Chromophobe ,男,55,0,0,1,19,嫌色
+412,恶,MiT family translocation associated renal cell carcinoma,女,60,0,1,0,18,MiT家族易位相关性肾癌
+413,良,Hamartoma,女,66,0,1,2,29,错构瘤
+414,恶,Transparent Level 2,男,76,1,1,2,31,透明2级
+415,恶,Transparent Level 2,男,48,0,1,0,65,透明2级
+416,良,Hamartoma with bleeding,女,37,1,1,1,48,错构瘤伴出血
+417,恶,Transparent Level 3,男,64,0,0,2,83,透明3级
+418,良,Solitary fibrotic tumor,女,54,0,0,2,34,孤立性纤维性肿瘤
+419,恶,Transparent Level 2,男,59,1,1,1,21,透明2级
+420,恶,Transparent Level 1,女,59,1,0,0,22,透明1级
+421,恶,Transparent Level 2,女,58,1,1,1,11,透明2级
+422,良,Hamartoma,女,67,1,0,1,14,错构瘤
+423,恶,Chromophobe ,男,48,1,1,0,19,嫌色
+424,良,Hamartoma,女,26,1,0,0,40,错构瘤
+425,恶,Transparent Level 2,女,40,1,0,1,28,透明2级
+426,恶,Transparent Level 2,男,48,0,1,1,39,透明2级
+427,恶,Transparent Level 2,男,44,0,0,2,45,透明2级
+428,恶,Transparent Level 2,男,55,1,0,0,17,透明2级
+429,恶,Transparent Level 2,男,52,0,1,2,37,透明2级
+430,良,Cystic mixed epithelial mesenchymal tumor,男,49,1,1,2,62,囊性混合性上皮间质肿瘤
+431,恶,Transparent cell papillary renal cell carcinoma,女,70,0,0,1,23,透明细胞乳头状肾癌
+432,恶,Transferable MT,男,60,1,1,0,31,转移性MT
+433,恶,Transparent Level 2,男,46,1,1,2,55,透明2级
+434,恶,Transparent Level 2,男,50,0,0,2,47,透明2级
+435,恶,Invasive urothelial carcinoma,男,74,0,1,2,51,浸润性尿路上皮癌
+436,良,Cystic renal tumor,男,44,0,1,2,40,囊性肾瘤
+437,恶,Transparent Level 2,男,67,1,1,2,28,透明2级
+438,良,Hamartoma,女,71,1,0,1,14,错构瘤
+439,恶,Invasive urothelial carcinoma,女,68,0,1,1,52,浸润性尿路上皮癌
+440,恶,Transparent Level 2-3,男,40,0,0,1,35,透明2-3级
+441,恶,Transparent Level 2,男,73,1,1,0,35,透明2级
+442,恶,Nipple type 2,男,42,0,0,2,46,乳头2型
+443,恶,Invasive urothelial carcinoma,女,68,1,0,0,25,浸润性尿路上皮癌
+444,恶,Transparent Level 2,男,55,0,1,0,22,透明2级
+445,恶,Invasive urothelial carcinoma,男,49,0,1,0,14,浸润性尿路上皮癌
+446,恶,Transparent Level 2,女,27,1,0,0,53,透明2级
+447,恶,Chromophobe ,女,54,0,0,2,75,嫌色
+449,恶,Transparent Level 2,男,50,1,1,2,35,透明2级
+450,恶,Chromophobe ,女,30,1,0,1,25,嫌色
+451,恶,Transparent Level 2-3,男,47,1,1,0,30,透明2-3级
+454,良,Hamartoma,男,68,1,0,1,9,错构瘤
+455,恶,Transparent Level 2,男,54,0,1,2,29,透明2级
+456,恶,Transparent Level 2,女,40,1,0,2,20,透明2级
+457,恶,Transferable MT,女,36,1,0,1,74,转移性MT
+458,恶,Transparent Level 2,女,31,1,1,0,10,透明2级
+459,恶,Transparent Level 2,女,50,0,0,0,33,透明2级
+460,恶,Transparent Level 2,男,47,1,0,2,21,透明2级
+461,恶,Transparent Level 3,女,61,0,1,2,40,透明3级
+464,恶,Transparent Level 2,男,64,0,1,2,38,透明2级
+467,恶,Transparent Level 2,男,70,0,1,0,51,透明2级
+468,恶,Transparent Level 2,男,48,0,1,2,55,透明2级
+469,恶,Transparent Level 2-3,女,59,0,0,1,37,透明2-3级
+470,恶,Transparent Level 2,男,47,1,1,2,26,透明2级
+471,恶,Transparent Level 2,女,42,0,0,2,24,透明2级
+472,恶,Transparent Level 3,男,57,1,1,0,34,透明3级
+473,良,Hamartoma,女,55,1,1,0,19,错构瘤
+474,良,Hamartoma,男,51,1,1,1,36,错构瘤
+475,恶,Transparent Level 2,男,53,0,0,0,28,透明2级
+476,恶,Transparent Level 2,女,71,0,0,0,32,透明2级
+477,恶,Chromophobe ,男,51,0,1,1,53,嫌色
+478,恶,Transparent Level 2,女,62,0,0,2,35,透明2级
+479,恶,Transparent Level 1-2,女,68,0,0,0,24,透明1-2级
+480,恶,Transparent Level 2,男,74,0,1,0,57,透明2级
+481,恶,Transparent Level 2,男,73,0,1,0,50,透明2级
+482,恶,transparent,女,38,1,1,0,15,透明
+483,恶,Chromophobe ,男,49,1,0,0,11,嫌色
+484,恶,Transparent Level 2,男,47,1,0,1,12,透明2级
+485,恶,Transparent Level 2,男,54,0,0,0,43,透明2级
+487,恶,Transparent Level 2-3,女,62,0,0,0,43,透明2-3级
+488,恶,Transparent Level 2,女,59,0,1,2,52,透明2级
+489,恶,Transparent Level 2,男,41,1,1,0,23,透明2级
+490,恶,Invasive urothelial carcinoma,男,53,0,1,2,20,浸润性尿路上皮癌
+491,恶,Transparent Level 2,女,49,1,1,0,31,透明2级
+492,良,Hamartoma,女,43,1,1,0,19,错构瘤
+493,恶,Transparent Level 2,男,83,0,0,0,77,透明2级
+494,恶,Transparent Level 2,男,66,0,1,0,35,透明2级
+495,恶,Transparent Level 1,男,48,1,1,0,16,透明1级
+496,恶,MiTF translocated renal cell carcinoma,女,32,1,1,2,22,MiTF易位性肾癌
+497,恶,Transparent Level 2,男,61,1,1,0,20,透明2级
+498,恶,Papillary renal cell carcinoma type 1,女,63,1,1,1,25,乳头状肾癌1型
+499,恶,Transparent Level 2,男,49,1,0,0,28,透明2级
+500,恶,Chromophobe ,女,76,1,0,2,22,嫌色
+501,恶,Papillary urothelial carcinoma,男,65,0,1,1,26,乳头状尿路上皮癌
+502,良,Eosinophilic adenoma,女,54,1,1,1,12,嗜酸细胞腺瘤
+503,恶,Transparent Level 2,女,73,0,1,2,26,透明2级
+506,恶,Transparent Level 2,男,48,0,0,1,40,透明2级
+507,恶,Transparent Level 2,男,64,0,0,1,23,透明2级
+509,恶,Evil excision,女,63,0,1,0,30,恶切除
+510,恶,Transparent Level 2,男,23,1,0,2,21,透明2级
+511,良,Hamartoma,女,58,1,1,1,7,错构瘤
+512,恶,Transparent Level 3,女,66,1,1,1,37,透明3级
+513,恶,Transparent Level 1,男,53,0,1,2,54,透明1级
+515,恶,Transparent Level 2,男,34,0,1,2,10,透明2级
+516,恶,Transparent Level 2,男,68,1,0,0,25,透明2级
+518,恶,Transparent Level 2,男,60,1,1,2,15,透明2级
+519,恶,Transparent cell papillary renal cell carcinoma,男,43,1,0,2,16,透明细胞乳头状肾癌
+520,恶,Transparent Level 2-3,男,61,1,1,0,16,透明2-3级
+522,恶,Papillary renal cell carcinoma type 2,男,57,0,1,1,89,乳头状肾癌2型
+524,良,inflammation,女,64,1,1,1,18,炎症
+525,良,Hamartoma,女,69,1,0,2,15,错构瘤
+526,恶,Transparent Level 2,男,52,1,0,2,38,透明2级
+527,良,Metanephric adenoma ,女,61,1,0,0,37,后肾腺瘤
+529,良,Hamartoma,女,54,1,1,0,10,错构瘤
+531,恶,Transparent Level 2,女,62,0,0,1,35,透明2级
+532,恶,Transparent Level 2,男,49,1,1,2,14,透明2级
+535,恶,Transparent Level 2,男,49,1,0,0,31,透明2级
+536,良,Eosinophilic adenoma,男,65,0,1,1,27,嗜酸细胞腺瘤
+537,恶,Transparent Level 2,女,61,0,0,2,31,透明2级
+538,恶,Transparent Level 2,女,61,0,0,2,14,透明2级
+539,恶,Transparent Level 2,男,71,0,0,0,50,透明2级
+540,恶,Transparent Level 2,女,58,1,0,2,32,透明2级
+541,恶,Invasive urothelial carcinoma,男,53,0,1,1,35,浸润性尿路上皮癌
+542,良,Hamartoma,女,69,1,1,0,16,错构瘤
+543,良,Hamartoma,女,32,1,1,0,44,错构瘤
+544,恶,Disgusting Color Level 2,男,55,0,0,2,35,嫌色2级
+545,恶,Papillary Type 1 Grade 2,男,43,1,0,0,49,乳头状1型2级
+546,恶,Transparent Level 2,女,71,1,1,0,18,透明2级
+547,恶,Transparent Level 2,男,72,1,0,2,28,透明2级
+548,恶,Transparent Level 2,女,68,0,1,1,40,透明2级
+550,恶,Invasive urothelial carcinoma,女,81,0,0,0,65,浸润性尿路上皮癌
+551,恶,Transparent Level 1,男,53,0,1,0,53,透明1级
+552,恶,Transparent Level 2,男,48,1,0,0,20,透明2级
+553,恶,Transparent Level 2,男,67,1,1,0,25,透明2级
+554,恶,Disgusting Color Level 2,女,30,1,1,2,35,嫌色2级
+555,恶,Transparent Level 2,男,63,1,0,2,17,透明2级
+556,恶,Transparent Level 2,男,72,1,1,0,21,透明2级
+557,恶,Chromophobe ,男,39,1,1,1,23,嫌色
+558,恶,Nipple type 1,男,53,1,0,1,18,乳头1型
+559,恶,Non invasive papillary urothelial carcinoma,男,56,0,0,0,23,非浸润性乳头状尿路上皮癌
+560,良,Hamartoma,男,47,0,0,1,37,错构瘤
+561,恶,Transparent Level 2,女,46,0,1,1,54,透明2级
+562,恶,Transparent Level 3,男,50,0,1,1,32,透明3级
+564,恶,Transparent Level 2,女,50,0,1,1,40,透明2级
+565,恶,Transparent Level 2,男,65,0,1,2,41,透明2级
+566,良,Hamartoma,女,31,1,1,0,35,错构瘤
+567,良,Hamartoma,女,31,1,0,1,14,错构瘤
+569,恶,Transparent Level 2,男,73,0,1,1,37,透明2级
+570,良,Hamartoma,男,41,1,0,2,7,错构瘤
+571,良,Hamartoma,女,47,1,1,2,25,错构瘤
+572,恶,Transparent Level 2,女,32,1,1,2,27,透明2级
+573,恶,Transparent Level 2,男,55,0,1,1,43,透明2级
+574,恶,Transparent Level 2,女,65,0,0,2,24,透明2级
+575,恶,Transparent Level 2,女,40,0,0,1,40,透明2级
+576,恶,Transparent Level 2,男,47,1,1,2,24,透明2级
+577,恶,Transparent Level 2,女,29,1,1,1,28,透明2级
+578,恶,Transparent Level 2,男,37,1,1,2,20,透明2级
+579,恶,Transparent Level 2-3,男,70,1,1,0,18,透明2-3级
+580,恶,Transparent Level 4,男,58,0,1,0,53,透明4级
+581,恶,Chromophobe ,男,78,1,1,0,35,嫌色
+582,良,Hamartoma,男,53,1,1,1,15,错构瘤
+583,恶,Renal medullary carcinoma,女,77,0,1,1,45,肾髓质癌
+584,良,Hemangioma,女,67,1,0,0,19,血管瘤
+585,恶,Transparent Level 2,男,61,0,0,0,39,透明2级
+587,恶,Transparent Level 2,女,72,0,1,0,67,透明2级
+588,良,Hamartoma,女,70,1,0,2,23,错构瘤
+589,恶,Transparent Level 2,男,46,1,0,1,13,透明2级
+590,恶,Transparent Level 2,男,39,1,1,2,18,透明2级
+591,恶,Transparent Level 3,女,66,0,0,0,33,透明3级
+592,恶,Transparent Level 1,男,55,1,0,0,20,透明1级
+595,恶,Papillary Type 1 Grade 2,女,56,1,1,0,26,乳头状1型2级
+597,恶,Transparent Level 2,男,54,0,1,2,48,透明2级
+598,恶,Papillary Type 1 Grade 2,男,49,1,1,1,25,乳头状1型2级
+599,恶,Transparent Level 2,男,30,1,1,2,25,透明2级
+600,恶,Transparent Level 2,女,55,1,1,2,25,透明2级

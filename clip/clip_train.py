@@ -22,7 +22,6 @@ from PIL import Image
 import os
 import warnings
 
-
 matplotlib.use('AGG')
 torch.multiprocessing.set_sharing_strategy('file_system')
 warnings.filterwarnings("ignore")
@@ -72,8 +71,7 @@ def load_data(image_path, excel_df, batch_size, preprocess):
                     df['image'].append(os.path.join(f, c, p, n))
                     df['label'].append(int(c))
                     # cla = excel_df.iloc[idx][1]
-                    # cla_type = excel_df.iloc[idx][2]
-                    # sex = excel_df.iloc[idx][3]
+                    disease = excel_df.iloc[idx][2]
                     if c == '0':
                         cla = 'benign'
                     else:
@@ -83,7 +81,14 @@ def load_data(image_path, excel_df, batch_size, preprocess):
                     else:
                         sex = 'man'
                     year = int(excel_df.iloc[idx][4])
-                    df['caption'].append("A photo of a {}-year-old {} with kidney cancer.".format(year, sex))
+                    resect = int(excel_df.iloc[idx][5])
+                    located = int(excel_df.iloc[idx][6])
+                    part = int(excel_df.iloc[idx][7])
+                    maximum = int(excel_df.iloc[idx][8])
+                    df['caption'].append(f"A photo of a kidney cancer image showing a {cla} tumor with {disease} in "
+                                         f"a {year}-year-old {sex}, with a maximum diameter of {maximum} mm, located "
+                                         f"on the {located} kidney, in the {part} part, and underwent a {resect} resection.")
+                    # df['caption'].append("A photo of a {}-year-old {} with kidney cancer.".format(year, sex))
                     # df['caption'].append(
                     #     "a photo of {} kidney cancer image in a {}-year-old {}.".format(cla, year, sex))
 
@@ -256,17 +261,16 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
 
 
 def main():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "1"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "0"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     epoch = 500
     batch_size = 128
     learning_rate = 1e-3
-    image_path = '/media/user/Disk1/caoxu/dataset/kidney/zhongshan/20240312-kidney-5fold'
-    # 'E:/med_dataset/kidney_dataset/kidney-zhongshan/20240312-kidney-5fold'
+    image_path = 'E:/med_dataset/kidney_dataset/kidney-zhongshan/20240312-kidney-5fold'
     excel_path = '复旦中山医院肾肿瘤病理编号1-600共508例.csv'
     excel_df = pd.read_csv(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'
-    save_path = 'res/20240506-clip-resnext50-classify'
+    save_path = 'res/20240726-clip-resnext50-classify'
     os.makedirs(save_path, exist_ok=True)
     train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, device)
 
