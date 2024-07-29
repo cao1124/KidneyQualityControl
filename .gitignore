@@ -15,7 +15,7 @@ mass_log
 mass_model
 *.png
 *.txt
-*.txt.gz
+# *.txt.gz
 dist
 kidney-small-tumor-segment/
 segment_model/
