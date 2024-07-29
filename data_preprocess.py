@@ -393,7 +393,7 @@ def backup_code():
 if __name__ == '__main__':
     # dataset_count()
     # kfold_split()
-    img2video()
+    # img2video()
     # mead_split_patient()
     # get_mask_by_json()
     # dataset_augment()
@@ -407,3 +407,8 @@ if __name__ == '__main__':
     #             file_len = os.listdir(os.path.join(base_dir, f, c, p))
     #             if len(file_len) % 2 != 0:
     #                 print(os.path.join(base_dir, f, c, p))
+
+    import chardet
+    with open('example.txt', 'rb') as f:
+        result = chardet.detect(f.read())  # 读取一定量的数据进行编码检测
+    print(result['encoding'])  # 打印检测到的编码
