@@ -1,509 +1,509 @@
-±àºÅ,²¡Àí1,²¡ÖÖen,ĞÔ±ğ,ÄêÁä,È«ÇĞ0²¿·Ö1,×ó0ÓÒ1,ÉÏ0ÖĞ1ÏÂ2,×î´ó¾¶Ïß,²¡ÖÖ
-1,¶ñ,transparent,ÄĞ,54,1,0,0,35,Í¸Ã÷
-3,¶ñ,Transferable MT,Å®,76,1,1,0,16,×ªÒÆĞÔMT
-5,¶ñ,Transparent Level 2,ÄĞ,33,1,1,0,24,Í¸Ã÷2¼¶
-6,¶ñ,transparent,ÄĞ,66,0,0,1,25,Í¸Ã÷
-7,¶ñ,Papillary carcinoma,Å®,61,1,0,0,21,ÈéÍ·×´°©
-8,Á¼,Hamartoma,Å®,68,1,0,2,35,´í¹¹Áö
-9,¶ñ,Transparent Level 2,ÄĞ,68,1,0,2,35,Í¸Ã÷2¼¶
-10,Á¼,Hamartoma,ÄĞ,39,0,1,2,86,´í¹¹Áö
-11,¶ñ,Transparent Level 2,ÄĞ,78,0,1,0,30,Í¸Ã÷2¼¶
-13,¶ñ,transparent,ÄĞ,64,1,1,1,14,Í¸Ã÷
-14,¶ñ,Transparent Level 2,ÄĞ,47,1,1,0,28,Í¸Ã÷2¼¶
-15,¶ñ,Transparent Level 2,ÄĞ,71,0,1,1,32,Í¸Ã÷2¼¶
-16,¶ñ,Chromophobe ,Å®,59,0,1,0,35,ÏÓÉ«
-17,Á¼,Epithelioid hamartoma,Å®,46,1,0,2,21,ÉÏÆ¤Ñù´í¹¹Áö
-18,¶ñ,papilla,ÄĞ,62,1,0,2,25,ÈéÍ·
-19,¶ñ,Transparent nipple grade 2,Å®,76,0,0,1,23,Í¸Ã÷ÈéÍ·2¼¶
-20,¶ñ,Nipple type 1,ÄĞ,64,0,1,1,25,ÈéÍ·1ĞÍ
-21,¶ñ,Transparent Level 2,ÄĞ,68,1,1,0,38,Í¸Ã÷2¼¶
-22,Á¼,Hamartoma,Å®,39,1,1,1,23,´í¹¹Áö
-23,¶ñ,High grade urothelial carcinoma,ÄĞ,83,0,0,0,37,¸ß¼¶±ğÄòÂ·ÉÏÆ¤°©
-24,¶ñ,evil,ÄĞ,71,1,1,2,24,¶ñ
-25,¶ñ,Transparent Level 2,ÄĞ,64,1,0,2,20,Í¸Ã÷2¼¶
-26,¶ñ,Transparent Level 2,ÄĞ,84,0,1,2,19,Í¸Ã÷2¼¶
-27,Á¼,Hamartoma,Å®,56,1,1,1,22,´í¹¹Áö
-28,¶ñ,evil,ÄĞ,57,0,0,1,35,¶ñ
-29,Á¼,Hamartoma,ÄĞ,59,1,1,2,17,´í¹¹Áö
-30,¶ñ,evil,ÄĞ,46,1,0,1,20,¶ñ
-32,¶ñ,Transparent Level 2,ÄĞ,40,0,0,1,33,Í¸Ã÷2¼¶
-33,¶ñ,Transparent Level 2,ÄĞ,64,0,0,2,27,Í¸Ã÷2¼¶
-34,¶ñ,Invasive urothelial carcinoma,ÄĞ,67,0,0,1,29,½şÈóĞÔÄòÂ·ÉÏÆ¤°©
-35,¶ñ,evil,Å®,71,0,1,2,24,¶ñ
-36,¶ñ,evil,ÄĞ,64,1,0,2,32,¶ñ
-37,¶ñ,Invasive urothelial carcinoma,ÄĞ,62,1,0,0,17,½şÈóĞÔÄòÂ·ÉÏÆ¤°©
-38,Á¼,Benign hamartoma,Å®,68,1,0,0,52,Á¼´í¹¹Áö
-39,Á¼,Benign hamartoma,Å®,68,1,0,2,31,Á¼´í¹¹Áö
-40,¶ñ,Malignant G2 type neuroendocrine tumor,Å®,51,0,1,2,54,¶ñG2ĞÍÉñ¾­ÄÚ·ÖÃÚÖ×Áö
-41,¶ñ,transparent,Å®,39,1,1,0,36,Í¸Ã÷
-42,¶ñ,Malignant mesodermal renal cell tumor,Å®,24,0,1,2,72,¶ñÖĞÅß²ãÉöÏ¸°ûÁö
-43,¶ñ,Transparent Level 2-3,ÄĞ,58,0,0,2,35,Í¸Ã÷2-3¼¶
-44,¶ñ,Chromophobe ,ÄĞ,65,1,1,0,20,ÏÓÉ«
-45,Á¼,Hamartoma,ÄĞ,37,1,1,1,30,´í¹¹Áö
-46,Á¼,Hamartoma,Å®,41,1,1,0,12,´í¹¹Áö
-47,¶ñ,Transparent Level 2,ÄĞ,67,0,0,0,49,Í¸Ã÷2¼¶
-49,Á¼,Benign hamartoma,Å®,50,1,0,1,10,Á¼´í¹¹Áö
-52,¶ñ,Transparent Level 2,ÄĞ,65,0,1,2,21,Í¸Ã÷2¼¶
-54,¶ñ,Transparent Level 2-3,ÄĞ,72,0,0,2,32,Í¸Ã÷2-3¼¶
-56,¶ñ,evil,ÄĞ,50,1,0,2,19,¶ñ
-58,¶ñ,transparent,ÄĞ,60,1,1,2,19,Í¸Ã÷
-59,Á¼,Focal fibrosis,ÄĞ,66,1,0,2,18,¾ÖÔîÇøÏËÎ¬»¯
-60,Á¼,Hemangioma,Å®,29,1,1,2,67,Ñª¹ÜÁö
-61,¶ñ,Transparent Level 2,ÄĞ,70,0,0,2,35,Í¸Ã÷2¼¶
-62,¶ñ,Transparent Level 2,ÄĞ,31,0,0,1,28,Í¸Ã÷2¼¶
-64,Á¼,Hamartoma,ÄĞ,49,1,0,2,31,´í¹¹Áö
-66,¶ñ,evil,ÄĞ,58,1,0,1,14,¶ñ
-69,¶ñ,Transparent Level 1-2,Å®,87,1,1,1,25,Í¸Ã÷1-2¼¶
-71,¶ñ,Transparent Level 2,ÄĞ,36,0,1,2,30,Í¸Ã÷2¼¶
-75,¶ñ,Hamartoma,ÄĞ,82,1,0,2,26,´í¹¹Áö
-77,¶ñ,Transparent Level 2-3,ÄĞ,74,1,0,0,32,Í¸Ã÷2-3¼¶
-78,¶ñ,Transparent Level 2,ÄĞ,67,0,0,0,25,Í¸Ã÷2¼¶
-79,Á¼,Hamartoma,Å®,41,0,0,1,28,´í¹¹Áö
-80,¶ñ,transparent,Å®,61,1,1,2,18,Í¸Ã÷
-81,¶ñ,Grade 2 nipple,Å®,57,0,1,2,73,ÈéÍ·2¼¶
-82,¶ñ,Transparent Level 2,Å®,83,0,0,2,45,Í¸Ã÷2¼¶
-83,¶ñ,Transparent Level 2,ÄĞ,59,0,1,2,60,Í¸Ã÷2¼¶
-85,Á¼,Hamartoma,Å®,79,1,1,0,29,´í¹¹Áö
-86,¶ñ,Transparent Level 3,ÄĞ,64,0,0,1,19,Í¸Ã÷3¼¶
-87,Á¼,good,Å®,48,1,1,1,10,Á¼
-89,¶ñ,Transparent Level 2,Å®,58,1,0,2,20,Í¸Ã÷2¼¶
-90,¶ñ,evil,ÄĞ,75,0,1,2,47,¶ñ
-91,¶ñ,Grade 1 multilocular cystic renal cell carcinoma,ÄĞ,80,1,0,2,33,¶à·¿ÄÒĞÔÉö°©1¼¶
-92,¶ñ,evil,ÄĞ,78,1,0,0,40,¶ñ
-93,Á¼,Renal cyst swelling with bleeding,Å®,59,1,0,0,43,ÉöÄÒÖ×°é³öÑª
-94,¶ñ,Transparent Level 2,ÄĞ,72,0,1,0,20,Í¸Ã÷2¼¶
-95,¶ñ,evil,Å®,65,1,1,1,13,¶ñ
-96,¶ñ,Transparent Level 1-2,Å®,69,0,0,1,50,Í¸Ã÷1-2¼¶
-97,¶ñ,Transparent Level 1-2,Å®,63,1,0,2,13,Í¸Ã÷1-2¼¶
-98,Á¼,Benign hamartoma,Å®,41,1,0,0,14,Á¼´í¹¹Áö
-99,¶ñ,Disgusting color level 2-3,ÄĞ,59,1,1,2,14,ÏÓÉ«2-3¼¶
-100,Á¼,Solitary fibrotic tumor,Å®,63,0,0,0,26,¹ÂÁ¢ĞÔÏËÎ¬ĞÔÖ×Áö
-101,¶ñ,transparent,ÄĞ,44,1,0,0,30,Í¸Ã÷
-106,¶ñ,evil,ÄĞ,51,0,1,1,12,¶ñ
-107,¶ñ,Transparent Level 2,Å®,57,1,1,2,20,Í¸Ã÷2¼¶
-108,¶ñ,Transparent Level 2,Å®,70,0,1,1,50,Í¸Ã÷2¼¶
-109,Á¼,Hamartoma,ÄĞ,46,1,1,0,35,´í¹¹Áö
-111,¶ñ,Squamous cell carcinoma,Å®,57,0,0,2,35,ÁÛ°©
-112,Á¼,Hamartoma,Å®,67,1,0,1,16,´í¹¹Áö
-113,¶ñ,Cystic renal cell carcinoma,ÄĞ,49,1,0,1,18,ÄÒĞÔÉö°©
-114,¶ñ,Transparent Level 2-3,Å®,46,0,1,2,53,Í¸Ã÷2-3¼¶
-115,Á¼,Epithelioid hamartoma,Å®,60,1,0,2,17,ÉÏÆ¤Ñù´í¹¹Áö
-116,Á¼,Hamartoma,Å®,58,1,0,1,18,´í¹¹Áö
-117,Á¼,Hamartoma,ÄĞ,58,1,0,0,38,´í¹¹Áö
-118,¶ñ,Transparent Level 1-2,ÄĞ,50,0,1,0,36,Í¸Ã÷1-2¼¶
-119,¶ñ,Transparent Level 2,ÄĞ,41,0,0,0,38,Í¸Ã÷2¼¶
-120,¶ñ,Low grade malignant renal tubular epithelial tumor,ÄĞ,36,1,0,1,12,µÍ¶È¶ñĞÔÉöĞ¡¹ÜÀ´Ô´ÉÏÆ¤ĞÔÖ×Áö
-121,¶ñ,Transparent Level 2,ÄĞ,63,0,1,0,91,Í¸Ã÷2¼¶
-122,¶ñ,Transparent Level 2,ÄĞ,45,0,1,1,39,Í¸Ã÷2¼¶
-123,Á¼,Hamartoma,Å®,82,0,0,0,24,´í¹¹Áö
-124,¶ñ,Papillary Type 1,ÄĞ,53,1,0,0,17,ÈéÍ·×´1ĞÍ
-126,¶ñ,Transparent Level 2,ÄĞ,69,0,1,1,43,Í¸Ã÷2¼¶
-127,¶ñ,Transparent Level 2,ÄĞ,45,0,1,1,21,Í¸Ã÷2¼¶
-128,¶ñ,evil,ÄĞ,46,1,1,0,14,¶ñ
-131,¶ñ,Evil transparency,Å®,51,1,1,0,10,¶ñÍ¸Ã÷
-132,¶ñ,Evil transparency,Å®,51,1,0,2,28,¶ñÍ¸Ã÷
-133,¶ñ,Transparent Level 2,Å®,79,0,0,2,59,Í¸Ã÷2¼¶
-134,¶ñ,Transparent Level 1-2,ÄĞ,60,0,0,0,70,Í¸Ã÷1-2¼¶
-135,¶ñ,Transparent Level 2,ÄĞ,74,0,0,2,38,Í¸Ã÷2¼¶
-136,¶ñ,Transparent Level 2,ÄĞ,64,0,1,2,22,Í¸Ã÷2¼¶
-137,¶ñ,Transparent Level 2,ÄĞ,61,0,0,0,30,Í¸Ã÷2¼¶
-138,¶ñ,Chromophobe ,Å®,39,1,1,2,17,ÏÓÉ«
-139,¶ñ,evil,ÄĞ,43,1,1,0,12,¶ñ
-140,¶ñ,Transparent Level 2,ÄĞ,43,0,0,0,40,Í¸Ã÷2¼¶
-141,¶ñ,Transparent Level 2,ÄĞ,43,0,0,2,40,Í¸Ã÷2¼¶
-142,¶ñ,evil,Å®,43,0,1,0,33,¶ñ
-143,¶ñ,Transparent Level 2-3,Å®,80,0,0,2,27,Í¸Ã÷2-3¼¶
-144,¶ñ,Post Evil Transplantation,ÄĞ,60,0,1,2,20,¶ñºóÒÆÖ²
-145,¶ñ,Transparent Level 3,ÄĞ,55,0,0,0,77,Í¸Ã÷3¼¶
-146,¶ñ,evil,ÄĞ,56,0,0,0,16,¶ñ
-148,¶ñ,Disgusting nipples or disgust,ÄĞ,22,1,1,2,42,¶ñÈéÍ·»òÏÓÉ«
-149,¶ñ,"Nipple type 2, grade 2",ÄĞ,65,1,1,2,26,ÈéÍ·2ĞÍ2¼¶
-150,¶ñ,Transparent Level 2,Å®,66,0,0,2,27,Í¸Ã÷2¼¶
-152,Á¼,Epithelioid hamartoma,ÄĞ,64,0,1,2,40,ÉÏÆ¤Ñù´í¹¹Áö
-154,Á¼,Hamartoma,ÄĞ,29,1,1,1,32,´í¹¹Áö
-155,¶ñ,Transparent Level 2,Å®,53,0,1,0,64,Í¸Ã÷2¼¶
-156,¶ñ,Transparent Level 2,Å®,69,0,1,0,62,Í¸Ã÷2¼¶
-157,¶ñ,evil,ÄĞ,83,1,1,2,23,¶ñ
-159,Á¼,Hamartoma,Å®,70,1,1,1,8,´í¹¹Áö
-161,Á¼,Hamartoma,Å®,29,1,1,2,6,´í¹¹Áö
-162,¶ñ,Transparent Level 2,ÄĞ,72,1,1,2,20,Í¸Ã÷2¼¶
-163,¶ñ,Chromophobe ,ÄĞ,59,0,0,1,45,ÏÓÉ«
-164,¶ñ,lymphoma,ÄĞ,34,1,0,1,40,ÁÜ°ÍÁö
-166,Á¼,Hamartoma,Å®,37,1,1,1,10,´í¹¹Áö
-167,Á¼,Epithelioid hamartoma,Å®,53,1,0,0,27,ÉÏÆ¤Ñù´í¹¹Áö
-168,¶ñ,Transparent Level 2,ÄĞ,75,1,0,2,17,Í¸Ã÷2¼¶
-169,¶ñ,Evil MT,Å®,33,0,1,1,59,¶ñMT
-172,Á¼,Hamartoma,Å®,70,1,0,2,25,´í¹¹Áö
-174,Á¼,Hamartoma,Å®,68,0,0,0,33,´í¹¹Áö
-176,¶ñ,Transparent Level 1-2,Å®,59,1,0,0,13,Í¸Ã÷1-2¼¶
-177,¶ñ,Transparent Level 2,ÄĞ,73,0,1,2,31,Í¸Ã÷2¼¶
-178,Á¼,Hamartoma,ÄĞ,21,1,0,1,20,´í¹¹Áö
-179,¶ñ,Transparent Level 2,Å®,73,0,1,0,40,Í¸Ã÷2¼¶
-180,¶ñ,Transparent Level 2,ÄĞ,74,0,0,2,40,Í¸Ã÷2¼¶
-181,¶ñ,Chromophobe ,Å®,64,1,0,2,17,ÏÓÉ«
-182,¶ñ,Disgusting Color Type 2,Å®,64,1,1,0,10,ÏÓÉ«2ĞÍ
-183,¶ñ,Papillary thyroid carcinoma with renal metastasis,Å®,54,0,0,0,87,¼××´ÏÙÈéÍ·×´°©Éö×ªÒÆ
-185,¶ñ,Transparent Level 2,Å®,65,0,0,2,69,Í¸Ã÷2¼¶
-186,¶ñ,Transparent Level 2,Å®,60,0,1,2,33,Í¸Ã÷2¼¶
-187,¶ñ,Transparent Level 2,ÄĞ,62,0,0,0,26,Í¸Ã÷2¼¶
-189,¶ñ,Chromophobe ,Å®,62,0,1,0,27,ÏÓÉ«
-190,¶ñ,Transparent Level 2,ÄĞ,39,0,0,2,55,Í¸Ã÷2¼¶
-191,¶ñ,Transparent Level 2,Å®,70,0,0,1,25,Í¸Ã÷2¼¶
-192,¶ñ,evil,ÄĞ,44,0,0,2,57,¶ñ
-193,¶ñ,transparent,Å®,40,0,0,1,17,Í¸Ã÷
-194,¶ñ,Transparent Level 2,ÄĞ,58,1,1,2,14,Í¸Ã÷2¼¶
-195,Á¼,Hamartoma,Å®,56,1,1,2,18,´í¹¹Áö
-196,¶ñ,Transparent Level 2,Å®,57,0,1,0,13,Í¸Ã÷2¼¶
-197,Á¼,Hamartoma,ÄĞ,61,1,1,1,21,´í¹¹Áö
-198,Á¼,Hamartoma,Å®,70,1,0,0,23,´í¹¹Áö
-199,¶ñ,Transparent Level 1-2,ÄĞ,50,0,0,2,30,Í¸Ã÷1-2¼¶
-200,¶ñ,Nipple grades 2-3,ÄĞ,55,1,1,0,22,ÈéÍ·2-3¼¶
-201,¶ñ,Transparent Level 2,ÄĞ,59,0,1,2,35,Í¸Ã÷2¼¶
-202,¶ñ,Transparent Level 2,ÄĞ,38,0,1,1,30,Í¸Ã÷2¼¶
-203,¶ñ,Transparent Level 1-2,Å®,55,1,1,1,11,Í¸Ã÷1-2¼¶
-205,¶ñ,Transparent Level 2,ÄĞ,52,1,0,2,12,Í¸Ã÷2¼¶
-206,¶ñ,Transparent Level 2,ÄĞ,73,1,0,1,23,Í¸Ã÷2¼¶
-207,¶ñ,Transparent Level 2,ÄĞ,74,1,1,2,15,Í¸Ã÷2¼¶
-208,¶ñ,Transparent Level 2,Å®,26,0,0,1,40,Í¸Ã÷2¼¶
-209,¶ñ,Transparent Level 2,ÄĞ,55,0,0,2,89,Í¸Ã÷2¼¶
-210,¶ñ,Transparent Level 2,Å®,32,0,1,0,53,Í¸Ã÷2¼¶
-211,Á¼,Hamartoma,Å®,77,1,0,0,31,´í¹¹Áö
-212,¶ñ,Transparent Level 2,ÄĞ,45,1,1,0,28,Í¸Ã÷2¼¶
-213,¶ñ,Transparent Level 2,Å®,56,1,0,2,22,Í¸Ã÷2¼¶
-214,¶ñ,Transparent Level 2,ÄĞ,58,0,1,2,67,Í¸Ã÷2¼¶
-215,Á¼,Hamartoma,ÄĞ,44,1,0,2,37,´í¹¹Áö
-217,¶ñ,Transparent Level 2,Å®,58,1,0,2,15,Í¸Ã÷2¼¶
-218,¶ñ,Evil transparency,Å®,52,1,1,2,23,¶ñÍ¸Ã÷
-219,Á¼,Hamartoma,Å®,59,1,0,0,15,´í¹¹Áö
-220,¶ñ,evil,ÄĞ,64,1,1,2,28,¶ñ
-221,¶ñ,Transparent Level 2,Å®,67,0,0,2,29,Í¸Ã÷2¼¶
-222,¶ñ,Transparent Level 2,Å®,48,1,0,1,29,Í¸Ã÷2¼¶
-223,Á¼,Hamartoma,Å®,47,1,0,1,32,´í¹¹Áö
-224,¶ñ,transparent,ÄĞ,32,0,0,0,23,Í¸Ã÷
-225,¶ñ,Transparent Level 2,Å®,59,0,0,0,45,Í¸Ã÷2¼¶
-227,¶ñ,Transparent Level 2-3,ÄĞ,45,0,0,2,32,Í¸Ã÷2-3¼¶
-228,Á¼,Hamartoma,ÄĞ,62,1,0,0,27,´í¹¹Áö
-230,Á¼,Hamartoma,Å®,49,1,0,0,23,´í¹¹Áö
-231,¶ñ,Transparent Level 2,ÄĞ,81,0,1,1,33,Í¸Ã÷2¼¶
-232,¶ñ,Papillary urothelial carcinoma of the renal pelvis,ÄĞ,55,0,1,1,25,ÉöÓÛÈéÍ·×´ÄòÂ·ÉÏÆ¤°©
-233,¶ñ,Transparent Level 2,ÄĞ,68,0,1,1,34,Í¸Ã÷2¼¶
-234,¶ñ,Transparent Level 2,ÄĞ,28,0,1,0,26,Í¸Ã÷2¼¶
-235,Á¼,Hamartoma,Å®,53,1,1,2,9,´í¹¹Áö
-236,¶ñ,transparent,Å®,49,0,1,0,57,Í¸Ã÷
-238,¶ñ,transparent,Å®,81,0,1,2,26,Í¸Ã÷
-239,¶ñ,Transparent Level 2,ÄĞ,51,1,0,2,18,Í¸Ã÷2¼¶
-240,¶ñ,Transparent Level 2,Å®,69,0,1,2,40,Í¸Ã÷2¼¶
-241,¶ñ,Nipple type 2,ÄĞ,48,0,0,0,37,ÈéÍ·2ĞÍ 
-242,¶ñ,Transparent Level 2,Å®,52,1,1,2,43,Í¸Ã÷2¼¶
-243,¶ñ,Nipple type 2,ÄĞ,34,0,0,0,35,ÈéÍ·2ĞÍ 
-244,¶ñ,evil,ÄĞ,78,0,1,1,15,¶ñ
-246,¶ñ,Multilocular cystic renal clear cell carcinoma,ÄĞ,73,0,0,0,31,¶à·¿ÄÒĞÔÉöÍ¸Ã÷Ï¸°û°©
-247,¶ñ,Chromophobe ,ÄĞ,47,1,1,1,34,ÏÓÉ«
-248,¶ñ,evil,ÄĞ,44,0,1,2,26,¶ñ
-249,¶ñ,Transparent Level 2,Å®,44,0,1,0,35,Í¸Ã÷2¼¶
-250,¶ñ,Nipple Type 1 Grade 2,Å®,66,1,1,0,33,ÈéÍ·1ĞÍ2¼¶
-251,¶ñ,Transparent Level 2,ÄĞ,69,0,1,0,31,Í¸Ã÷2¼¶
-252,¶ñ,Transparent Level 2,Å®,60,1,1,1,36,Í¸Ã÷2¼¶
-253,¶ñ,Transparent Level 2,ÄĞ,37,0,1,2,36,Í¸Ã÷2¼¶
-254,Á¼,Hamartoma,Å®,38,1,0,2,39,´í¹¹Áö
-255,¶ñ,Transparent Level 2,ÄĞ,35,1,0,0,15,Í¸Ã÷2¼¶
-257,¶ñ,Transparent Level 2,ÄĞ,47,1,1,2,20,Í¸Ã÷2¼¶
-258,Á¼,Hamartoma,Å®,26,1,0,2,14,´í¹¹Áö
-259,¶ñ,Transparent Level 2,ÄĞ,71,1,1,2,28,Í¸Ã÷2¼¶
-260,¶ñ,Transparent Level 2,ÄĞ,62,0,1,1,16,Í¸Ã÷2¼¶
-262,Á¼,Hamartoma,Å®,46,1,0,1,12,´í¹¹Áö
-263,¶ñ,renal carcinoma,ÄĞ,75,1,0,1,29,Éö°©
-264,Á¼,Hamartoma,Å®,46,1,0,0,70,´í¹¹Áö
-265,¶ñ,Transparent Level 2-3,ÄĞ,60,0,0,0,32,Í¸Ã÷2-3¼¶
-266,¶ñ,Transparent Level 2,ÄĞ,24,0,0,0,37,Í¸Ã÷2¼¶
-267,Á¼,Hamartoma,Å®,40,1,0,1,22,´í¹¹Áö
-269,Á¼,Hamartoma,ÄĞ,40,1,0,0,34,´í¹¹Áö
-270,Á¼,Hamartoma,ÄĞ,40,1,1,0,15,´í¹¹Áö
-271,¶ñ,Transparent Level 2,ÄĞ,42,0,1,2,60,Í¸Ã÷2¼¶
-272,¶ñ,Chromophobe ,ÄĞ,63,0,1,0,40,ÏÓÉ«
-273,¶ñ,Transparent Level 2,Å®,27,0,0,1,40,Í¸Ã÷2¼¶
-274,¶ñ,Transparent Level 2,ÄĞ,70,1,0,0,33,Í¸Ã÷2¼¶
-276,¶ñ,Transparent Level 2,ÄĞ,79,0,1,2,48,Í¸Ã÷2¼¶
-277,¶ñ,Transparent Level 1-2,ÄĞ,31,0,0,0,63,Í¸Ã÷1-2¼¶
-278,¶ñ,Nipple Type 1 Grade 2,ÄĞ,64,1,1,1,27,ÈéÍ·1ĞÍ2¼¶
-279,¶ñ,Transparent Level 2,ÄĞ,56,1,1,0,29,Í¸Ã÷2¼¶
-280,Á¼,Hamartoma,Å®,55,1,1,1,16,´í¹¹Áö
-281,¶ñ,Transparent Level 2-3,ÄĞ,71,0,1,1,39,Í¸Ã÷2-3¼¶
-283,Á¼,Hamartoma,Å®,41,1,0,2,50,´í¹¹Áö
-284,Á¼,Hamartoma,Å®,41,1,1,1,25,´í¹¹Áö
-285,¶ñ,Transparent Level 2,ÄĞ,48,1,1,2,18,Í¸Ã÷2¼¶
-286,¶ñ,Transparent Level 2,ÄĞ,46,0,0,1,39,Í¸Ã÷2¼¶
-287,¶ñ,Evil transparency,ÄĞ,47,0,1,1,20,¶ñÍ¸Ã÷
-288,¶ñ,Transparent Level 2,Å®,69,0,1,2,40,Í¸Ã÷2¼¶
-289,Á¼,Mixed epithelial mesenchymal tumor,ÄĞ,24,1,0,2,28,»ìºÏĞÔÉÏÆ¤¼äÖÊÖ×Áö
-290,Á¼,Hamartoma,Å®,30,1,0,2,60,´í¹¹Áö
-292,¶ñ,Unclassified renal cell carcinoma,Å®,55,0,0,0,28,ÉöÏ¸°û°©Î´·ÖÀàĞÍ
-293,¶ñ,Transparent Level 2,ÄĞ,54,1,0,0,29,Í¸Ã÷2¼¶
-296,¶ñ,Transparent Level 2,ÄĞ,52,0,0,0,37,Í¸Ã÷2¼¶
-297,Á¼,Hamartoma,Å®,68,0,1,1,58,´í¹¹Áö
-298,¶ñ,Renal pelvis invasive urothelial carcinoma,Å®,61,0,0,0,28,ÉöÓÛ½şÈóĞÔÄòÂ·ÉÏÆ¤°©
-300,¶ñ,Evil 62305895,ÄĞ,57,0,0,2,26,¶ñ62305895
-301,¶ñ,Transparent Level 2,ÄĞ,33,1,0,2,18,Í¸Ã÷2¼¶
-302,¶ñ,evil,Å®,52,0,1,1,24,¶ñ
-303,Á¼,Hamartoma,ÄĞ,47,1,0,2,18,´í¹¹Áö
-304,¶ñ,Transparent Level 2,ÄĞ,56,1,1,0,17,Í¸Ã÷2¼¶
-305,¶ñ,Transparent Level 2,ÄĞ,55,1,1,1,12,Í¸Ã÷2¼¶
-306,Á¼,Hamartoma,ÄĞ,61,1,0,1,12,´í¹¹Áö
-307,¶ñ,evil,ÄĞ,78,0,1,2,38,¶ñ
-308,¶ñ,Transparent Level 2,ÄĞ,43,1,0,1,11,Í¸Ã÷2¼¶
-309,Á¼,good,ÄĞ,74,1,1,0,11,Á¼
-311,¶ñ,Renal cancer unclassified,ÄĞ,53,0,0,1,46,Éö°©Î´·ÖÀà
-312,¶ñ,Transparent Level 2,ÄĞ,64,0,1,0,38,Í¸Ã÷2¼¶
-313,¶ñ,mucinous tubular and spindle cell carcinoma ,Å®,33,0,1,0,50,ğ¤ÒºÑùĞ¡¹Ü×´ºÍËóĞÎÏ¸°û°©
-314,¶ñ,Invasive urothelial carcinoma,Å®,61,0,0,1,27,½şÈóĞÔÄòÂ·ÉÏÆ¤°©
-315,¶ñ,Transparent Level 2-3,Å®,58,0,1,0,26,Í¸Ã÷2-3¼¶
-316,¶ñ,evil,ÄĞ,86,0,0,2,33,¶ñ
-318,Á¼,Hamartoma,ÄĞ,44,1,1,1,26,´í¹¹Áö
-319,¶ñ,Transparent Level 2,Å®,63,1,0,0,30,Í¸Ã÷2¼¶
-320,¶ñ,Transparent Level 2,ÄĞ,60,1,1,0,18,Í¸Ã÷2¼¶
-321,Á¼,Hamartoma,ÄĞ,66,1,1,0,10,´í¹¹Áö
-322,Á¼,Hamartoma,ÄĞ,47,1,0,2,16,´í¹¹Áö
-324,Á¼,Eosinophilic cell tumor,Å®,44,1,1,0,28,ÊÈËáÏ¸°ûÁö
-326,¶ñ,Papillary Type 1 Grade 1,ÄĞ,40,1,0,0,30,ÈéÍ·×´1ĞÍ1¼¶
-327,¶ñ,Invasive urothelial carcinoma,ÄĞ,68,0,0,0,68,½şÈóĞÔÄòÂ·ÉÏÆ¤°©
-328,¶ñ,Carcinoid,ÄĞ,43,1,0,1,44,Àà°©
-329,¶ñ,Transparent Level 3,ÄĞ,71,0,1,0,30,Í¸Ã÷3¼¶
-330,¶ñ,Transparent Level 2,Å®,71,1,1,0,30,Í¸Ã÷2¼¶
-331,¶ñ,Transparent Level 2,ÄĞ,78,0,0,0,49,Í¸Ã÷2¼¶
-332,¶ñ,Transparent 3-4 levels,ÄĞ,85,0,1,1,16,Í¸Ã÷3-4¼¶
-333,¶ñ,Renal cancer unclassified,ÄĞ,55,0,0,0,30,Éö°©Î´·ÖÀà
-334,¶ñ,Transparent Level 2,ÄĞ,50,1,1,2,28,Í¸Ã÷2¼¶
-335,Á¼,Hamartoma,ÄĞ,35,1,0,2,35,´í¹¹Áö
-337,¶ñ,Transparent Level 2,ÄĞ,69,0,0,0,39,Í¸Ã÷2¼¶
-338,¶ñ,Transparent Level 2,ÄĞ,29,0,1,2,46,Í¸Ã÷2¼¶
-339,¶ñ,Transparent Level 1-2,ÄĞ,63,1,0,1,15,Í¸Ã÷1-2¼¶
-340,¶ñ,Papillary Type 1,ÄĞ,61,1,0,2,14,ÈéÍ·×´1ĞÍ
-341,¶ñ,evil,Å®,51,1,1,0,12,¶ñ
-342,¶ñ,Transparent Level 2,ÄĞ,54,1,1,2,21,Í¸Ã÷2¼¶
-343,¶ñ,evil,ÄĞ,70,0,0,0,20,¶ñ
-344,¶ñ,Transparent Level 2,ÄĞ,36,1,1,1,32,Í¸Ã÷2¼¶
-346,¶ñ,Transparent Level 2,ÄĞ,64,0,1,1,48,Í¸Ã÷2¼¶
-348,¶ñ,Transparent Level 2,ÄĞ,84,1,0,0,83,Í¸Ã÷2¼¶
-349,¶ñ,Transparent Level 2-3,ÄĞ,59,1,0,0,52,Í¸Ã÷2-3¼¶
-351,Á¼,Eosinophilic adenoma,ÄĞ,45,0,1,2,43,ÊÈËáÏ¸°ûÏÙÁö
-352,¶ñ,evil,ÄĞ,39,0,1,2,19,¶ñ
-353,¶ñ,Transparent Level 2-3,ÄĞ,61,1,1,2,34,Í¸Ã÷2-3¼¶
-354,¶ñ,Transparent Level 2,ÄĞ,65,1,0,1,25,Í¸Ã÷2¼¶
-355,¶ñ,Transparent Level 2,Å®,64,1,1,2,21,Í¸Ã÷2¼¶
-356,¶ñ,Transparent Level 3,ÄĞ,61,0,0,2,67,Í¸Ã÷3¼¶
-357,¶ñ,evil,ÄĞ,60,0,0,1,25,¶ñ
-358,¶ñ,Invasive urothelial carcinoma,ÄĞ,71,0,0,0,18,½şÈóĞÔÄòÂ·ÉÏÆ¤°©
-359,¶ñ,Transparent Level 2,ÄĞ,53,0,0,0,32,Í¸Ã÷2¼¶
-360,¶ñ,Transparent Level 2,Å®,69,0,0,0,40,Í¸Ã÷2¼¶
-361,Á¼,Hamartoma,Å®,48,1,0,2,55,´í¹¹Áö
-362,¶ñ,Transparent Level 2,Å®,48,1,1,1,38,Í¸Ã÷2¼¶
-363,¶ñ,Transparent Level 2,Å®,61,0,1,1,48,Í¸Ã÷2¼¶
-364,Á¼,Eosinophilic adenoma,ÄĞ,49,0,1,0,67,ÊÈËáÏ¸°ûÏÙÁö
-365,¶ñ,Transparent Level 2,ÄĞ,41,0,0,2,44,Í¸Ã÷2¼¶
-366,¶ñ,Transparent Level 2,ÄĞ,50,0,0,2,45,Í¸Ã÷2¼¶
-367,¶ñ,Transparent Level 2,ÄĞ,69,0,1,2,56,Í¸Ã÷2¼¶
-368,¶ñ,Transparent Level 2,Å®,62,1,1,1,29,Í¸Ã÷2¼¶
-369,¶ñ,Transparent Level 2,ÄĞ,53,1,1,2,19,Í¸Ã÷2¼¶
-370,¶ñ,Transparent Level 2,ÄĞ,47,0,1,2,36,Í¸Ã÷2¼¶
-371,¶ñ,Transparent Level 2,ÄĞ,64,1,1,1,30,Í¸Ã÷2¼¶
-372,¶ñ,Transparent Level 2,ÄĞ,63,1,1,2,27,Í¸Ã÷2¼¶
-373,¶ñ,Evil excision,ÄĞ,79,0,1,2,40,¶ñÇĞ³ı
-374,¶ñ,Evil excision,ÄĞ,52,0,1,1,60,¶ñÇĞ³ı
-375,Á¼,Hamartoma,Å®,59,1,0,0,10,´í¹¹Áö
-376,¶ñ,Transparent Level 2,Å®,55,0,1,2,30,Í¸Ã÷2¼¶
-377,¶ñ,Transparent Level 2,ÄĞ,52,0,0,0,35,Í¸Ã÷2¼¶
-378,Á¼,Hamartoma,Å®,49,1,1,0,16,´í¹¹Áö
-379,¶ñ,Transparent Level 2,ÄĞ,40,0,1,1,29,Í¸Ã÷2¼¶
-380,¶ñ,Transparent Level 2,ÄĞ,56,0,0,2,32,Í¸Ã÷2¼¶
-381,¶ñ,Transparent Level 3,ÄĞ,52,0,1,2,80,Í¸Ã÷3¼¶
-382,¶ñ,Transparent Level 2,ÄĞ,37,1,0,2,24,Í¸Ã÷2¼¶
-384,¶ñ,Transparent Level 2,ÄĞ,56,0,1,1,19,Í¸Ã÷2¼¶
-385,¶ñ,Chromophobe ,ÄĞ,50,1,0,2,28,ÏÓÉ«
-386,¶ñ,Renal pelvis mt,ÄĞ,71,0,0,2,37,ÉöÓÛmt
-387,Á¼,Complex cyst,Å®,56,0,1,0,23,¸´ÔÓĞÔÄÒÖ×
-388,Á¼,Hamartoma,Å®,27,1,1,1,64,´í¹¹Áö
-389,¶ñ,Transparent Level 2,Å®,63,0,0,0,68,Í¸Ã÷2¼¶
-390,¶ñ,Transparent Level 2,ÄĞ,65,1,0,0,18,Í¸Ã÷2¼¶
-391,¶ñ,Nipple type 1,ÄĞ,39,0,0,0,56,ÈéÍ·1ĞÍ
-392,¶ñ,Collecting duct cancer,ÄĞ,56,0,0,0,37,¼¯ºÏ¹Ü°©
-393,¶ñ,Transparent Level 2,ÄĞ,60,0,0,0,117,Í¸Ã÷2¼¶
-394,Á¼,Hamartoma,Å®,51,1,0,2,119,´í¹¹Áö
-395,Á¼,Hamartoma,Å®,47,1,0,2,12,´í¹¹Áö
-397,¶ñ,Differentiated malignancy,Å®,76,0,1,0,42,²î·Ö»¯¶ñĞÔ
-398,Á¼,Mixed epithelial mesenchymal tumor,Å®,39,0,1,1,33,»ìºÏĞÔÉÏÆ¤¼äÖÊÖ×Áö
-399,¶ñ,Transparent Level 2,Å®,35,1,1,0,32,Í¸Ã÷2¼¶
-400,¶ñ,MiT family translocation associated renal cell carcinoma,Å®,26,0,0,0,33,MiT¼Ò×åÒ×Î»Ïà¹ØĞÔÉö°©
-401,¶ñ,Transparent Level 2,Å®,67,0,0,1,79,Í¸Ã÷2¼¶
-402,¶ñ,Nipple Type 1 Grade 2,ÄĞ,65,0,0,2,40,ÈéÍ·1ĞÍ2¼¶
-403,¶ñ,Transparent Level 2,ÄĞ,48,1,0,1,18,Í¸Ã÷2¼¶
-404,¶ñ,Xp11.2 translocation/MiTF family renal cell carcinoma,Å®,27,0,1,0,54,xp11.2Ò×Î»/MiTF¼Ò×åÉö°©
-405,¶ñ,Transparent Level 2,ÄĞ,47,1,0,0,39,Í¸Ã÷2¼¶
-406,Á¼,Schwannoma,Å®,38,1,1,0,30,Éñ¾­ÇÊÁö
-407,Á¼,Complex cyst,Å®,46,1,0,1,12,¸´ÔÓĞÔÄÒÖ×
-408,¶ñ,MiT family translocation associated renal cell carcinoma,ÄĞ,52,0,0,0,66,MiT¼Ò×åÒ×Î»Ïà¹ØĞÔÉö°©
-409,¶ñ,Transparent Level 2,ÄĞ,59,0,0,0,78,Í¸Ã÷2¼¶
-410,¶ñ,Transparent Level 2,Å®,68,0,0,0,55,Í¸Ã÷2¼¶
-411,¶ñ,Chromophobe ,ÄĞ,55,0,0,1,19,ÏÓÉ«
-412,¶ñ,MiT family translocation associated renal cell carcinoma,Å®,60,0,1,0,18,MiT¼Ò×åÒ×Î»Ïà¹ØĞÔÉö°©
-413,Á¼,Hamartoma,Å®,66,0,1,2,29,´í¹¹Áö
-414,¶ñ,Transparent Level 2,ÄĞ,76,1,1,2,31,Í¸Ã÷2¼¶
-415,¶ñ,Transparent Level 2,ÄĞ,48,0,1,0,65,Í¸Ã÷2¼¶
-416,Á¼,Hamartoma with bleeding,Å®,37,1,1,1,48,´í¹¹Áö°é³öÑª
-417,¶ñ,Transparent Level 3,ÄĞ,64,0,0,2,83,Í¸Ã÷3¼¶
-418,Á¼,Solitary fibrotic tumor,Å®,54,0,0,2,34,¹ÂÁ¢ĞÔÏËÎ¬ĞÔÖ×Áö
-419,¶ñ,Transparent Level 2,ÄĞ,59,1,1,1,21,Í¸Ã÷2¼¶
-420,¶ñ,Transparent Level 1,Å®,59,1,0,0,22,Í¸Ã÷1¼¶
-421,¶ñ,Transparent Level 2,Å®,58,1,1,1,11,Í¸Ã÷2¼¶
-422,Á¼,Hamartoma,Å®,67,1,0,1,14,´í¹¹Áö
-423,¶ñ,Chromophobe ,ÄĞ,48,1,1,0,19,ÏÓÉ«
-424,Á¼,Hamartoma,Å®,26,1,0,0,40,´í¹¹Áö
-425,¶ñ,Transparent Level 2,Å®,40,1,0,1,28,Í¸Ã÷2¼¶
-426,¶ñ,Transparent Level 2,ÄĞ,48,0,1,1,39,Í¸Ã÷2¼¶
-427,¶ñ,Transparent Level 2,ÄĞ,44,0,0,2,45,Í¸Ã÷2¼¶
-428,¶ñ,Transparent Level 2,ÄĞ,55,1,0,0,17,Í¸Ã÷2¼¶
-429,¶ñ,Transparent Level 2,ÄĞ,52,0,1,2,37,Í¸Ã÷2¼¶
-430,Á¼,Cystic mixed epithelial mesenchymal tumor,ÄĞ,49,1,1,2,62,ÄÒĞÔ»ìºÏĞÔÉÏÆ¤¼äÖÊÖ×Áö
-431,¶ñ,Transparent cell papillary renal cell carcinoma,Å®,70,0,0,1,23,Í¸Ã÷Ï¸°ûÈéÍ·×´Éö°©
-432,¶ñ,Transferable MT,ÄĞ,60,1,1,0,31,×ªÒÆĞÔMT
-433,¶ñ,Transparent Level 2,ÄĞ,46,1,1,2,55,Í¸Ã÷2¼¶
-434,¶ñ,Transparent Level 2,ÄĞ,50,0,0,2,47,Í¸Ã÷2¼¶
-435,¶ñ,Invasive urothelial carcinoma,ÄĞ,74,0,1,2,51,½şÈóĞÔÄòÂ·ÉÏÆ¤°©
-436,Á¼,Cystic renal tumor,ÄĞ,44,0,1,2,40,ÄÒĞÔÉöÁö
-437,¶ñ,Transparent Level 2,ÄĞ,67,1,1,2,28,Í¸Ã÷2¼¶
-438,Á¼,Hamartoma,Å®,71,1,0,1,14,´í¹¹Áö
-439,¶ñ,Invasive urothelial carcinoma,Å®,68,0,1,1,52,½şÈóĞÔÄòÂ·ÉÏÆ¤°©
-440,¶ñ,Transparent Level 2-3,ÄĞ,40,0,0,1,35,Í¸Ã÷2-3¼¶
-441,¶ñ,Transparent Level 2,ÄĞ,73,1,1,0,35,Í¸Ã÷2¼¶
-442,¶ñ,Nipple type 2,ÄĞ,42,0,0,2,46,ÈéÍ·2ĞÍ
-443,¶ñ,Invasive urothelial carcinoma,Å®,68,1,0,0,25,½şÈóĞÔÄòÂ·ÉÏÆ¤°©
-444,¶ñ,Transparent Level 2,ÄĞ,55,0,1,0,22,Í¸Ã÷2¼¶
-445,¶ñ,Invasive urothelial carcinoma,ÄĞ,49,0,1,0,14,½şÈóĞÔÄòÂ·ÉÏÆ¤°©
-446,¶ñ,Transparent Level 2,Å®,27,1,0,0,53,Í¸Ã÷2¼¶
-447,¶ñ,Chromophobe ,Å®,54,0,0,2,75,ÏÓÉ«
-449,¶ñ,Transparent Level 2,ÄĞ,50,1,1,2,35,Í¸Ã÷2¼¶
-450,¶ñ,Chromophobe ,Å®,30,1,0,1,25,ÏÓÉ«
-451,¶ñ,Transparent Level 2-3,ÄĞ,47,1,1,0,30,Í¸Ã÷2-3¼¶
-454,Á¼,Hamartoma,ÄĞ,68,1,0,1,9,´í¹¹Áö
-455,¶ñ,Transparent Level 2,ÄĞ,54,0,1,2,29,Í¸Ã÷2¼¶
-456,¶ñ,Transparent Level 2,Å®,40,1,0,2,20,Í¸Ã÷2¼¶
-457,¶ñ,Transferable MT,Å®,36,1,0,1,74,×ªÒÆĞÔMT
-458,¶ñ,Transparent Level 2,Å®,31,1,1,0,10,Í¸Ã÷2¼¶
-459,¶ñ,Transparent Level 2,Å®,50,0,0,0,33,Í¸Ã÷2¼¶
-460,¶ñ,Transparent Level 2,ÄĞ,47,1,0,2,21,Í¸Ã÷2¼¶
-461,¶ñ,Transparent Level 3,Å®,61,0,1,2,40,Í¸Ã÷3¼¶
-464,¶ñ,Transparent Level 2,ÄĞ,64,0,1,2,38,Í¸Ã÷2¼¶
-467,¶ñ,Transparent Level 2,ÄĞ,70,0,1,0,51,Í¸Ã÷2¼¶
-468,¶ñ,Transparent Level 2,ÄĞ,48,0,1,2,55,Í¸Ã÷2¼¶
-469,¶ñ,Transparent Level 2-3,Å®,59,0,0,1,37,Í¸Ã÷2-3¼¶
-470,¶ñ,Transparent Level 2,ÄĞ,47,1,1,2,26,Í¸Ã÷2¼¶
-471,¶ñ,Transparent Level 2,Å®,42,0,0,2,24,Í¸Ã÷2¼¶
-472,¶ñ,Transparent Level 3,ÄĞ,57,1,1,0,34,Í¸Ã÷3¼¶
-473,Á¼,Hamartoma,Å®,55,1,1,0,19,´í¹¹Áö
-474,Á¼,Hamartoma,ÄĞ,51,1,1,1,36,´í¹¹Áö
-475,¶ñ,Transparent Level 2,ÄĞ,53,0,0,0,28,Í¸Ã÷2¼¶
-476,¶ñ,Transparent Level 2,Å®,71,0,0,0,32,Í¸Ã÷2¼¶
-477,¶ñ,Chromophobe ,ÄĞ,51,0,1,1,53,ÏÓÉ«
-478,¶ñ,Transparent Level 2,Å®,62,0,0,2,35,Í¸Ã÷2¼¶
-479,¶ñ,Transparent Level 1-2,Å®,68,0,0,0,24,Í¸Ã÷1-2¼¶
-480,¶ñ,Transparent Level 2,ÄĞ,74,0,1,0,57,Í¸Ã÷2¼¶
-481,¶ñ,Transparent Level 2,ÄĞ,73,0,1,0,50,Í¸Ã÷2¼¶
-482,¶ñ,transparent,Å®,38,1,1,0,15,Í¸Ã÷
-483,¶ñ,Chromophobe ,ÄĞ,49,1,0,0,11,ÏÓÉ«
-484,¶ñ,Transparent Level 2,ÄĞ,47,1,0,1,12,Í¸Ã÷2¼¶
-485,¶ñ,Transparent Level 2,ÄĞ,54,0,0,0,43,Í¸Ã÷2¼¶
-487,¶ñ,Transparent Level 2-3,Å®,62,0,0,0,43,Í¸Ã÷2-3¼¶
-488,¶ñ,Transparent Level 2,Å®,59,0,1,2,52,Í¸Ã÷2¼¶
-489,¶ñ,Transparent Level 2,ÄĞ,41,1,1,0,23,Í¸Ã÷2¼¶
-490,¶ñ,Invasive urothelial carcinoma,ÄĞ,53,0,1,2,20,½şÈóĞÔÄòÂ·ÉÏÆ¤°©
-491,¶ñ,Transparent Level 2,Å®,49,1,1,0,31,Í¸Ã÷2¼¶
-492,Á¼,Hamartoma,Å®,43,1,1,0,19,´í¹¹Áö
-493,¶ñ,Transparent Level 2,ÄĞ,83,0,0,0,77,Í¸Ã÷2¼¶
-494,¶ñ,Transparent Level 2,ÄĞ,66,0,1,0,35,Í¸Ã÷2¼¶
-495,¶ñ,Transparent Level 1,ÄĞ,48,1,1,0,16,Í¸Ã÷1¼¶
-496,¶ñ,MiTF translocated renal cell carcinoma,Å®,32,1,1,2,22,MiTFÒ×Î»ĞÔÉö°©
-497,¶ñ,Transparent Level 2,ÄĞ,61,1,1,0,20,Í¸Ã÷2¼¶
-498,¶ñ,Papillary renal cell carcinoma type 1,Å®,63,1,1,1,25,ÈéÍ·×´Éö°©1ĞÍ
-499,¶ñ,Transparent Level 2,ÄĞ,49,1,0,0,28,Í¸Ã÷2¼¶
-500,¶ñ,Chromophobe ,Å®,76,1,0,2,22,ÏÓÉ«
-501,¶ñ,Papillary urothelial carcinoma,ÄĞ,65,0,1,1,26,ÈéÍ·×´ÄòÂ·ÉÏÆ¤°©
-502,Á¼,Eosinophilic adenoma,Å®,54,1,1,1,12,ÊÈËáÏ¸°ûÏÙÁö
-503,¶ñ,Transparent Level 2,Å®,73,0,1,2,26,Í¸Ã÷2¼¶
-506,¶ñ,Transparent Level 2,ÄĞ,48,0,0,1,40,Í¸Ã÷2¼¶
-507,¶ñ,Transparent Level 2,ÄĞ,64,0,0,1,23,Í¸Ã÷2¼¶
-509,¶ñ,Evil excision,Å®,63,0,1,0,30,¶ñÇĞ³ı
-510,¶ñ,Transparent Level 2,ÄĞ,23,1,0,2,21,Í¸Ã÷2¼¶
-511,Á¼,Hamartoma,Å®,58,1,1,1,7,´í¹¹Áö
-512,¶ñ,Transparent Level 3,Å®,66,1,1,1,37,Í¸Ã÷3¼¶
-513,¶ñ,Transparent Level 1,ÄĞ,53,0,1,2,54,Í¸Ã÷1¼¶
-515,¶ñ,Transparent Level 2,ÄĞ,34,0,1,2,10,Í¸Ã÷2¼¶
-516,¶ñ,Transparent Level 2,ÄĞ,68,1,0,0,25,Í¸Ã÷2¼¶
-518,¶ñ,Transparent Level 2,ÄĞ,60,1,1,2,15,Í¸Ã÷2¼¶
-519,¶ñ,Transparent cell papillary renal cell carcinoma,ÄĞ,43,1,0,2,16,Í¸Ã÷Ï¸°ûÈéÍ·×´Éö°©
-520,¶ñ,Transparent Level 2-3,ÄĞ,61,1,1,0,16,Í¸Ã÷2-3¼¶
-522,¶ñ,Papillary renal cell carcinoma type 2,ÄĞ,57,0,1,1,89,ÈéÍ·×´Éö°©2ĞÍ
-524,Á¼,inflammation,Å®,64,1,1,1,18,Ñ×Ö¢
-525,Á¼,Hamartoma,Å®,69,1,0,2,15,´í¹¹Áö
-526,¶ñ,Transparent Level 2,ÄĞ,52,1,0,2,38,Í¸Ã÷2¼¶
-527,Á¼,Metanephric adenoma ,Å®,61,1,0,0,37,ºóÉöÏÙÁö
-529,Á¼,Hamartoma,Å®,54,1,1,0,10,´í¹¹Áö
-531,¶ñ,Transparent Level 2,Å®,62,0,0,1,35,Í¸Ã÷2¼¶
-532,¶ñ,Transparent Level 2,ÄĞ,49,1,1,2,14,Í¸Ã÷2¼¶
-535,¶ñ,Transparent Level 2,ÄĞ,49,1,0,0,31,Í¸Ã÷2¼¶
-536,Á¼,Eosinophilic adenoma,ÄĞ,65,0,1,1,27,ÊÈËáÏ¸°ûÏÙÁö
-537,¶ñ,Transparent Level 2,Å®,61,0,0,2,31,Í¸Ã÷2¼¶
-538,¶ñ,Transparent Level 2,Å®,61,0,0,2,14,Í¸Ã÷2¼¶
-539,¶ñ,Transparent Level 2,ÄĞ,71,0,0,0,50,Í¸Ã÷2¼¶
-540,¶ñ,Transparent Level 2,Å®,58,1,0,2,32,Í¸Ã÷2¼¶
-541,¶ñ,Invasive urothelial carcinoma,ÄĞ,53,0,1,1,35,½şÈóĞÔÄòÂ·ÉÏÆ¤°©
-542,Á¼,Hamartoma,Å®,69,1,1,0,16,´í¹¹Áö
-543,Á¼,Hamartoma,Å®,32,1,1,0,44,´í¹¹Áö
-544,¶ñ,Disgusting Color Level 2,ÄĞ,55,0,0,2,35,ÏÓÉ«2¼¶
-545,¶ñ,Papillary Type 1 Grade 2,ÄĞ,43,1,0,0,49,ÈéÍ·×´1ĞÍ2¼¶
-546,¶ñ,Transparent Level 2,Å®,71,1,1,0,18,Í¸Ã÷2¼¶
-547,¶ñ,Transparent Level 2,ÄĞ,72,1,0,2,28,Í¸Ã÷2¼¶
-548,¶ñ,Transparent Level 2,Å®,68,0,1,1,40,Í¸Ã÷2¼¶
-550,¶ñ,Invasive urothelial carcinoma,Å®,81,0,0,0,65,½şÈóĞÔÄòÂ·ÉÏÆ¤°©
-551,¶ñ,Transparent Level 1,ÄĞ,53,0,1,0,53,Í¸Ã÷1¼¶
-552,¶ñ,Transparent Level 2,ÄĞ,48,1,0,0,20,Í¸Ã÷2¼¶
-553,¶ñ,Transparent Level 2,ÄĞ,67,1,1,0,25,Í¸Ã÷2¼¶
-554,¶ñ,Disgusting Color Level 2,Å®,30,1,1,2,35,ÏÓÉ«2¼¶
-555,¶ñ,Transparent Level 2,ÄĞ,63,1,0,2,17,Í¸Ã÷2¼¶
-556,¶ñ,Transparent Level 2,ÄĞ,72,1,1,0,21,Í¸Ã÷2¼¶
-557,¶ñ,Chromophobe ,ÄĞ,39,1,1,1,23,ÏÓÉ«
-558,¶ñ,Nipple type 1,ÄĞ,53,1,0,1,18,ÈéÍ·1ĞÍ
-559,¶ñ,Non invasive papillary urothelial carcinoma,ÄĞ,56,0,0,0,23,·Ç½şÈóĞÔÈéÍ·×´ÄòÂ·ÉÏÆ¤°©
-560,Á¼,Hamartoma,ÄĞ,47,0,0,1,37,´í¹¹Áö
-561,¶ñ,Transparent Level 2,Å®,46,0,1,1,54,Í¸Ã÷2¼¶
-562,¶ñ,Transparent Level 3,ÄĞ,50,0,1,1,32,Í¸Ã÷3¼¶
-564,¶ñ,Transparent Level 2,Å®,50,0,1,1,40,Í¸Ã÷2¼¶
-565,¶ñ,Transparent Level 2,ÄĞ,65,0,1,2,41,Í¸Ã÷2¼¶
-566,Á¼,Hamartoma,Å®,31,1,1,0,35,´í¹¹Áö
-567,Á¼,Hamartoma,Å®,31,1,0,1,14,´í¹¹Áö
-569,¶ñ,Transparent Level 2,ÄĞ,73,0,1,1,37,Í¸Ã÷2¼¶
-570,Á¼,Hamartoma,ÄĞ,41,1,0,2,7,´í¹¹Áö
-571,Á¼,Hamartoma,Å®,47,1,1,2,25,´í¹¹Áö
-572,¶ñ,Transparent Level 2,Å®,32,1,1,2,27,Í¸Ã÷2¼¶
-573,¶ñ,Transparent Level 2,ÄĞ,55,0,1,1,43,Í¸Ã÷2¼¶
-574,¶ñ,Transparent Level 2,Å®,65,0,0,2,24,Í¸Ã÷2¼¶
-575,¶ñ,Transparent Level 2,Å®,40,0,0,1,40,Í¸Ã÷2¼¶
-576,¶ñ,Transparent Level 2,ÄĞ,47,1,1,2,24,Í¸Ã÷2¼¶
-577,¶ñ,Transparent Level 2,Å®,29,1,1,1,28,Í¸Ã÷2¼¶
-578,¶ñ,Transparent Level 2,ÄĞ,37,1,1,2,20,Í¸Ã÷2¼¶
-579,¶ñ,Transparent Level 2-3,ÄĞ,70,1,1,0,18,Í¸Ã÷2-3¼¶
-580,¶ñ,Transparent Level 4,ÄĞ,58,0,1,0,53,Í¸Ã÷4¼¶
-581,¶ñ,Chromophobe ,ÄĞ,78,1,1,0,35,ÏÓÉ«
-582,Á¼,Hamartoma,ÄĞ,53,1,1,1,15,´í¹¹Áö
-583,¶ñ,Renal medullary carcinoma,Å®,77,0,1,1,45,ÉöËèÖÊ°©
-584,Á¼,Hemangioma,Å®,67,1,0,0,19,Ñª¹ÜÁö
-585,¶ñ,Transparent Level 2,ÄĞ,61,0,0,0,39,Í¸Ã÷2¼¶
-587,¶ñ,Transparent Level 2,Å®,72,0,1,0,67,Í¸Ã÷2¼¶
-588,Á¼,Hamartoma,Å®,70,1,0,2,23,´í¹¹Áö
-589,¶ñ,Transparent Level 2,ÄĞ,46,1,0,1,13,Í¸Ã÷2¼¶
-590,¶ñ,Transparent Level 2,ÄĞ,39,1,1,2,18,Í¸Ã÷2¼¶
-591,¶ñ,Transparent Level 3,Å®,66,0,0,0,33,Í¸Ã÷3¼¶
-592,¶ñ,Transparent Level 1,ÄĞ,55,1,0,0,20,Í¸Ã÷1¼¶
-595,¶ñ,Papillary Type 1 Grade 2,Å®,56,1,1,0,26,ÈéÍ·×´1ĞÍ2¼¶
-597,¶ñ,Transparent Level 2,ÄĞ,54,0,1,2,48,Í¸Ã÷2¼¶
-598,¶ñ,Papillary Type 1 Grade 2,ÄĞ,49,1,1,1,25,ÈéÍ·×´1ĞÍ2¼¶
-599,¶ñ,Transparent Level 2,ÄĞ,30,1,1,2,25,Í¸Ã÷2¼¶
-600,¶ñ,Transparent Level 2,Å®,55,1,1,2,25,Í¸Ã÷2¼¶
+ç¼–å·,ç—…ç†1,ç—…ç§en,æ€§åˆ«,å¹´é¾„,å…¨åˆ‡0éƒ¨åˆ†1,å·¦0å³1,ä¸Š0ä¸­1ä¸‹2,æœ€å¤§å¾„çº¿,ç—…ç§
+1,æ¶,transparent,ç”·,54,1,0,0,35,é€æ˜
+3,æ¶,Transferable MT,å¥³,76,1,1,0,16,è½¬ç§»æ€§MT
+5,æ¶,Transparent Level 2,ç”·,33,1,1,0,24,é€æ˜2çº§
+6,æ¶,transparent,ç”·,66,0,0,1,25,é€æ˜
+7,æ¶,Papillary carcinoma,å¥³,61,1,0,0,21,ä¹³å¤´çŠ¶ç™Œ
+8,è‰¯,Hamartoma,å¥³,68,1,0,2,35,é”™æ„ç˜¤
+9,æ¶,Transparent Level 2,ç”·,68,1,0,2,35,é€æ˜2çº§
+10,è‰¯,Hamartoma,ç”·,39,0,1,2,86,é”™æ„ç˜¤
+11,æ¶,Transparent Level 2,ç”·,78,0,1,0,30,é€æ˜2çº§
+13,æ¶,transparent,ç”·,64,1,1,1,14,é€æ˜
+14,æ¶,Transparent Level 2,ç”·,47,1,1,0,28,é€æ˜2çº§
+15,æ¶,Transparent Level 2,ç”·,71,0,1,1,32,é€æ˜2çº§
+16,æ¶,Chromophobe ,å¥³,59,0,1,0,35,å«Œè‰²
+17,è‰¯,Epithelioid hamartoma,å¥³,46,1,0,2,21,ä¸Šçš®æ ·é”™æ„ç˜¤
+18,æ¶,papilla,ç”·,62,1,0,2,25,ä¹³å¤´
+19,æ¶,Transparent nipple grade 2,å¥³,76,0,0,1,23,é€æ˜ä¹³å¤´2çº§
+20,æ¶,Nipple type 1,ç”·,64,0,1,1,25,ä¹³å¤´1å‹
+21,æ¶,Transparent Level 2,ç”·,68,1,1,0,38,é€æ˜2çº§
+22,è‰¯,Hamartoma,å¥³,39,1,1,1,23,é”™æ„ç˜¤
+23,æ¶,High grade urothelial carcinoma,ç”·,83,0,0,0,37,é«˜çº§åˆ«å°¿è·¯ä¸Šçš®ç™Œ
+24,æ¶,evil,ç”·,71,1,1,2,24,æ¶
+25,æ¶,Transparent Level 2,ç”·,64,1,0,2,20,é€æ˜2çº§
+26,æ¶,Transparent Level 2,ç”·,84,0,1,2,19,é€æ˜2çº§
+27,è‰¯,Hamartoma,å¥³,56,1,1,1,22,é”™æ„ç˜¤
+28,æ¶,evil,ç”·,57,0,0,1,35,æ¶
+29,è‰¯,Hamartoma,ç”·,59,1,1,2,17,é”™æ„ç˜¤
+30,æ¶,evil,ç”·,46,1,0,1,20,æ¶
+32,æ¶,Transparent Level 2,ç”·,40,0,0,1,33,é€æ˜2çº§
+33,æ¶,Transparent Level 2,ç”·,64,0,0,2,27,é€æ˜2çº§
+34,æ¶,Invasive urothelial carcinoma,ç”·,67,0,0,1,29,æµ¸æ¶¦æ€§å°¿è·¯ä¸Šçš®ç™Œ
+35,æ¶,evil,å¥³,71,0,1,2,24,æ¶
+36,æ¶,evil,ç”·,64,1,0,2,32,æ¶
+37,æ¶,Invasive urothelial carcinoma,ç”·,62,1,0,0,17,æµ¸æ¶¦æ€§å°¿è·¯ä¸Šçš®ç™Œ
+38,è‰¯,Benign hamartoma,å¥³,68,1,0,0,52,è‰¯é”™æ„ç˜¤
+39,è‰¯,Benign hamartoma,å¥³,68,1,0,2,31,è‰¯é”™æ„ç˜¤
+40,æ¶,Malignant G2 type neuroendocrine tumor,å¥³,51,0,1,2,54,æ¶G2å‹ç¥ç»å†…åˆ†æ³Œè‚¿ç˜¤
+41,æ¶,transparent,å¥³,39,1,1,0,36,é€æ˜
+42,æ¶,Malignant mesodermal renal cell tumor,å¥³,24,0,1,2,72,æ¶ä¸­èƒšå±‚è‚¾ç»†èƒç˜¤
+43,æ¶,Transparent Level 2-3,ç”·,58,0,0,2,35,é€æ˜2-3çº§
+44,æ¶,Chromophobe ,ç”·,65,1,1,0,20,å«Œè‰²
+45,è‰¯,Hamartoma,ç”·,37,1,1,1,30,é”™æ„ç˜¤
+46,è‰¯,Hamartoma,å¥³,41,1,1,0,12,é”™æ„ç˜¤
+47,æ¶,Transparent Level 2,ç”·,67,0,0,0,49,é€æ˜2çº§
+49,è‰¯,Benign hamartoma,å¥³,50,1,0,1,10,è‰¯é”™æ„ç˜¤
+52,æ¶,Transparent Level 2,ç”·,65,0,1,2,21,é€æ˜2çº§
+54,æ¶,Transparent Level 2-3,ç”·,72,0,0,2,32,é€æ˜2-3çº§
+56,æ¶,evil,ç”·,50,1,0,2,19,æ¶
+58,æ¶,transparent,ç”·,60,1,1,2,19,é€æ˜
+59,è‰¯,Focal fibrosis,ç”·,66,1,0,2,18,å±€ç¶åŒºçº¤ç»´åŒ–
+60,è‰¯,Hemangioma,å¥³,29,1,1,2,67,è¡€ç®¡ç˜¤
+61,æ¶,Transparent Level 2,ç”·,70,0,0,2,35,é€æ˜2çº§
+62,æ¶,Transparent Level 2,ç”·,31,0,0,1,28,é€æ˜2çº§
+64,è‰¯,Hamartoma,ç”·,49,1,0,2,31,é”™æ„ç˜¤
+66,æ¶,evil,ç”·,58,1,0,1,14,æ¶
+69,æ¶,Transparent Level 1-2,å¥³,87,1,1,1,25,é€æ˜1-2çº§
+71,æ¶,Transparent Level 2,ç”·,36,0,1,2,30,é€æ˜2çº§
+75,æ¶,Hamartoma,ç”·,82,1,0,2,26,é”™æ„ç˜¤
+77,æ¶,Transparent Level 2-3,ç”·,74,1,0,0,32,é€æ˜2-3çº§
+78,æ¶,Transparent Level 2,ç”·,67,0,0,0,25,é€æ˜2çº§
+79,è‰¯,Hamartoma,å¥³,41,0,0,1,28,é”™æ„ç˜¤
+80,æ¶,transparent,å¥³,61,1,1,2,18,é€æ˜
+81,æ¶,Grade 2 nipple,å¥³,57,0,1,2,73,ä¹³å¤´2çº§
+82,æ¶,Transparent Level 2,å¥³,83,0,0,2,45,é€æ˜2çº§
+83,æ¶,Transparent Level 2,ç”·,59,0,1,2,60,é€æ˜2çº§
+85,è‰¯,Hamartoma,å¥³,79,1,1,0,29,é”™æ„ç˜¤
+86,æ¶,Transparent Level 3,ç”·,64,0,0,1,19,é€æ˜3çº§
+87,è‰¯,good,å¥³,48,1,1,1,10,è‰¯
+89,æ¶,Transparent Level 2,å¥³,58,1,0,2,20,é€æ˜2çº§
+90,æ¶,evil,ç”·,75,0,1,2,47,æ¶
+91,æ¶,Grade 1 multilocular cystic renal cell carcinoma,ç”·,80,1,0,2,33,å¤šæˆ¿å›Šæ€§è‚¾ç™Œ1çº§
+92,æ¶,evil,ç”·,78,1,0,0,40,æ¶
+93,è‰¯,Renal cyst swelling with bleeding,å¥³,59,1,0,0,43,è‚¾å›Šè‚¿ä¼´å‡ºè¡€
+94,æ¶,Transparent Level 2,ç”·,72,0,1,0,20,é€æ˜2çº§
+95,æ¶,evil,å¥³,65,1,1,1,13,æ¶
+96,æ¶,Transparent Level 1-2,å¥³,69,0,0,1,50,é€æ˜1-2çº§
+97,æ¶,Transparent Level 1-2,å¥³,63,1,0,2,13,é€æ˜1-2çº§
+98,è‰¯,Benign hamartoma,å¥³,41,1,0,0,14,è‰¯é”™æ„ç˜¤
+99,æ¶,Disgusting color level 2-3,ç”·,59,1,1,2,14,å«Œè‰²2-3çº§
+100,è‰¯,Solitary fibrotic tumor,å¥³,63,0,0,0,26,å­¤ç«‹æ€§çº¤ç»´æ€§è‚¿ç˜¤
+101,æ¶,transparent,ç”·,44,1,0,0,30,é€æ˜
+106,æ¶,evil,ç”·,51,0,1,1,12,æ¶
+107,æ¶,Transparent Level 2,å¥³,57,1,1,2,20,é€æ˜2çº§
+108,æ¶,Transparent Level 2,å¥³,70,0,1,1,50,é€æ˜2çº§
+109,è‰¯,Hamartoma,ç”·,46,1,1,0,35,é”™æ„ç˜¤
+111,æ¶,Squamous cell carcinoma,å¥³,57,0,0,2,35,é³ç™Œ
+112,è‰¯,Hamartoma,å¥³,67,1,0,1,16,é”™æ„ç˜¤
+113,æ¶,Cystic renal cell carcinoma,ç”·,49,1,0,1,18,å›Šæ€§è‚¾ç™Œ
+114,æ¶,Transparent Level 2-3,å¥³,46,0,1,2,53,é€æ˜2-3çº§
+115,è‰¯,Epithelioid hamartoma,å¥³,60,1,0,2,17,ä¸Šçš®æ ·é”™æ„ç˜¤
+116,è‰¯,Hamartoma,å¥³,58,1,0,1,18,é”™æ„ç˜¤
+117,è‰¯,Hamartoma,ç”·,58,1,0,0,38,é”™æ„ç˜¤
+118,æ¶,Transparent Level 1-2,ç”·,50,0,1,0,36,é€æ˜1-2çº§
+119,æ¶,Transparent Level 2,ç”·,41,0,0,0,38,é€æ˜2çº§
+120,æ¶,Low grade malignant renal tubular epithelial tumor,ç”·,36,1,0,1,12,ä½åº¦æ¶æ€§è‚¾å°ç®¡æ¥æºä¸Šçš®æ€§è‚¿ç˜¤
+121,æ¶,Transparent Level 2,ç”·,63,0,1,0,91,é€æ˜2çº§
+122,æ¶,Transparent Level 2,ç”·,45,0,1,1,39,é€æ˜2çº§
+123,è‰¯,Hamartoma,å¥³,82,0,0,0,24,é”™æ„ç˜¤
+124,æ¶,Papillary Type 1,ç”·,53,1,0,0,17,ä¹³å¤´çŠ¶1å‹
+126,æ¶,Transparent Level 2,ç”·,69,0,1,1,43,é€æ˜2çº§
+127,æ¶,Transparent Level 2,ç”·,45,0,1,1,21,é€æ˜2çº§
+128,æ¶,evil,ç”·,46,1,1,0,14,æ¶
+131,æ¶,Evil transparency,å¥³,51,1,1,0,10,æ¶é€æ˜
+132,æ¶,Evil transparency,å¥³,51,1,0,2,28,æ¶é€æ˜
+133,æ¶,Transparent Level 2,å¥³,79,0,0,2,59,é€æ˜2çº§
+134,æ¶,Transparent Level 1-2,ç”·,60,0,0,0,70,é€æ˜1-2çº§
+135,æ¶,Transparent Level 2,ç”·,74,0,0,2,38,é€æ˜2çº§
+136,æ¶,Transparent Level 2,ç”·,64,0,1,2,22,é€æ˜2çº§
+137,æ¶,Transparent Level 2,ç”·,61,0,0,0,30,é€æ˜2çº§
+138,æ¶,Chromophobe ,å¥³,39,1,1,2,17,å«Œè‰²
+139,æ¶,evil,ç”·,43,1,1,0,12,æ¶
+140,æ¶,Transparent Level 2,ç”·,43,0,0,0,40,é€æ˜2çº§
+141,æ¶,Transparent Level 2,ç”·,43,0,0,2,40,é€æ˜2çº§
+142,æ¶,evil,å¥³,43,0,1,0,33,æ¶
+143,æ¶,Transparent Level 2-3,å¥³,80,0,0,2,27,é€æ˜2-3çº§
+144,æ¶,Post Evil Transplantation,ç”·,60,0,1,2,20,æ¶åç§»æ¤
+145,æ¶,Transparent Level 3,ç”·,55,0,0,0,77,é€æ˜3çº§
+146,æ¶,evil,ç”·,56,0,0,0,16,æ¶
+148,æ¶,Disgusting nipples or disgust,ç”·,22,1,1,2,42,æ¶ä¹³å¤´æˆ–å«Œè‰²
+149,æ¶,"Nipple type 2, grade 2",ç”·,65,1,1,2,26,ä¹³å¤´2å‹2çº§
+150,æ¶,Transparent Level 2,å¥³,66,0,0,2,27,é€æ˜2çº§
+152,è‰¯,Epithelioid hamartoma,ç”·,64,0,1,2,40,ä¸Šçš®æ ·é”™æ„ç˜¤
+154,è‰¯,Hamartoma,ç”·,29,1,1,1,32,é”™æ„ç˜¤
+155,æ¶,Transparent Level 2,å¥³,53,0,1,0,64,é€æ˜2çº§
+156,æ¶,Transparent Level 2,å¥³,69,0,1,0,62,é€æ˜2çº§
+157,æ¶,evil,ç”·,83,1,1,2,23,æ¶
+159,è‰¯,Hamartoma,å¥³,70,1,1,1,8,é”™æ„ç˜¤
+161,è‰¯,Hamartoma,å¥³,29,1,1,2,6,é”™æ„ç˜¤
+162,æ¶,Transparent Level 2,ç”·,72,1,1,2,20,é€æ˜2çº§
+163,æ¶,Chromophobe ,ç”·,59,0,0,1,45,å«Œè‰²
+164,æ¶,lymphoma,ç”·,34,1,0,1,40,æ·‹å·´ç˜¤
+166,è‰¯,Hamartoma,å¥³,37,1,1,1,10,é”™æ„ç˜¤
+167,è‰¯,Epithelioid hamartoma,å¥³,53,1,0,0,27,ä¸Šçš®æ ·é”™æ„ç˜¤
+168,æ¶,Transparent Level 2,ç”·,75,1,0,2,17,é€æ˜2çº§
+169,æ¶,Evil MT,å¥³,33,0,1,1,59,æ¶MT
+172,è‰¯,Hamartoma,å¥³,70,1,0,2,25,é”™æ„ç˜¤
+174,è‰¯,Hamartoma,å¥³,68,0,0,0,33,é”™æ„ç˜¤
+176,æ¶,Transparent Level 1-2,å¥³,59,1,0,0,13,é€æ˜1-2çº§
+177,æ¶,Transparent Level 2,ç”·,73,0,1,2,31,é€æ˜2çº§
+178,è‰¯,Hamartoma,ç”·,21,1,0,1,20,é”™æ„ç˜¤
+179,æ¶,Transparent Level 2,å¥³,73,0,1,0,40,é€æ˜2çº§
+180,æ¶,Transparent Level 2,ç”·,74,0,0,2,40,é€æ˜2çº§
+181,æ¶,Chromophobe ,å¥³,64,1,0,2,17,å«Œè‰²
+182,æ¶,Disgusting Color Type 2,å¥³,64,1,1,0,10,å«Œè‰²2å‹
+183,æ¶,Papillary thyroid carcinoma with renal metastasis,å¥³,54,0,0,0,87,ç”²çŠ¶è…ºä¹³å¤´çŠ¶ç™Œè‚¾è½¬ç§»
+185,æ¶,Transparent Level 2,å¥³,65,0,0,2,69,é€æ˜2çº§
+186,æ¶,Transparent Level 2,å¥³,60,0,1,2,33,é€æ˜2çº§
+187,æ¶,Transparent Level 2,ç”·,62,0,0,0,26,é€æ˜2çº§
+189,æ¶,Chromophobe ,å¥³,62,0,1,0,27,å«Œè‰²
+190,æ¶,Transparent Level 2,ç”·,39,0,0,2,55,é€æ˜2çº§
+191,æ¶,Transparent Level 2,å¥³,70,0,0,1,25,é€æ˜2çº§
+192,æ¶,evil,ç”·,44,0,0,2,57,æ¶
+193,æ¶,transparent,å¥³,40,0,0,1,17,é€æ˜
+194,æ¶,Transparent Level 2,ç”·,58,1,1,2,14,é€æ˜2çº§
+195,è‰¯,Hamartoma,å¥³,56,1,1,2,18,é”™æ„ç˜¤
+196,æ¶,Transparent Level 2,å¥³,57,0,1,0,13,é€æ˜2çº§
+197,è‰¯,Hamartoma,ç”·,61,1,1,1,21,é”™æ„ç˜¤
+198,è‰¯,Hamartoma,å¥³,70,1,0,0,23,é”™æ„ç˜¤
+199,æ¶,Transparent Level 1-2,ç”·,50,0,0,2,30,é€æ˜1-2çº§
+200,æ¶,Nipple grades 2-3,ç”·,55,1,1,0,22,ä¹³å¤´2-3çº§
+201,æ¶,Transparent Level 2,ç”·,59,0,1,2,35,é€æ˜2çº§
+202,æ¶,Transparent Level 2,ç”·,38,0,1,1,30,é€æ˜2çº§
+203,æ¶,Transparent Level 1-2,å¥³,55,1,1,1,11,é€æ˜1-2çº§
+205,æ¶,Transparent Level 2,ç”·,52,1,0,2,12,é€æ˜2çº§
+206,æ¶,Transparent Level 2,ç”·,73,1,0,1,23,é€æ˜2çº§
+207,æ¶,Transparent Level 2,ç”·,74,1,1,2,15,é€æ˜2çº§
+208,æ¶,Transparent Level 2,å¥³,26,0,0,1,40,é€æ˜2çº§
+209,æ¶,Transparent Level 2,ç”·,55,0,0,2,89,é€æ˜2çº§
+210,æ¶,Transparent Level 2,å¥³,32,0,1,0,53,é€æ˜2çº§
+211,è‰¯,Hamartoma,å¥³,77,1,0,0,31,é”™æ„ç˜¤
+212,æ¶,Transparent Level 2,ç”·,45,1,1,0,28,é€æ˜2çº§
+213,æ¶,Transparent Level 2,å¥³,56,1,0,2,22,é€æ˜2çº§
+214,æ¶,Transparent Level 2,ç”·,58,0,1,2,67,é€æ˜2çº§
+215,è‰¯,Hamartoma,ç”·,44,1,0,2,37,é”™æ„ç˜¤
+217,æ¶,Transparent Level 2,å¥³,58,1,0,2,15,é€æ˜2çº§
+218,æ¶,Evil transparency,å¥³,52,1,1,2,23,æ¶é€æ˜
+219,è‰¯,Hamartoma,å¥³,59,1,0,0,15,é”™æ„ç˜¤
+220,æ¶,evil,ç”·,64,1,1,2,28,æ¶
+221,æ¶,Transparent Level 2,å¥³,67,0,0,2,29,é€æ˜2çº§
+222,æ¶,Transparent Level 2,å¥³,48,1,0,1,29,é€æ˜2çº§
+223,è‰¯,Hamartoma,å¥³,47,1,0,1,32,é”™æ„ç˜¤
+224,æ¶,transparent,ç”·,32,0,0,0,23,é€æ˜
+225,æ¶,Transparent Level 2,å¥³,59,0,0,0,45,é€æ˜2çº§
+227,æ¶,Transparent Level 2-3,ç”·,45,0,0,2,32,é€æ˜2-3çº§
+228,è‰¯,Hamartoma,ç”·,62,1,0,0,27,é”™æ„ç˜¤
+230,è‰¯,Hamartoma,å¥³,49,1,0,0,23,é”™æ„ç˜¤
+231,æ¶,Transparent Level 2,ç”·,81,0,1,1,33,é€æ˜2çº§
+232,æ¶,Papillary urothelial carcinoma of the renal pelvis,ç”·,55,0,1,1,25,è‚¾ç›‚ä¹³å¤´çŠ¶å°¿è·¯ä¸Šçš®ç™Œ
+233,æ¶,Transparent Level 2,ç”·,68,0,1,1,34,é€æ˜2çº§
+234,æ¶,Transparent Level 2,ç”·,28,0,1,0,26,é€æ˜2çº§
+235,è‰¯,Hamartoma,å¥³,53,1,1,2,9,é”™æ„ç˜¤
+236,æ¶,transparent,å¥³,49,0,1,0,57,é€æ˜
+238,æ¶,transparent,å¥³,81,0,1,2,26,é€æ˜
+239,æ¶,Transparent Level 2,ç”·,51,1,0,2,18,é€æ˜2çº§
+240,æ¶,Transparent Level 2,å¥³,69,0,1,2,40,é€æ˜2çº§
+241,æ¶,Nipple type 2,ç”·,48,0,0,0,37,ä¹³å¤´2å‹ 
+242,æ¶,Transparent Level 2,å¥³,52,1,1,2,43,é€æ˜2çº§
+243,æ¶,Nipple type 2,ç”·,34,0,0,0,35,ä¹³å¤´2å‹ 
+244,æ¶,evil,ç”·,78,0,1,1,15,æ¶
+246,æ¶,Multilocular cystic renal clear cell carcinoma,ç”·,73,0,0,0,31,å¤šæˆ¿å›Šæ€§è‚¾é€æ˜ç»†èƒç™Œ
+247,æ¶,Chromophobe ,ç”·,47,1,1,1,34,å«Œè‰²
+248,æ¶,evil,ç”·,44,0,1,2,26,æ¶
+249,æ¶,Transparent Level 2,å¥³,44,0,1,0,35,é€æ˜2çº§
+250,æ¶,Nipple Type 1 Grade 2,å¥³,66,1,1,0,33,ä¹³å¤´1å‹2çº§
+251,æ¶,Transparent Level 2,ç”·,69,0,1,0,31,é€æ˜2çº§
+252,æ¶,Transparent Level 2,å¥³,60,1,1,1,36,é€æ˜2çº§
+253,æ¶,Transparent Level 2,ç”·,37,0,1,2,36,é€æ˜2çº§
+254,è‰¯,Hamartoma,å¥³,38,1,0,2,39,é”™æ„ç˜¤
+255,æ¶,Transparent Level 2,ç”·,35,1,0,0,15,é€æ˜2çº§
+257,æ¶,Transparent Level 2,ç”·,47,1,1,2,20,é€æ˜2çº§
+258,è‰¯,Hamartoma,å¥³,26,1,0,2,14,é”™æ„ç˜¤
+259,æ¶,Transparent Level 2,ç”·,71,1,1,2,28,é€æ˜2çº§
+260,æ¶,Transparent Level 2,ç”·,62,0,1,1,16,é€æ˜2çº§
+262,è‰¯,Hamartoma,å¥³,46,1,0,1,12,é”™æ„ç˜¤
+263,æ¶,renal carcinoma,ç”·,75,1,0,1,29,è‚¾ç™Œ
+264,è‰¯,Hamartoma,å¥³,46,1,0,0,70,é”™æ„ç˜¤
+265,æ¶,Transparent Level 2-3,ç”·,60,0,0,0,32,é€æ˜2-3çº§
+266,æ¶,Transparent Level 2,ç”·,24,0,0,0,37,é€æ˜2çº§
+267,è‰¯,Hamartoma,å¥³,40,1,0,1,22,é”™æ„ç˜¤
+269,è‰¯,Hamartoma,ç”·,40,1,0,0,34,é”™æ„ç˜¤
+270,è‰¯,Hamartoma,ç”·,40,1,1,0,15,é”™æ„ç˜¤
+271,æ¶,Transparent Level 2,ç”·,42,0,1,2,60,é€æ˜2çº§
+272,æ¶,Chromophobe ,ç”·,63,0,1,0,40,å«Œè‰²
+273,æ¶,Transparent Level 2,å¥³,27,0,0,1,40,é€æ˜2çº§
+274,æ¶,Transparent Level 2,ç”·,70,1,0,0,33,é€æ˜2çº§
+276,æ¶,Transparent Level 2,ç”·,79,0,1,2,48,é€æ˜2çº§
+277,æ¶,Transparent Level 1-2,ç”·,31,0,0,0,63,é€æ˜1-2çº§
+278,æ¶,Nipple Type 1 Grade 2,ç”·,64,1,1,1,27,ä¹³å¤´1å‹2çº§
+279,æ¶,Transparent Level 2,ç”·,56,1,1,0,29,é€æ˜2çº§
+280,è‰¯,Hamartoma,å¥³,55,1,1,1,16,é”™æ„ç˜¤
+281,æ¶,Transparent Level 2-3,ç”·,71,0,1,1,39,é€æ˜2-3çº§
+283,è‰¯,Hamartoma,å¥³,41,1,0,2,50,é”™æ„ç˜¤
+284,è‰¯,Hamartoma,å¥³,41,1,1,1,25,é”™æ„ç˜¤
+285,æ¶,Transparent Level 2,ç”·,48,1,1,2,18,é€æ˜2çº§
+286,æ¶,Transparent Level 2,ç”·,46,0,0,1,39,é€æ˜2çº§
+287,æ¶,Evil transparency,ç”·,47,0,1,1,20,æ¶é€æ˜
+288,æ¶,Transparent Level 2,å¥³,69,0,1,2,40,é€æ˜2çº§
+289,è‰¯,Mixed epithelial mesenchymal tumor,ç”·,24,1,0,2,28,æ··åˆæ€§ä¸Šçš®é—´è´¨è‚¿ç˜¤
+290,è‰¯,Hamartoma,å¥³,30,1,0,2,60,é”™æ„ç˜¤
+292,æ¶,Unclassified renal cell carcinoma,å¥³,55,0,0,0,28,è‚¾ç»†èƒç™Œæœªåˆ†ç±»å‹
+293,æ¶,Transparent Level 2,ç”·,54,1,0,0,29,é€æ˜2çº§
+296,æ¶,Transparent Level 2,ç”·,52,0,0,0,37,é€æ˜2çº§
+297,è‰¯,Hamartoma,å¥³,68,0,1,1,58,é”™æ„ç˜¤
+298,æ¶,Renal pelvis invasive urothelial carcinoma,å¥³,61,0,0,0,28,è‚¾ç›‚æµ¸æ¶¦æ€§å°¿è·¯ä¸Šçš®ç™Œ
+300,æ¶,Evil 62305895,ç”·,57,0,0,2,26,æ¶62305895
+301,æ¶,Transparent Level 2,ç”·,33,1,0,2,18,é€æ˜2çº§
+302,æ¶,evil,å¥³,52,0,1,1,24,æ¶
+303,è‰¯,Hamartoma,ç”·,47,1,0,2,18,é”™æ„ç˜¤
+304,æ¶,Transparent Level 2,ç”·,56,1,1,0,17,é€æ˜2çº§
+305,æ¶,Transparent Level 2,ç”·,55,1,1,1,12,é€æ˜2çº§
+306,è‰¯,Hamartoma,ç”·,61,1,0,1,12,é”™æ„ç˜¤
+307,æ¶,evil,ç”·,78,0,1,2,38,æ¶
+308,æ¶,Transparent Level 2,ç”·,43,1,0,1,11,é€æ˜2çº§
+309,è‰¯,good,ç”·,74,1,1,0,11,è‰¯
+311,æ¶,Renal cancer unclassified,ç”·,53,0,0,1,46,è‚¾ç™Œæœªåˆ†ç±»
+312,æ¶,Transparent Level 2,ç”·,64,0,1,0,38,é€æ˜2çº§
+313,æ¶,mucinous tubular and spindle cell carcinoma ,å¥³,33,0,1,0,50,é»æ¶²æ ·å°ç®¡çŠ¶å’Œæ¢­å½¢ç»†èƒç™Œ
+314,æ¶,Invasive urothelial carcinoma,å¥³,61,0,0,1,27,æµ¸æ¶¦æ€§å°¿è·¯ä¸Šçš®ç™Œ
+315,æ¶,Transparent Level 2-3,å¥³,58,0,1,0,26,é€æ˜2-3çº§
+316,æ¶,evil,ç”·,86,0,0,2,33,æ¶
+318,è‰¯,Hamartoma,ç”·,44,1,1,1,26,é”™æ„ç˜¤
+319,æ¶,Transparent Level 2,å¥³,63,1,0,0,30,é€æ˜2çº§
+320,æ¶,Transparent Level 2,ç”·,60,1,1,0,18,é€æ˜2çº§
+321,è‰¯,Hamartoma,ç”·,66,1,1,0,10,é”™æ„ç˜¤
+322,è‰¯,Hamartoma,ç”·,47,1,0,2,16,é”™æ„ç˜¤
+324,è‰¯,Eosinophilic cell tumor,å¥³,44,1,1,0,28,å—œé…¸ç»†èƒç˜¤
+326,æ¶,Papillary Type 1 Grade 1,ç”·,40,1,0,0,30,ä¹³å¤´çŠ¶1å‹1çº§
+327,æ¶,Invasive urothelial carcinoma,ç”·,68,0,0,0,68,æµ¸æ¶¦æ€§å°¿è·¯ä¸Šçš®ç™Œ
+328,æ¶,Carcinoid,ç”·,43,1,0,1,44,ç±»ç™Œ
+329,æ¶,Transparent Level 3,ç”·,71,0,1,0,30,é€æ˜3çº§
+330,æ¶,Transparent Level 2,å¥³,71,1,1,0,30,é€æ˜2çº§
+331,æ¶,Transparent Level 2,ç”·,78,0,0,0,49,é€æ˜2çº§
+332,æ¶,Transparent 3-4 levels,ç”·,85,0,1,1,16,é€æ˜3-4çº§
+333,æ¶,Renal cancer unclassified,ç”·,55,0,0,0,30,è‚¾ç™Œæœªåˆ†ç±»
+334,æ¶,Transparent Level 2,ç”·,50,1,1,2,28,é€æ˜2çº§
+335,è‰¯,Hamartoma,ç”·,35,1,0,2,35,é”™æ„ç˜¤
+337,æ¶,Transparent Level 2,ç”·,69,0,0,0,39,é€æ˜2çº§
+338,æ¶,Transparent Level 2,ç”·,29,0,1,2,46,é€æ˜2çº§
+339,æ¶,Transparent Level 1-2,ç”·,63,1,0,1,15,é€æ˜1-2çº§
+340,æ¶,Papillary Type 1,ç”·,61,1,0,2,14,ä¹³å¤´çŠ¶1å‹
+341,æ¶,evil,å¥³,51,1,1,0,12,æ¶
+342,æ¶,Transparent Level 2,ç”·,54,1,1,2,21,é€æ˜2çº§
+343,æ¶,evil,ç”·,70,0,0,0,20,æ¶
+344,æ¶,Transparent Level 2,ç”·,36,1,1,1,32,é€æ˜2çº§
+346,æ¶,Transparent Level 2,ç”·,64,0,1,1,48,é€æ˜2çº§
+348,æ¶,Transparent Level 2,ç”·,84,1,0,0,83,é€æ˜2çº§
+349,æ¶,Transparent Level 2-3,ç”·,59,1,0,0,52,é€æ˜2-3çº§
+351,è‰¯,Eosinophilic adenoma,ç”·,45,0,1,2,43,å—œé…¸ç»†èƒè…ºç˜¤
+352,æ¶,evil,ç”·,39,0,1,2,19,æ¶
+353,æ¶,Transparent Level 2-3,ç”·,61,1,1,2,34,é€æ˜2-3çº§
+354,æ¶,Transparent Level 2,ç”·,65,1,0,1,25,é€æ˜2çº§
+355,æ¶,Transparent Level 2,å¥³,64,1,1,2,21,é€æ˜2çº§
+356,æ¶,Transparent Level 3,ç”·,61,0,0,2,67,é€æ˜3çº§
+357,æ¶,evil,ç”·,60,0,0,1,25,æ¶
+358,æ¶,Invasive urothelial carcinoma,ç”·,71,0,0,0,18,æµ¸æ¶¦æ€§å°¿è·¯ä¸Šçš®ç™Œ
+359,æ¶,Transparent Level 2,ç”·,53,0,0,0,32,é€æ˜2çº§
+360,æ¶,Transparent Level 2,å¥³,69,0,0,0,40,é€æ˜2çº§
+361,è‰¯,Hamartoma,å¥³,48,1,0,2,55,é”™æ„ç˜¤
+362,æ¶,Transparent Level 2,å¥³,48,1,1,1,38,é€æ˜2çº§
+363,æ¶,Transparent Level 2,å¥³,61,0,1,1,48,é€æ˜2çº§
+364,è‰¯,Eosinophilic adenoma,ç”·,49,0,1,0,67,å—œé…¸ç»†èƒè…ºç˜¤
+365,æ¶,Transparent Level 2,ç”·,41,0,0,2,44,é€æ˜2çº§
+366,æ¶,Transparent Level 2,ç”·,50,0,0,2,45,é€æ˜2çº§
+367,æ¶,Transparent Level 2,ç”·,69,0,1,2,56,é€æ˜2çº§
+368,æ¶,Transparent Level 2,å¥³,62,1,1,1,29,é€æ˜2çº§
+369,æ¶,Transparent Level 2,ç”·,53,1,1,2,19,é€æ˜2çº§
+370,æ¶,Transparent Level 2,ç”·,47,0,1,2,36,é€æ˜2çº§
+371,æ¶,Transparent Level 2,ç”·,64,1,1,1,30,é€æ˜2çº§
+372,æ¶,Transparent Level 2,ç”·,63,1,1,2,27,é€æ˜2çº§
+373,æ¶,Evil excision,ç”·,79,0,1,2,40,æ¶åˆ‡é™¤
+374,æ¶,Evil excision,ç”·,52,0,1,1,60,æ¶åˆ‡é™¤
+375,è‰¯,Hamartoma,å¥³,59,1,0,0,10,é”™æ„ç˜¤
+376,æ¶,Transparent Level 2,å¥³,55,0,1,2,30,é€æ˜2çº§
+377,æ¶,Transparent Level 2,ç”·,52,0,0,0,35,é€æ˜2çº§
+378,è‰¯,Hamartoma,å¥³,49,1,1,0,16,é”™æ„ç˜¤
+379,æ¶,Transparent Level 2,ç”·,40,0,1,1,29,é€æ˜2çº§
+380,æ¶,Transparent Level 2,ç”·,56,0,0,2,32,é€æ˜2çº§
+381,æ¶,Transparent Level 3,ç”·,52,0,1,2,80,é€æ˜3çº§
+382,æ¶,Transparent Level 2,ç”·,37,1,0,2,24,é€æ˜2çº§
+384,æ¶,Transparent Level 2,ç”·,56,0,1,1,19,é€æ˜2çº§
+385,æ¶,Chromophobe ,ç”·,50,1,0,2,28,å«Œè‰²
+386,æ¶,Renal pelvis mt,ç”·,71,0,0,2,37,è‚¾ç›‚mt
+387,è‰¯,Complex cyst,å¥³,56,0,1,0,23,å¤æ‚æ€§å›Šè‚¿
+388,è‰¯,Hamartoma,å¥³,27,1,1,1,64,é”™æ„ç˜¤
+389,æ¶,Transparent Level 2,å¥³,63,0,0,0,68,é€æ˜2çº§
+390,æ¶,Transparent Level 2,ç”·,65,1,0,0,18,é€æ˜2çº§
+391,æ¶,Nipple type 1,ç”·,39,0,0,0,56,ä¹³å¤´1å‹
+392,æ¶,Collecting duct cancer,ç”·,56,0,0,0,37,é›†åˆç®¡ç™Œ
+393,æ¶,Transparent Level 2,ç”·,60,0,0,0,117,é€æ˜2çº§
+394,è‰¯,Hamartoma,å¥³,51,1,0,2,119,é”™æ„ç˜¤
+395,è‰¯,Hamartoma,å¥³,47,1,0,2,12,é”™æ„ç˜¤
+397,æ¶,Differentiated malignancy,å¥³,76,0,1,0,42,å·®åˆ†åŒ–æ¶æ€§
+398,è‰¯,Mixed epithelial mesenchymal tumor,å¥³,39,0,1,1,33,æ··åˆæ€§ä¸Šçš®é—´è´¨è‚¿ç˜¤
+399,æ¶,Transparent Level 2,å¥³,35,1,1,0,32,é€æ˜2çº§
+400,æ¶,MiT family translocation associated renal cell carcinoma,å¥³,26,0,0,0,33,MiTå®¶æ—æ˜“ä½ç›¸å…³æ€§è‚¾ç™Œ
+401,æ¶,Transparent Level 2,å¥³,67,0,0,1,79,é€æ˜2çº§
+402,æ¶,Nipple Type 1 Grade 2,ç”·,65,0,0,2,40,ä¹³å¤´1å‹2çº§
+403,æ¶,Transparent Level 2,ç”·,48,1,0,1,18,é€æ˜2çº§
+404,æ¶,Xp11.2 translocation/MiTF family renal cell carcinoma,å¥³,27,0,1,0,54,xp11.2æ˜“ä½/MiTFå®¶æ—è‚¾ç™Œ
+405,æ¶,Transparent Level 2,ç”·,47,1,0,0,39,é€æ˜2çº§
+406,è‰¯,Schwannoma,å¥³,38,1,1,0,30,ç¥ç»é˜ç˜¤
+407,è‰¯,Complex cyst,å¥³,46,1,0,1,12,å¤æ‚æ€§å›Šè‚¿
+408,æ¶,MiT family translocation associated renal cell carcinoma,ç”·,52,0,0,0,66,MiTå®¶æ—æ˜“ä½ç›¸å…³æ€§è‚¾ç™Œ
+409,æ¶,Transparent Level 2,ç”·,59,0,0,0,78,é€æ˜2çº§
+410,æ¶,Transparent Level 2,å¥³,68,0,0,0,55,é€æ˜2çº§
+411,æ¶,Chromophobe ,ç”·,55,0,0,1,19,å«Œè‰²
+412,æ¶,MiT family translocation associated renal cell carcinoma,å¥³,60,0,1,0,18,MiTå®¶æ—æ˜“ä½ç›¸å…³æ€§è‚¾ç™Œ
+413,è‰¯,Hamartoma,å¥³,66,0,1,2,29,é”™æ„ç˜¤
+414,æ¶,Transparent Level 2,ç”·,76,1,1,2,31,é€æ˜2çº§
+415,æ¶,Transparent Level 2,ç”·,48,0,1,0,65,é€æ˜2çº§
+416,è‰¯,Hamartoma with bleeding,å¥³,37,1,1,1,48,é”™æ„ç˜¤ä¼´å‡ºè¡€
+417,æ¶,Transparent Level 3,ç”·,64,0,0,2,83,é€æ˜3çº§
+418,è‰¯,Solitary fibrotic tumor,å¥³,54,0,0,2,34,å­¤ç«‹æ€§çº¤ç»´æ€§è‚¿ç˜¤
+419,æ¶,Transparent Level 2,ç”·,59,1,1,1,21,é€æ˜2çº§
+420,æ¶,Transparent Level 1,å¥³,59,1,0,0,22,é€æ˜1çº§
+421,æ¶,Transparent Level 2,å¥³,58,1,1,1,11,é€æ˜2çº§
+422,è‰¯,Hamartoma,å¥³,67,1,0,1,14,é”™æ„ç˜¤
+423,æ¶,Chromophobe ,ç”·,48,1,1,0,19,å«Œè‰²
+424,è‰¯,Hamartoma,å¥³,26,1,0,0,40,é”™æ„ç˜¤
+425,æ¶,Transparent Level 2,å¥³,40,1,0,1,28,é€æ˜2çº§
+426,æ¶,Transparent Level 2,ç”·,48,0,1,1,39,é€æ˜2çº§
+427,æ¶,Transparent Level 2,ç”·,44,0,0,2,45,é€æ˜2çº§
+428,æ¶,Transparent Level 2,ç”·,55,1,0,0,17,é€æ˜2çº§
+429,æ¶,Transparent Level 2,ç”·,52,0,1,2,37,é€æ˜2çº§
+430,è‰¯,Cystic mixed epithelial mesenchymal tumor,ç”·,49,1,1,2,62,å›Šæ€§æ··åˆæ€§ä¸Šçš®é—´è´¨è‚¿ç˜¤
+431,æ¶,Transparent cell papillary renal cell carcinoma,å¥³,70,0,0,1,23,é€æ˜ç»†èƒä¹³å¤´çŠ¶è‚¾ç™Œ
+432,æ¶,Transferable MT,ç”·,60,1,1,0,31,è½¬ç§»æ€§MT
+433,æ¶,Transparent Level 2,ç”·,46,1,1,2,55,é€æ˜2çº§
+434,æ¶,Transparent Level 2,ç”·,50,0,0,2,47,é€æ˜2çº§
+435,æ¶,Invasive urothelial carcinoma,ç”·,74,0,1,2,51,æµ¸æ¶¦æ€§å°¿è·¯ä¸Šçš®ç™Œ
+436,è‰¯,Cystic renal tumor,ç”·,44,0,1,2,40,å›Šæ€§è‚¾ç˜¤
+437,æ¶,Transparent Level 2,ç”·,67,1,1,2,28,é€æ˜2çº§
+438,è‰¯,Hamartoma,å¥³,71,1,0,1,14,é”™æ„ç˜¤
+439,æ¶,Invasive urothelial carcinoma,å¥³,68,0,1,1,52,æµ¸æ¶¦æ€§å°¿è·¯ä¸Šçš®ç™Œ
+440,æ¶,Transparent Level 2-3,ç”·,40,0,0,1,35,é€æ˜2-3çº§
+441,æ¶,Transparent Level 2,ç”·,73,1,1,0,35,é€æ˜2çº§
+442,æ¶,Nipple type 2,ç”·,42,0,0,2,46,ä¹³å¤´2å‹
+443,æ¶,Invasive urothelial carcinoma,å¥³,68,1,0,0,25,æµ¸æ¶¦æ€§å°¿è·¯ä¸Šçš®ç™Œ
+444,æ¶,Transparent Level 2,ç”·,55,0,1,0,22,é€æ˜2çº§
+445,æ¶,Invasive urothelial carcinoma,ç”·,49,0,1,0,14,æµ¸æ¶¦æ€§å°¿è·¯ä¸Šçš®ç™Œ
+446,æ¶,Transparent Level 2,å¥³,27,1,0,0,53,é€æ˜2çº§
+447,æ¶,Chromophobe ,å¥³,54,0,0,2,75,å«Œè‰²
+449,æ¶,Transparent Level 2,ç”·,50,1,1,2,35,é€æ˜2çº§
+450,æ¶,Chromophobe ,å¥³,30,1,0,1,25,å«Œè‰²
+451,æ¶,Transparent Level 2-3,ç”·,47,1,1,0,30,é€æ˜2-3çº§
+454,è‰¯,Hamartoma,ç”·,68,1,0,1,9,é”™æ„ç˜¤
+455,æ¶,Transparent Level 2,ç”·,54,0,1,2,29,é€æ˜2çº§
+456,æ¶,Transparent Level 2,å¥³,40,1,0,2,20,é€æ˜2çº§
+457,æ¶,Transferable MT,å¥³,36,1,0,1,74,è½¬ç§»æ€§MT
+458,æ¶,Transparent Level 2,å¥³,31,1,1,0,10,é€æ˜2çº§
+459,æ¶,Transparent Level 2,å¥³,50,0,0,0,33,é€æ˜2çº§
+460,æ¶,Transparent Level 2,ç”·,47,1,0,2,21,é€æ˜2çº§
+461,æ¶,Transparent Level 3,å¥³,61,0,1,2,40,é€æ˜3çº§
+464,æ¶,Transparent Level 2,ç”·,64,0,1,2,38,é€æ˜2çº§
+467,æ¶,Transparent Level 2,ç”·,70,0,1,0,51,é€æ˜2çº§
+468,æ¶,Transparent Level 2,ç”·,48,0,1,2,55,é€æ˜2çº§
+469,æ¶,Transparent Level 2-3,å¥³,59,0,0,1,37,é€æ˜2-3çº§
+470,æ¶,Transparent Level 2,ç”·,47,1,1,2,26,é€æ˜2çº§
+471,æ¶,Transparent Level 2,å¥³,42,0,0,2,24,é€æ˜2çº§
+472,æ¶,Transparent Level 3,ç”·,57,1,1,0,34,é€æ˜3çº§
+473,è‰¯,Hamartoma,å¥³,55,1,1,0,19,é”™æ„ç˜¤
+474,è‰¯,Hamartoma,ç”·,51,1,1,1,36,é”™æ„ç˜¤
+475,æ¶,Transparent Level 2,ç”·,53,0,0,0,28,é€æ˜2çº§
+476,æ¶,Transparent Level 2,å¥³,71,0,0,0,32,é€æ˜2çº§
+477,æ¶,Chromophobe ,ç”·,51,0,1,1,53,å«Œè‰²
+478,æ¶,Transparent Level 2,å¥³,62,0,0,2,35,é€æ˜2çº§
+479,æ¶,Transparent Level 1-2,å¥³,68,0,0,0,24,é€æ˜1-2çº§
+480,æ¶,Transparent Level 2,ç”·,74,0,1,0,57,é€æ˜2çº§
+481,æ¶,Transparent Level 2,ç”·,73,0,1,0,50,é€æ˜2çº§
+482,æ¶,transparent,å¥³,38,1,1,0,15,é€æ˜
+483,æ¶,Chromophobe ,ç”·,49,1,0,0,11,å«Œè‰²
+484,æ¶,Transparent Level 2,ç”·,47,1,0,1,12,é€æ˜2çº§
+485,æ¶,Transparent Level 2,ç”·,54,0,0,0,43,é€æ˜2çº§
+487,æ¶,Transparent Level 2-3,å¥³,62,0,0,0,43,é€æ˜2-3çº§
+488,æ¶,Transparent Level 2,å¥³,59,0,1,2,52,é€æ˜2çº§
+489,æ¶,Transparent Level 2,ç”·,41,1,1,0,23,é€æ˜2çº§
+490,æ¶,Invasive urothelial carcinoma,ç”·,53,0,1,2,20,æµ¸æ¶¦æ€§å°¿è·¯ä¸Šçš®ç™Œ
+491,æ¶,Transparent Level 2,å¥³,49,1,1,0,31,é€æ˜2çº§
+492,è‰¯,Hamartoma,å¥³,43,1,1,0,19,é”™æ„ç˜¤
+493,æ¶,Transparent Level 2,ç”·,83,0,0,0,77,é€æ˜2çº§
+494,æ¶,Transparent Level 2,ç”·,66,0,1,0,35,é€æ˜2çº§
+495,æ¶,Transparent Level 1,ç”·,48,1,1,0,16,é€æ˜1çº§
+496,æ¶,MiTF translocated renal cell carcinoma,å¥³,32,1,1,2,22,MiTFæ˜“ä½æ€§è‚¾ç™Œ
+497,æ¶,Transparent Level 2,ç”·,61,1,1,0,20,é€æ˜2çº§
+498,æ¶,Papillary renal cell carcinoma type 1,å¥³,63,1,1,1,25,ä¹³å¤´çŠ¶è‚¾ç™Œ1å‹
+499,æ¶,Transparent Level 2,ç”·,49,1,0,0,28,é€æ˜2çº§
+500,æ¶,Chromophobe ,å¥³,76,1,0,2,22,å«Œè‰²
+501,æ¶,Papillary urothelial carcinoma,ç”·,65,0,1,1,26,ä¹³å¤´çŠ¶å°¿è·¯ä¸Šçš®ç™Œ
+502,è‰¯,Eosinophilic adenoma,å¥³,54,1,1,1,12,å—œé…¸ç»†èƒè…ºç˜¤
+503,æ¶,Transparent Level 2,å¥³,73,0,1,2,26,é€æ˜2çº§
+506,æ¶,Transparent Level 2,ç”·,48,0,0,1,40,é€æ˜2çº§
+507,æ¶,Transparent Level 2,ç”·,64,0,0,1,23,é€æ˜2çº§
+509,æ¶,Evil excision,å¥³,63,0,1,0,30,æ¶åˆ‡é™¤
+510,æ¶,Transparent Level 2,ç”·,23,1,0,2,21,é€æ˜2çº§
+511,è‰¯,Hamartoma,å¥³,58,1,1,1,7,é”™æ„ç˜¤
+512,æ¶,Transparent Level 3,å¥³,66,1,1,1,37,é€æ˜3çº§
+513,æ¶,Transparent Level 1,ç”·,53,0,1,2,54,é€æ˜1çº§
+515,æ¶,Transparent Level 2,ç”·,34,0,1,2,10,é€æ˜2çº§
+516,æ¶,Transparent Level 2,ç”·,68,1,0,0,25,é€æ˜2çº§
+518,æ¶,Transparent Level 2,ç”·,60,1,1,2,15,é€æ˜2çº§
+519,æ¶,Transparent cell papillary renal cell carcinoma,ç”·,43,1,0,2,16,é€æ˜ç»†èƒä¹³å¤´çŠ¶è‚¾ç™Œ
+520,æ¶,Transparent Level 2-3,ç”·,61,1,1,0,16,é€æ˜2-3çº§
+522,æ¶,Papillary renal cell carcinoma type 2,ç”·,57,0,1,1,89,ä¹³å¤´çŠ¶è‚¾ç™Œ2å‹
+524,è‰¯,inflammation,å¥³,64,1,1,1,18,ç‚ç—‡
+525,è‰¯,Hamartoma,å¥³,69,1,0,2,15,é”™æ„ç˜¤
+526,æ¶,Transparent Level 2,ç”·,52,1,0,2,38,é€æ˜2çº§
+527,è‰¯,Metanephric adenoma ,å¥³,61,1,0,0,37,åè‚¾è…ºç˜¤
+529,è‰¯,Hamartoma,å¥³,54,1,1,0,10,é”™æ„ç˜¤
+531,æ¶,Transparent Level 2,å¥³,62,0,0,1,35,é€æ˜2çº§
+532,æ¶,Transparent Level 2,ç”·,49,1,1,2,14,é€æ˜2çº§
+535,æ¶,Transparent Level 2,ç”·,49,1,0,0,31,é€æ˜2çº§
+536,è‰¯,Eosinophilic adenoma,ç”·,65,0,1,1,27,å—œé…¸ç»†èƒè…ºç˜¤
+537,æ¶,Transparent Level 2,å¥³,61,0,0,2,31,é€æ˜2çº§
+538,æ¶,Transparent Level 2,å¥³,61,0,0,2,14,é€æ˜2çº§
+539,æ¶,Transparent Level 2,ç”·,71,0,0,0,50,é€æ˜2çº§
+540,æ¶,Transparent Level 2,å¥³,58,1,0,2,32,é€æ˜2çº§
+541,æ¶,Invasive urothelial carcinoma,ç”·,53,0,1,1,35,æµ¸æ¶¦æ€§å°¿è·¯ä¸Šçš®ç™Œ
+542,è‰¯,Hamartoma,å¥³,69,1,1,0,16,é”™æ„ç˜¤
+543,è‰¯,Hamartoma,å¥³,32,1,1,0,44,é”™æ„ç˜¤
+544,æ¶,Disgusting Color Level 2,ç”·,55,0,0,2,35,å«Œè‰²2çº§
+545,æ¶,Papillary Type 1 Grade 2,ç”·,43,1,0,0,49,ä¹³å¤´çŠ¶1å‹2çº§
+546,æ¶,Transparent Level 2,å¥³,71,1,1,0,18,é€æ˜2çº§
+547,æ¶,Transparent Level 2,ç”·,72,1,0,2,28,é€æ˜2çº§
+548,æ¶,Transparent Level 2,å¥³,68,0,1,1,40,é€æ˜2çº§
+550,æ¶,Invasive urothelial carcinoma,å¥³,81,0,0,0,65,æµ¸æ¶¦æ€§å°¿è·¯ä¸Šçš®ç™Œ
+551,æ¶,Transparent Level 1,ç”·,53,0,1,0,53,é€æ˜1çº§
+552,æ¶,Transparent Level 2,ç”·,48,1,0,0,20,é€æ˜2çº§
+553,æ¶,Transparent Level 2,ç”·,67,1,1,0,25,é€æ˜2çº§
+554,æ¶,Disgusting Color Level 2,å¥³,30,1,1,2,35,å«Œè‰²2çº§
+555,æ¶,Transparent Level 2,ç”·,63,1,0,2,17,é€æ˜2çº§
+556,æ¶,Transparent Level 2,ç”·,72,1,1,0,21,é€æ˜2çº§
+557,æ¶,Chromophobe ,ç”·,39,1,1,1,23,å«Œè‰²
+558,æ¶,Nipple type 1,ç”·,53,1,0,1,18,ä¹³å¤´1å‹
+559,æ¶,Non invasive papillary urothelial carcinoma,ç”·,56,0,0,0,23,éæµ¸æ¶¦æ€§ä¹³å¤´çŠ¶å°¿è·¯ä¸Šçš®ç™Œ
+560,è‰¯,Hamartoma,ç”·,47,0,0,1,37,é”™æ„ç˜¤
+561,æ¶,Transparent Level 2,å¥³,46,0,1,1,54,é€æ˜2çº§
+562,æ¶,Transparent Level 3,ç”·,50,0,1,1,32,é€æ˜3çº§
+564,æ¶,Transparent Level 2,å¥³,50,0,1,1,40,é€æ˜2çº§
+565,æ¶,Transparent Level 2,ç”·,65,0,1,2,41,é€æ˜2çº§
+566,è‰¯,Hamartoma,å¥³,31,1,1,0,35,é”™æ„ç˜¤
+567,è‰¯,Hamartoma,å¥³,31,1,0,1,14,é”™æ„ç˜¤
+569,æ¶,Transparent Level 2,ç”·,73,0,1,1,37,é€æ˜2çº§
+570,è‰¯,Hamartoma,ç”·,41,1,0,2,7,é”™æ„ç˜¤
+571,è‰¯,Hamartoma,å¥³,47,1,1,2,25,é”™æ„ç˜¤
+572,æ¶,Transparent Level 2,å¥³,32,1,1,2,27,é€æ˜2çº§
+573,æ¶,Transparent Level 2,ç”·,55,0,1,1,43,é€æ˜2çº§
+574,æ¶,Transparent Level 2,å¥³,65,0,0,2,24,é€æ˜2çº§
+575,æ¶,Transparent Level 2,å¥³,40,0,0,1,40,é€æ˜2çº§
+576,æ¶,Transparent Level 2,ç”·,47,1,1,2,24,é€æ˜2çº§
+577,æ¶,Transparent Level 2,å¥³,29,1,1,1,28,é€æ˜2çº§
+578,æ¶,Transparent Level 2,ç”·,37,1,1,2,20,é€æ˜2çº§
+579,æ¶,Transparent Level 2-3,ç”·,70,1,1,0,18,é€æ˜2-3çº§
+580,æ¶,Transparent Level 4,ç”·,58,0,1,0,53,é€æ˜4çº§
+581,æ¶,Chromophobe ,ç”·,78,1,1,0,35,å«Œè‰²
+582,è‰¯,Hamartoma,ç”·,53,1,1,1,15,é”™æ„ç˜¤
+583,æ¶,Renal medullary carcinoma,å¥³,77,0,1,1,45,è‚¾é«“è´¨ç™Œ
+584,è‰¯,Hemangioma,å¥³,67,1,0,0,19,è¡€ç®¡ç˜¤
+585,æ¶,Transparent Level 2,ç”·,61,0,0,0,39,é€æ˜2çº§
+587,æ¶,Transparent Level 2,å¥³,72,0,1,0,67,é€æ˜2çº§
+588,è‰¯,Hamartoma,å¥³,70,1,0,2,23,é”™æ„ç˜¤
+589,æ¶,Transparent Level 2,ç”·,46,1,0,1,13,é€æ˜2çº§
+590,æ¶,Transparent Level 2,ç”·,39,1,1,2,18,é€æ˜2çº§
+591,æ¶,Transparent Level 3,å¥³,66,0,0,0,33,é€æ˜3çº§
+592,æ¶,Transparent Level 1,ç”·,55,1,0,0,20,é€æ˜1çº§
+595,æ¶,Papillary Type 1 Grade 2,å¥³,56,1,1,0,26,ä¹³å¤´çŠ¶1å‹2çº§
+597,æ¶,Transparent Level 2,ç”·,54,0,1,2,48,é€æ˜2çº§
+598,æ¶,Papillary Type 1 Grade 2,ç”·,49,1,1,1,25,ä¹³å¤´çŠ¶1å‹2çº§
+599,æ¶,Transparent Level 2,ç”·,30,1,1,2,25,é€æ˜2çº§
+600,æ¶,Transparent Level 2,å¥³,55,1,1,2,25,é€æ˜2çº§
