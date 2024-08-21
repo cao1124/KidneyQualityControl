@@ -184,9 +184,9 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
         lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=num_epochs, eta_min=0.005)
 
         # 加载数据集
-        train_dataloader, train_size = load_data(image_path, train_list, excel_df, batch_size, image_transforms['train'])
-        valid_dataloader, valid_size = load_data(image_path, valid_list, excel_df, batch_size, image_transforms['valid'])
-        test_dataloader, test_size = load_data(image_path, test_list, excel_df, batch_size, image_transforms['valid'])
+        train_dataloader, train_size = load_data(image_path, train_list[0], excel_df, batch_size, image_transforms['train'])
+        valid_dataloader, valid_size = load_data(image_path, valid_list[0], excel_df, batch_size, image_transforms['valid'])
+        test_dataloader, test_size = load_data(image_path, test_list[0], excel_df, batch_size, image_transforms['valid'])
         print('train_size:{}, valid_size:{}, test_size:{}'.format(train_size, valid_size, test_size))
         # 训练
         fc_layer = torch.nn.Linear(1024, 3 * 224 * 224).to(device)
