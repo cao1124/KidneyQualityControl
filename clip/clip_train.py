@@ -7,6 +7,8 @@
 @Time    : 2024/4/19 13:54
 clip model提取 img_feature和text_feature，concatenate后送入resnet分类
 """
+import os
+from sklearn.utils import shuffle
 import matplotlib
 import numpy as np
 from sklearn.metrics import confusion_matrix, classification_report
@@ -19,7 +21,7 @@ from torchvision import transforms, models
 from torch import nn, optim
 import pandas as pd
 from PIL import Image
-import os
+from data_preprocess import func
 import warnings
 
 matplotlib.use('AGG')
@@ -60,37 +62,54 @@ class image_caption_dataset(Dataset):
         return images, caption, label
 
 
-def load_data(image_path, excel_df, batch_size, preprocess):
+def load_data(data_path, num_list, excel_df, batch_size, preprocess):
     df = {'image': [], 'caption': [], 'label': []}
-    num_list = excel_df.iloc[:, 0].tolist()
-    for f in image_path:
-        for c in os.listdir(f):
-            for p in os.listdir(os.path.join(f, c)):
-                idx = num_list.index(int(p))
-                for n in os.listdir(os.path.join(f, c, p)):
-                    df['image'].append(os.path.join(f, c, p, n))
-                    df['label'].append(int(c))
-                    # cla = excel_df.iloc[idx][1]
-                    disease = excel_df.iloc[idx][2]
-                    if c == '0':
-                        cla = 'benign'
-                    else:
-                        cla = 'malignant'
-                    if excel_df.iloc[idx][3] == '女':
-                        sex = 'woman'
-                    else:
-                        sex = 'man'
-                    year = int(excel_df.iloc[idx][4])
-                    resect = int(excel_df.iloc[idx][5])
-                    located = int(excel_df.iloc[idx][6])
-                    part = int(excel_df.iloc[idx][7])
-                    maximum = int(excel_df.iloc[idx][8])
-                    df['caption'].append(f"A photo of a kidney cancer image showing a {cla} tumor with {disease} in "
-                                         f"a {year}-year-old {sex}, with a maximum diameter of {maximum} mm, located "
-                                         f"on the {located} kidney, in the {part} part, and underwent a {resect} resection.")
-                    # df['caption'].append("A photo of a {}-year-old {} with kidney cancer.".format(year, sex))
-                    # df['caption'].append(
-                    #     "a photo of {} kidney cancer image in a {}-year-old {}.".format(cla, year, sex))
+    'fold dataset'
+    # num_list = excel_df.iloc[:, 0].tolist()
+    # for f in image_path:
+    #     for c in os.listdir(f):
+    #         for p in os.listdir(os.path.join(f, c)):
+    #             idx = num_list.index(int(p))
+    #             for n in os.listdir(os.path.join(f, c, p)):
+    #                 df['image'].append(os.path.join(f, c, p, n))
+    #                 df['label'].append(int(c))
+    for p_num in num_list:
+        idx = num_list.index(int(p_num))
+        for name in os.listdir(os.path.join(data_path, str(p_num) + '-result')):
+            df['image'].append(os.path.join(data_path, str(p_num) + '-result', name))
+            c = excel_df.iloc[idx][3]
+            description = excel_df.iloc[idx][2]
+            if c == '良':
+                # cla = 'benign'
+                df['label'].append(0)
+            else:
+                # cla = 'malignant'
+                df['label'].append(1)
+            if excel_df.iloc[idx][4] == '女':
+                sex = 'woman'
+            else:
+                sex = 'man'
+            year = int(excel_df.iloc[idx][5])
+            # resect = int(excel_df.iloc[idx][6])
+            loc = int(excel_df.iloc[idx][6])
+            if loc == 0:
+                located = 'left kidney'
+            else:
+                located = 'right kidney'
+            pa = int(excel_df.iloc[idx][7])
+            if pa == 0:
+                part = 'upper kidney location'
+            elif pa == 1:
+                part = 'middle kidney location'
+            else:
+                part = 'lower kidney location'
+            maximum = int(excel_df.iloc[idx][8])
+            df['caption'].append(f"A photo of a kidney cancer image showing a tumor with {description} in "
+                                 f"a {year}-year-old {sex}, with a maximum diameter of {maximum} mm, located "
+                                 f"on the {located} kidney, in the {part}.")
+            # df['caption'].append("A photo of a {}-year-old {} with kidney cancer.".format(year, sex))
+            # df['caption'].append(
+            #     "a photo of {} kidney cancer image in a {}-year-old {}.".format(cla, year, sex))
 
     dataset = image_caption_dataset(df, preprocess)
     train_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, drop_last=True, num_workers=4)
@@ -115,14 +134,26 @@ def load_pretrian_model(model_path, device):
 def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path, device):
     # 加载CLIP模型
     model_clip, _ = load_pretrian_model('ViT-B/32', device)  # ViT-B/32
-    for i in range(4):
+    for i in range(5):
         print('五折交叉验证 第{}次实验:'.format(i))
-        # 数据划分
-        test_path = [os.path.join(image_path, 'fold4/')]
-        fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/']
-        valid_path = [os.path.join(image_path, fold_list[3 - i])]
-        train_path = [os.path.join(image_path, x) for x in fold_list if x != fold_list[3 - i]]
-
+        # fold 数据划分
+        # test_path = [os.path.join(image_path, 'fold4/')]
+        # fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/']
+        # valid_path = [os.path.join(image_path, fold_list[3 - i])]
+        # train_path = [os.path.join(image_path, x) for x in fold_list if x != fold_list[3 - i]]
+        'csv 5fold dataset'
+        train_list, valid_list, test_list = [], [], []
+        num_list = excel_df.iloc[:, 0].tolist()
+        temp = func(shuffle(num_list, random_state=i), int(len(num_list) * 0.2), m=5)
+        for index, cross in enumerate(temp):
+            if index == i:
+                valid_list.append(cross)
+            elif index == i + 1 and i < 4:
+                test_list.append(cross)
+            elif index == 0 and i == 4:
+                test_list.append(cross)
+            else:
+                train_list.append(cross)
         # 加载模型  resnet
         model_classify = models.resnext50_32x4d(pretrained=True)
         model_classify.fc = nn.Linear(in_features=2048, out_features=2, bias=True)
@@ -142,9 +173,9 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
         lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=num_epochs, eta_min=0.005)
 
         # 加载数据集
-        train_dataloader, train_size = load_data(train_path, excel_df, batch_size, image_transforms['train'])
-        valid_dataloader, valid_size = load_data(valid_path, excel_df, batch_size, image_transforms['valid'])
-        test_dataloader, test_size = load_data(test_path, excel_df, batch_size, image_transforms['valid'])
+        train_dataloader, train_size = load_data(image_path, train_list, excel_df, batch_size, image_transforms['train'])
+        valid_dataloader, valid_size = load_data(image_path, valid_list, excel_df, batch_size, image_transforms['valid'])
+        test_dataloader, test_size = load_data(image_path, test_list, excel_df, batch_size, image_transforms['valid'])
         print('train_size:{}, valid_size:{}, test_size:{}'.format(train_size, valid_size, test_size))
         # 训练
         fc_layer = torch.nn.Linear(1024, 3 * 224 * 224).to(device)
@@ -261,16 +292,16 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
 
 
 def main():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "0"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "1"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     epoch = 500
     batch_size = 128
     learning_rate = 1e-3
-    image_path = 'E:/med_dataset/kidney_dataset/kidney-zhongshan/20240312-kidney-5fold'
-    excel_path = '复旦中山医院肾肿瘤病理编号1-600共508例.csv'
-    excel_df = pd.read_csv(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'
-    save_path = 'res/20240726-clip-resnext50-classify'
+    image_path = '/mnt/sdb/caoxu/kidney/复旦中山医院肾肿瘤编号1-841共535例'
+    excel_path = '/mnt/sdb/caoxu/kidney/复旦大学附属中山医院肾肿瘤文本信息.xlsx'
+    excel_df = pd.read_excel(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'
+    save_path = 'res/20240821-clip-resnext50-classify'
     os.makedirs(save_path, exist_ok=True)
     train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, device)
 

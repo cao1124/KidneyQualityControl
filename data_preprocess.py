@@ -390,15 +390,8 @@ def backup_code():
     #     print('test:', test_path)
 
 
-if __name__ == '__main__':
-    # dataset_count()
-    # kfold_split()
-    # img2video()
-    # mead_split_patient()
-    # get_mask_by_json()
-    # dataset_augment()
-    # image_json_compare()
-    # backup_code()
+def move_data():
+    base_dir = r'E:\dataset\kidney\中山肾癌\复旦中山医院肾肿瘤编号1-841共535例'
 
     # base_dir = r'D:\med_dataset\kidney\20240408-shiyuan-kidney\20240408-renal-cystic-classify-5fold'
     # for f in os.listdir(base_dir):
@@ -408,7 +401,21 @@ if __name__ == '__main__':
     #             if len(file_len) % 2 != 0:
     #                 print(os.path.join(base_dir, f, c, p))
 
-    import chardet
-    with open('example.txt', 'rb') as f:
-        result = chardet.detect(f.read())  # 读取一定量的数据进行编码检测
-    print(result['encoding'])  # 打印检测到的编码
+    # import chardet
+    # with open('example.txt', 'rb') as f:
+    #     result = chardet.detect(f.read())  # 读取一定量的数据进行编码检测
+    # print(result['encoding'])  # 打印检测到的编码
+
+
+if __name__ == '__main__':
+    # dataset_count()
+    # kfold_split()
+    # img2video()
+    # mead_split_patient()
+    # get_mask_by_json()
+    # dataset_augment()
+    # image_json_compare()
+    # backup_code()
+    # move_data()
+    print('done.')
+
