@@ -21,7 +21,6 @@ from torchvision import transforms, models
 from torch import nn, optim
 import pandas as pd
 from PIL import Image
-from data_preprocess import func
 import warnings
 
 matplotlib.use('AGG')
@@ -43,6 +42,18 @@ image_transforms = {
         transforms.Normalize(mass_mean, mass_std)
     ])
 }
+
+
+def func(list_temp, n, m=5):
+    """ listTemp 为列表 平分后每份列表的的个数"""
+    count = 0
+    for i in range(0, len(list_temp), n):
+        count += 1
+        if count == m:
+            yield list_temp[i:]
+            break
+        else:
+            yield list_temp[i:i + n]
 
 
 class image_caption_dataset(Dataset):
