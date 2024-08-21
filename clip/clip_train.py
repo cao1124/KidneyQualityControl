@@ -310,7 +310,7 @@ def main():
     batch_size = 128
     learning_rate = 1e-3
     image_path = '/mnt/sdb/caoxu/kidney/复旦中山医院肾肿瘤编号1-841共535例'
-    excel_path = '/mnt/sdb/caoxu/kidney/复旦大学附属中山医院肾肿瘤文本信息.xlsx'
+    excel_path = '/mnt/sdb/caoxu/kidney/复旦大学附属中山医院肾肿瘤文本信息-EN.xlsx'
     excel_df = pd.read_excel(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'
     save_path = 'res/20240821-clip-resnext50-classify'
     os.makedirs(save_path, exist_ok=True)
