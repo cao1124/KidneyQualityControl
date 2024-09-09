@@ -31,19 +31,6 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
         fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/']
         valid_path = [os.path.join(data_dir, fold_list[3 - i])]
         train_path = [os.path.join(data_dir, x) for x in fold_list if x != fold_list[3 - i]]
-        '随机test database'
-        # fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/']
-        # valid_path = [os.path.join(data_dir, fold_list[i])]
-        # fold_list.remove(fold_list[i])
-        # if i == 4:
-        #     test_path = [os.path.join(data_dir, fold_list[0])]
-        #     fold_list.remove(fold_list[0])
-        # else:
-        #     test_path = [os.path.join(data_dir, fold_list[i])]
-        #     fold_list.remove(fold_list[i])
-        # train_path = []
-        # for x in range(len(fold_list)):
-        #     train_path.append(os.path.join(data_dir, fold_list[x]))
 
         train_dataset = ClassificationDataset(img_path=train_path, transforms=image_transforms['train'])
         valid_dataset = ClassificationDataset(img_path=valid_path, transforms=image_transforms['valid'])
@@ -182,15 +169,15 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
 
 
 def classification():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "0"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "2"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model_name = 'resnet18'
-    data_dir = '/media/user/Disk1/caoxu/dataset/kidney/zhongshan/20240318-kidney-blood-fusion-classify-5fold/'
+    model_name = 'resnet50'
+    data_dir = '/mnt/sdb/caoxu/dataset/十院肾囊肿/训练数据整理-ori/'   # 训练数据整理-crop
     category_num = 2
     bs = 256
     lr = 0.01
     num_epochs = 500
-    data = 'classification-model/20240318-kidney-classify-'
+    data = 'classification-model/20240910-十院肾囊肿-原图囊肿分类-'   # crop小图
     save_path = data + str(category_num) + 'class-' + model_name + '-bs' + str(bs) + '-lr' + str(lr) + '/'
     pt_dir = 'classification_model/' + save_path
     if not os.path.exists(pt_dir):

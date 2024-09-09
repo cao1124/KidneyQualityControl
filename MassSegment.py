@@ -15,29 +15,12 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
         os.makedirs(save_dir1, exist_ok=True)
         print('五折交叉验证 第{}次实验:'.format(i))
         test_path = [os.path.join(data_dir, 'fold4/')]
-        test_mask = [os.path.join(data_dir.replace('kidney-5fold', 'mask-5fold'), 'fold4/')]
+        test_mask = [os.path.join(data_dir.replace('ori', 'cancer-mask'), 'fold4/')]
         fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/']
         valid_path = [os.path.join(data_dir, fold_list[3 - i])]
-        valid_mask = [os.path.join(data_dir.replace('kidney-5fold', 'mask-5fold'), fold_list[3 - i])]
+        valid_mask = [os.path.join(data_dir.replace('ori', 'cancer-mask'), fold_list[3 - i])]
         train_path = [os.path.join(data_dir, x) for x in fold_list if x != fold_list[3 - i]]
-        train_mask = [os.path.join(data_dir.replace('kidney-5fold', 'mask-5fold'), x) for x in fold_list if x != fold_list[3 - i]]
-        '随机test database'
-        # fold_list = ['fold0/', 'fold1/', 'fold2/', 'fold3/', 'fold4/']
-        # valid_path = [os.path.join(data_dir, fold_list[i])]
-        # valid_mask = [os.path.join(data_dir.replace('kidney-5fold', 'mask-5fold'), fold_list[i])]
-        # fold_list.remove(fold_list[i])
-        # if i == 4:
-        #     test_path = [os.path.join(data_dir, fold_list[0])]
-        #     test_mask = [os.path.join(data_dir.replace('kidney-5fold', 'mask-5fold'), fold_list[0])]
-        #     fold_list.remove(fold_list[0])
-        # else:
-        #     test_path = [os.path.join(data_dir, fold_list[i])]
-        #     test_mask = [os.path.join(data_dir.replace('kidney-5fold', 'mask-5fold'), fold_list[i])]
-        #     fold_list.remove(fold_list[i])
-        # train_path, train_mask = [], []
-        # for x in range(len(fold_list)):
-        #     train_path.append(os.path.join(data_dir, fold_list[x]))
-        #     train_mask.append(os.path.join(data_dir.replace('kidney-5fold', 'mask-5fold'), fold_list[x]))
+        train_mask = [os.path.join(data_dir.replace('ori', 'cancer-mask'), x) for x in fold_list if x != fold_list[3 - i]]
 
         train_dataset = RenalDataset(train_path, train_mask, augmentation=training_augmentation())
         valid_dataset = RenalDataset(valid_path, valid_mask, augmentation=valid_augmentation())
@@ -89,11 +72,10 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
             verbose=True,
         )
 
-        # train model for 40 epochs
         max_score = -1
         max_dice = 0
         best_epoch = 0
-        early_stops = 200
+        early_stops = 100
 
         train_history = {'dice_loss + bce_loss': [], 'fscore': []}
         val_history = {'dice_loss + bce_loss': [], 'fscore': []}
@@ -116,22 +98,22 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
             # do something (save model, change lr, etc.)
             if max_score < np.round(valid_logs['iou_score'], 4):  # fscore  iou_score
                 if max_score != -1:
-                    old_filepath = save_dir1 + "best_" + str(max_score) + ".pth"
+                    old_filepath = save_dir1 + "best_" + str(max_score) + ".pt"
                     os.remove(old_filepath)
                 max_score = np.round(valid_logs['iou_score'], 4)
                 max_dice = np.round(valid_logs['fscore'], 4)
-                torch.save(model, save_dir1 + "best_" + str(max_score) + ".pth")
+                torch.save(model, save_dir1 + "best_" + str(max_score) + ".pt")
                 print('best iou score={}, Model saved!'.format(max_score))
                 best_epoch = j
 
-            if j - best_epoch > 1000:
+            if j - best_epoch > 50:
                 optimizer.param_groups[0]['lr'] = optimizer.param_groups[0]['lr'] / 2
                 print('Decrease decoder learning rate. lr:', optimizer.param_groups[0]['lr'])
 
         'test'
         iou_list, dice_list = [], []
-        print('model_name:', [x for x in os.listdir(save_dir1) if x.endswith('.pth')][-1])
-        model = torch.load(save_dir1 + [x for x in os.listdir(save_dir1) if x.endswith('.pth')][-1])
+        print('model_name:', [x for x in os.listdir(save_dir1) if x.endswith('.pt')][-1])
+        model = torch.load(save_dir1 + [x for x in os.listdir(save_dir1) if x.endswith('.pt')][-1])
         model.eval()
         torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
         for k in range(len(test_dataset)):
@@ -179,8 +161,8 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
             img_gt_pred = combine_image(img_gt, img_pred)
             cv2.imwrite(save_full_path, img_gt_pred)
 
-        print("\tMean Dice:", np.average(dice_list))
-        print("\tMean IoU:", np.average(iou_list))
+        print("\t Mass Mean Dice:", np.average(dice_list))
+        print("\t Mass Mean IoU:", np.average(iou_list))
         # hist, bins = np.histogram(dice_list, bins=np.arange(0.0, 1.05, 0.1))
         # print(hist)
         # print(hist / len(test_dataset))
@@ -210,13 +192,13 @@ def segment():
     timm-efficientnet-l2
     replknet-31b
     """
-    encoder_name = "efficientnet-b0"
+    encoder_name = "efficientnet-b7"
     encoder_activation = "sigmoid"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
-    bs = 64
+    bs = 32
     lr = 1e-4
     epochs = 1000
-    save_dir = "mass-segment/20240422-mass-segment-zhongshan-" + encoder_name + '/'
+    save_dir = "mass-segment/20240910-十院肾囊肿-囊肿分割-" + encoder_name + '/'
     train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, device)
 
 

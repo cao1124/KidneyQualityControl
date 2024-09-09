@@ -13,6 +13,7 @@ import random
 import shutil
 import cv2
 import numpy as np
+import pandas as pd
 
 
 def func(list_temp, n, m=5):
@@ -52,124 +53,70 @@ def dataset_count():
 
 
 def kfold_split():
-    base_dir = 'D:/MED_File/dataset/KidneyDataset/ori dataset/'
-    jsons = [x for x in os.listdir(base_dir) if x.endswith('.json')]
-    kidney_split = False
-    cancer_split = True
+    base_dir = 'D:/dataset/十院肾囊肿/训练数据整理/'
     ben_list, mal_list = [], []
-    if cancer_split:
-        ori_out_path = 'D:/MED_File/dataset/KidneyDataset/kfold-cancer-ori/'
-        if not os.path.exists(ori_out_path):
-            os.makedirs(ori_out_path, exist_ok=True)
-        crop_out_path = 'D:/MED_File/dataset/KidneyDataset/kfold-cancer-crop/'
-        if not os.path.exists(crop_out_path):
-            os.makedirs(crop_out_path, exist_ok=True)
-        cancer_mask_out_path = 'D:/MED_File/dataset/KidneyDataset/kfold-cancer-mask/'
-        if not os.path.exists(cancer_mask_out_path):
-            os.makedirs(cancer_mask_out_path, exist_ok=True)
-        for j in jsons:
-            with open(base_dir + j, 'r', encoding='utf-8') as fp:
-                json_data = json.load(fp)
-                if len(json_data['shapes']) > 1:
-                    mal_list.append(j)
-                elif len(json_data['shapes']) == 1 and json_data['shapes'][0]['label'] == 'Kidney':
-                    ben_list.append(j)
-                elif len(json_data['shapes']) == 1 and json_data['shapes'][0]['label'] == 'Kidney cancer':
-                    mal_list.append(j)
-    if kidney_split:
-        ori_out_path = 'D:/MED_File/dataset/KidneyDataset/kfold-kidney-ori/'
-        if not os.path.exists(ori_out_path):
-            os.makedirs(ori_out_path, exist_ok=True)
-        kidney_mask_out_path = 'D:/MED_File/dataset/KidneyDataset/kfold-kidney-mask/'
-        if not os.path.exists(kidney_mask_out_path):
-            os.makedirs(kidney_mask_out_path, exist_ok=True)
-        for j in jsons:
-            with open(base_dir + j, 'r', encoding='utf-8') as fp:
-                json_data = json.load(fp)
-                if len(json_data['shapes']) > 1:
-                    mal_list.append(j)
-                elif len(json_data['shapes']) == 1 and json_data['shapes'][0]['label'] == 'Kidney cancer':
-                    ben_list.append(j)
-                elif len(json_data['shapes']) == 1 and json_data['shapes'][0]['label'] == 'Kidney':
-                    mal_list.append(j)
+    ori_out_path = 'D:/dataset/十院肾囊肿/训练数据整理-ori/'
+    crop_out_path = 'D:/dataset/十院肾囊肿/训练数据整理-crop/'
+    cancer_mask_out_path = 'D:/dataset/十院肾囊肿/训练数据整理-cancer-mask/'
+    kidney_mask_out_path = 'D:/dataset/十院肾囊肿/训练数据整理-kidney-mask/'
+    for root, dirs, files in os.walk(base_dir):
+        for f in files:
+            if not f.endswith('json'):
+                if '恶性' in root.split('/')[-1]:
+                    mal_list.append(os.path.join(root, f))
+                elif '良性' in root.split('/')[-1]:
+                    ben_list.append(os.path.join(root, f))
+                else:
+                    print(f'{os.path.join(root, f)}图像label错误')
 
-    for cla in ['benign', 'malignant']:
-        if cla == 'benign':
+    for cla in ['良性', '恶性']:
+        if cla == '良性':
             img_list = ben_list
         else:
             img_list = mal_list
 
         random.shuffle(img_list)  # 打乱
         img_nums = len(img_list)  # 所有的图片数目
-
         temp = func(img_list, int(img_nums * 0.2), m=5)  # 平均分为5份,5折交叉训练
 
         for index, cross in enumerate(temp):
-            print(" %d / %d " % (index + 1, img_nums))  # processing bar
+            print(cla, " %d / %d " % (index + 1, img_nums))  # processing bar
             ori_save_path = os.path.join(ori_out_path, f"fold{index}", cla)
-            if not os.path.exists(ori_save_path):
-                os.makedirs(ori_save_path, exist_ok=True)
-            if cancer_split:
-                crop_save_path = os.path.join(crop_out_path, f"fold{index}", cla)
-                if not os.path.exists(crop_save_path):
-                    os.makedirs(crop_save_path, exist_ok=True)
-                cancer_mask_save_path = os.path.join(cancer_mask_out_path, f"fold{index}", cla)
-                if not os.path.exists(cancer_mask_save_path):
-                    os.makedirs(cancer_mask_save_path, exist_ok=True)
-            if kidney_split:
-                kidney_mask_save_path = os.path.join(kidney_mask_out_path, f"fold{index}", cla)
-                if not os.path.exists(kidney_mask_save_path):
-                    os.makedirs(kidney_mask_save_path, exist_ok=True)
-            for img_name in img_list:
-                if img_name in cross:
-                    'copy ori image and json'
-                    shutil.copy(os.path.join(base_dir, img_name), os.path.join(ori_save_path, img_name))  # crop json
-                    shutil.copy(os.path.join(base_dir, img_name.replace('.json', '.jpg')),
-                                os.path.join(ori_save_path, img_name.replace('.json', '.jpg')))  # crop image
-                    img = cv2.imread(os.path.join(base_dir, img_name.replace('.json', '.jpg')))
-                    with open(base_dir + img_name, 'r', encoding='utf-8') as fp:
-                        json_data = json.load(fp)
-                    'cancer mask image'
-                    if cancer_split:
+            os.makedirs(ori_save_path, exist_ok=True)
+            crop_save_path = os.path.join(crop_out_path, f"fold{index}", cla)
+            os.makedirs(crop_save_path, exist_ok=True)
+            cancer_mask_save_path = os.path.join(cancer_mask_out_path, f"fold{index}", cla)
+            os.makedirs(cancer_mask_save_path, exist_ok=True)
+            kidney_mask_save_path = os.path.join(kidney_mask_out_path, f"fold{index}", cla)
+            os.makedirs(kidney_mask_save_path, exist_ok=True)
+            for img_path in img_list:
+                if img_path in cross:
+                    img_name = img_path.split('\\')[-1]
+                    json_path = os.path.splitext(img_path)[0] + '.json'
+                    shutil.copy(img_path, os.path.join(ori_save_path, img_name))
+                    if os.path.exists(json_path):
+                        'copy ori image and json'
+                        img = cv_read(img_path)
+                        with open(json_path, 'r', encoding='utf-8') as fp:
+                            json_data = json.load(fp)
+                        'cancer mask image'
                         cancer_mask = np.zeros(img.shape[:2], dtype=np.uint8)
-                        if len(json_data['shapes']) == 1 and json_data['shapes'][0]['label'] == 'Kidney cancer':
-                            points = np.array(json_data['shapes'][0]['points'])
-                            polygon = np.array(points, np.int32)  # 坐标为顺时针方向
-                            cv2.fillConvexPoly(cancer_mask, polygon, (255, 255, 255))
-                        elif len(json_data['shapes']) > 1:
-                            if json_data['shapes'][0]['label'] == 'Kidney cancer':
-                                points = np.array(json_data['shapes'][0]['points'])
-                            else:
-                                points = np.array(json_data['shapes'][1]['points'])
-                            polygon = np.array(points, np.int32)  # 坐标为顺时针方向
-                            cv2.fillConvexPoly(cancer_mask, polygon, (255, 255, 255))
-                        cv2.imwrite(os.path.join(cancer_mask_save_path, img_name.replace('.json', '.png')), cancer_mask)
-                        'crop image'
-                        if len(json_data['shapes']) > 1:
-                            if json_data['shapes'][0]['label'] == 'Kidney cancer':
-                                points = np.array(json_data['shapes'][0]['points'])
-                            else:
-                                points = np.array(json_data['shapes'][1]['points'])
-                        else:
-                            points = np.array(json_data['shapes'][0]['points'])
-                        crop_img = img[int(min(points[:, 1])): int(max(points[:, 1])),
-                                   int(min(points[:, 0])): int(max(points[:, 0]))]
-                        cv2.imwrite(os.path.join(crop_save_path, img_name.replace('.json', '.png')), crop_img)
-                    'kidney mask image'
-                    if kidney_split:
                         kidney_mask = np.zeros(img.shape[:2], dtype=np.uint8)
-                        if len(json_data['shapes']) == 1 and json_data['shapes'][0]['label'] == 'Kidney':
-                            points = np.array(json_data['shapes'][0]['points'])
+                        for n in range(len(json_data['shapes'])):
+                            points = np.array(json_data['shapes'][n]['points'])
                             polygon = np.array(points, np.int32)  # 坐标为顺时针方向
-                            cv2.fillConvexPoly(kidney_mask, polygon, (255, 255, 255))
-                        elif len(json_data['shapes']) > 1:
-                            if json_data['shapes'][0]['label'] == 'Kidney':
-                                points = np.array(json_data['shapes'][0]['points'])
+                            if json_data['shapes'][n]['label'] in ['良性', '恶性']:
+                                cv2.fillConvexPoly(cancer_mask, polygon, (255, 255, 255))
+                                cv_write(os.path.join(cancer_mask_save_path, img_name), cancer_mask)
+                                'crop image'
+                                crop_img = img[int(min(points[:, 1])): int(max(points[:, 1])),
+                                               int(min(points[:, 0])): int(max(points[:, 0]))]
+                                cv_write(os.path.join(crop_save_path, img_name), crop_img)
+                            elif json_data['shapes'][n]['label'] == '肾脏':
+                                cv2.fillConvexPoly(kidney_mask, polygon, (255, 255, 255))
+                                cv_write(os.path.join(kidney_mask_save_path, img_name), kidney_mask)
                             else:
-                                points = np.array(json_data['shapes'][1]['points'])
-                            polygon = np.array(points, np.int32)  # 坐标为顺时针方向
-                            cv2.fillConvexPoly(kidney_mask, polygon, (255, 255, 255))
-                        cv2.imwrite(os.path.join(kidney_mask_save_path, img_name.replace('.json', '.png')), kidney_mask)
+                                print(f'{img_path}图像json错误')
 
 
 def img2video():
@@ -409,7 +356,7 @@ def move_data():
 
 if __name__ == '__main__':
     # dataset_count()
-    # kfold_split()
+    kfold_split()
     # img2video()
     # mead_split_patient()
     # get_mask_by_json()
@@ -417,5 +364,18 @@ if __name__ == '__main__':
     # image_json_compare()
     # backup_code()
     # move_data()
+
+    # excel_path = 'E:/dataset/kidney/中山肾癌/复旦大学附属中山医院肾肿瘤文本信息-EN.xlsx'
+    # excel_df = pd.read_excel(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'
+    # num_list = excel_df.iloc[:, 0].tolist()
+    # cls_list = excel_df.iloc[:, 3].tolist()
+    # base_dir = 'E:/dataset/kidney/中山肾癌/复旦中山医院肾肿瘤编号1-841共535例/'
+    # out_dir = 'E:/dataset/kidney/中山肾癌/20240822-segment'
+    # os.makedirs(os.path.join(out_dir, str(1)))
+    # for i in range(len(cls_list)):
+    #     if cls_list[i] == '恶':
+    #         shutil.copytree(os.path.join(base_dir, num_list[i]+'-result'), os.path.join(out_dir, '1', num_list[i]+'-result'))
+    #     else:
+    #         shutil.copytree()
     print('done.')
 
