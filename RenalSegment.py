@@ -181,13 +181,13 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
 
 
 def segment():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "0"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "2"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     data_dir = '/mnt/sdb/caoxu/dataset/十院肾囊肿/训练数据整理-ori/'
     encoder_name = "efficientnet-b7"
     encoder_activation = "sigmoid"  # could be None for logits or 'softmax2d' for multiclass segmentation
     # preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder_name, encoder_weights)
-    bs = 32
+    bs = 6
     lr = 1e-4
     epochs = 1000
     save_dir = "renal-segment/20240910-十院肾囊肿-肾脏分割-" + encoder_name + '/'

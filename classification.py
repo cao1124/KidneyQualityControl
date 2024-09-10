@@ -169,15 +169,15 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
 
 
 def classification():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "2"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "5"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model_name = 'resnet50'
-    data_dir = '/mnt/sdb/caoxu/dataset/十院肾囊肿/训练数据整理-ori/'   # 训练数据整理-crop
+    data_dir = '/mnt/sdb/caoxu/dataset/十院肾囊肿/训练数据整理-crop/'   # 训练数据整理-crop  训练数据整理-ori
     category_num = 2
     bs = 256
     lr = 0.01
     num_epochs = 500
-    data = 'classification-model/20240910-十院肾囊肿-原图囊肿分类-'   # crop小图
+    data = 'classification-model/20240910-十院肾囊肿-crop小图囊肿分类-'   # crop小图  原图囊肿分类
     save_path = data + str(category_num) + 'class-' + model_name + '-bs' + str(bs) + '-lr' + str(lr) + '/'
     pt_dir = 'classification_model/' + save_path
     if not os.path.exists(pt_dir):
