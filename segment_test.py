@@ -23,7 +23,7 @@ def test():
     iou_list, dice_list = [], []
     for root, dirs, files in os.walk(data_dir):
         for f in files:
-            if not f.endswith('json'):
+            if not f.endswith('json') and os.path.exists(os.path.join(root.replace('ori', 'cancer-mask'), f)):
                 print(os.path.join(root, f))
                 image_ori = cv_read(os.path.join(root, f))
                 gt_mask = cv_read(os.path.join(root.replace('ori', 'cancer-mask'), f))
