@@ -53,12 +53,12 @@ def dataset_count():
 
 
 def kfold_split():
-    base_dir = 'D:/dataset/十院肾囊肿/训练数据整理/'
+    base_dir = 'E:/med_dataset/kidney_dataset/十院/十院肾囊肿/市一外部验证/'
     ben_list, mal_list = [], []
-    ori_out_path = 'D:/dataset/十院肾囊肿/训练数据整理-ori/'
-    crop_out_path = 'D:/dataset/十院肾囊肿/训练数据整理-crop/'
-    cancer_mask_out_path = 'D:/dataset/十院肾囊肿/训练数据整理-cancer-mask/'
-    kidney_mask_out_path = 'D:/dataset/十院肾囊肿/训练数据整理-kidney-mask/'
+    ori_out_path = 'E:/med_dataset/kidney_dataset/十院/十院肾囊肿/市一外部验证-ori/'
+    crop_out_path = 'E:/med_dataset/kidney_dataset/十院/十院肾囊肿/市一外部验证-crop/'
+    cancer_mask_out_path = 'E:/med_dataset/kidney_dataset/十院/十院肾囊肿/市一外部验证-cancer-mask/'
+    kidney_mask_out_path = 'E:/med_dataset/kidney_dataset/十院/十院肾囊肿/市一外部验证-kidney-mask/'
     for root, dirs, files in os.walk(base_dir):
         for f in files:
             if not f.endswith('json'):
