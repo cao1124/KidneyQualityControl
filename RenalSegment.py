@@ -181,7 +181,7 @@ def train(data_dir, encoder_name, encoder_activation, bs, lr, epochs, save_dir, 
 
 
 def segment():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "2"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "7"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     data_dir = '/mnt/sdb/caoxu/dataset/十院肾囊肿/训练数据整理-ori/'
     encoder_name = "efficientnet-b7"

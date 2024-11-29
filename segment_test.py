@@ -61,6 +61,6 @@ def test():
 
 
 if __name__ == '__main__':
-    os.environ['CUDA_VISIBLE_DEVICES'] = "3"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "7"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     test()

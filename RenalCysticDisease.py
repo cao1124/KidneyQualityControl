@@ -20,7 +20,7 @@ from segment_util import add_weighted, get_iou, get_f1
 
 
 def classify():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "3"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "7"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model_name = 'resnet50'
     data_dir = '/media/user/Disk1/caoxu/dataset/kidney/shiyuan/20240408-renal-cystic-crop-classify-5fold/'
@@ -40,7 +40,7 @@ def classify():
 
 
 def segment():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "1"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "7"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     data_dir = '/media/user/Disk1/caoxu/dataset/kidney/shiyuan/20240408-renal-cystic-classify-5fold/'
     encoder_name = "efficientnet-b0"
@@ -59,7 +59,7 @@ class RenalCystic(Enum):
 
 
 def segment_test():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "0"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "7"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     test_list = []
     test_img_dir = r'D:\med_dataset\kidney\20240408-shiyuan-kidney\20240408-renal-cystic-classify-5fold\fold4'

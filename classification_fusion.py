@@ -182,7 +182,7 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
 
 
 def classification():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "3"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "7"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model_name = 'resnet18'
     data_dir = '/media/user/Disk1/caoxu/dataset/kidney/zhongshan/20240318-kidney-blood-fusion-classify-5fold/'

@@ -8,7 +8,6 @@
 clip model提取 img_feature和text_feature，concatenate后送入resnet分类
 """
 import os
-os.environ['CUDA_VISIBLE_DEVICES'] = "1"
 from sklearn.utils import shuffle
 import matplotlib
 import numpy as np
@@ -305,6 +304,7 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
 
 
 def main():
+    os.environ['CUDA_VISIBLE_DEVICES'] = "1"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     epoch = 500
     batch_size = 128
