@@ -356,10 +356,10 @@ def move_data():
 
 if __name__ == '__main__':
     # dataset_count()
-    kfold_split()
+    # kfold_split()
     # img2video()
     # mead_split_patient()
-    # get_mask_by_json()
+    get_mask_by_json()
     # dataset_augment()
     # image_json_compare()
     # backup_code()
