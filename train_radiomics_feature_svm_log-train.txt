@@ -1,0 +1,23 @@
+影像组学特征+机器学习分类，步骤如下：
+1.提取radiomics feature，共计提取101张图的877个维度上的特征，保存特征excel - radiomics_features.xlsx；
+2.准备训练和测试数据，数据划分按照train：test = 8：2进行划分；
+3.特征选择，通过对每个特征与目标变量之间的统计关系进行评估来选取最重要的特征，本实验选择最重要的100个特征，选择结果如下。
+4.数据标准化，使用SVM进行分类；
+5.预测和打印分类报告；
+
+
+结果：
+选中的特征名称: ['diagnostics_Mask-interpolated_Mean', 'original_shape_SphericalDisproportion', 'original_shape_Maximum3DDiameter', 'original_shape_Maximum2DDiameterSlice', 'original_shape_Maximum2DDiameterColumn', 'original_shape_MajorAxisLength', 'original_shape_LeastAxisLength', 'original_shape_Elongation', 'original_shape_Flatness', 'original_firstorder_Energy', 'original_firstorder_TotalEnergy', 'original_firstorder_Entropy', 'original_firstorder_90Percentile', 'original_firstorder_Mean', 'original_firstorder_Median', 'original_firstorder_RootMeanSquared', 'original_firstorder_Uniformity', 'original_glcm_Autocorrelation', 'original_glcm_DifferenceAverage', 'original_glcm_DifferenceEntropy', 'original_glcm_Id', 'original_glcm_Idm', 'original_glcm_Idn', 'original_glcm_JointAverage', 'original_glcm_JointEnergy', 'original_glcm_JointEntropy', 'original_glcm_MaximumProbability', 'original_glcm_SumAverage', 'original_glcm_SumEntropy', 'original_gldm_DependenceEntropy', 'original_gldm_HighGrayLevelEmphasis', 'original_gldm_LargeDependenceEmphasis', 'original_glrlm_GrayLevelNonUniformityNormalized', 'original_glrlm_HighGrayLevelRunEmphasis', 'original_glrlm_RunLengthNonUniformity', 'original_glrlm_RunLengthNonUniformityNormalized', 'original_glrlm_RunPercentage', 'original_glrlm_ShortRunEmphasis', 'original_glrlm_ShortRunHighGrayLevelEmphasis', 'original_glszm_GrayLevelNonUniformity', 'original_glszm_ZoneEntropy', 'wavelet-LLH_firstorder_Entropy', 'wavelet-LLH_firstorder_10Percentile', 'wavelet-LLH_firstorder_90Percentile', 'wavelet-LLH_firstorder_MeanAbsoluteDeviation', 'wavelet-LLH_firstorder_RobustMeanAbsoluteDeviation', 'wavelet-LLH_firstorder_Uniformity', 'wavelet-LLH_glcm_DifferenceAverage', 'wavelet-LLH_glcm_DifferenceEntropy', 'wavelet-LLH_glcm_JointEntropy', 'wavelet-LLH_glcm_SumEntropy', 'wavelet-LLH_glrlm_GrayLevelNonUniformityNormalized', 'wavelet-LLH_glrlm_RunEntropy', 'wavelet-LLH_glrlm_RunLengthNonUniformity', 'wavelet-LHL_glcm_Correlation', 'wavelet-LHL_glcm_MCC', 'wavelet-LHL_glrlm_RunLengthNonUniformity', 'wavelet-LHL_glszm_GrayLevelNonUniformity', 'wavelet-LHH_glrlm_GrayLevelNonUniformity', 'wavelet-LHH_glrlm_RunLengthNonUniformity', 'wavelet-HLL_glszm_GrayLevelNonUniformity', 'wavelet-HLH_glrlm_GrayLevelNonUniformity', 'wavelet-HLH_glrlm_RunLengthNonUniformity', 'wavelet-HHL_glrlm_GrayLevelNonUniformity', 'wavelet-HHL_glrlm_RunLengthNonUniformity', 'wavelet-HHH_gldm_DependenceNonUniformity', 'wavelet-HHH_glrlm_GrayLevelNonUniformity', 'wavelet-HHH_glrlm_RunLengthNonUniformity', 'wavelet-LLL_firstorder_Energy', 'wavelet-LLL_firstorder_TotalEnergy', 'wavelet-LLL_firstorder_Entropy', 'wavelet-LLL_firstorder_90Percentile', 'wavelet-LLL_firstorder_Mean', 'wavelet-LLL_firstorder_Median', 'wavelet-LLL_firstorder_RootMeanSquared', 'wavelet-LLL_glcm_Autocorrelation', 'wavelet-LLL_glcm_DifferenceAverage', 'wavelet-LLL_glcm_DifferenceEntropy', 'wavelet-LLL_glcm_Id', 'wavelet-LLL_glcm_Idm', 'wavelet-LLL_glcm_Idn', 'wavelet-LLL_glcm_Imc1', 'wavelet-LLL_glcm_JointAverage', 'wavelet-LLL_glcm_JointEntropy', 'wavelet-LLL_glcm_SumAverage', 'wavelet-LLL_glcm_SumEntropy', 'wavelet-LLL_gldm_DependenceVariance', 'wavelet-LLL_gldm_HighGrayLevelEmphasis', 'wavelet-LLL_gldm_LargeDependenceEmphasis', 'wavelet-LLL_gldm_SmallDependenceEmphasis', 'wavelet-LLL_gldm_SmallDependenceHighGrayLevelEmphasis', 'wavelet-LLL_glrlm_GrayLevelNonUniformityNormalized', 'wavelet-LLL_glrlm_HighGrayLevelRunEmphasis', 'wavelet-LLL_glrlm_RunLengthNonUniformity', 'wavelet-LLL_glrlm_RunLengthNonUniformityNormalized', 'wavelet-LLL_glrlm_RunPercentage', 'wavelet-LLL_glrlm_ShortRunEmphasis', 'wavelet-LLL_glrlm_ShortRunHighGrayLevelEmphasis', 'wavelet-LLL_glszm_GrayLevelNonUniformity', 'wavelet-LLL_glszm_ZonePercentage']
+........*...*
+optimization finished, #iter = 949
+obj = -8.684796, rho = -0.695564
+nSV = 27, nBSV = 4
+Total nSV = 27
+[LibSVM]              precision    recall  f1-score   support
+
+      benign                0.93         0.93       0.93        14
+   malignant             0.86          0.86       0.86         7
+
+    accuracy                           0.90        21
+   macro avg       0.89      0.89      0.89        21
+weighted avg       0.90      0.90      0.90        21

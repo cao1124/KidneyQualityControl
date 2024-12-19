@@ -1,0 +1,23 @@
+影像组学特征+机器学习分类，步骤如下：
+1.提取radiomics feature，共计提取101张图的877个维度上的特征，保存特征excel - radiomics_features.xlsx；
+2.准备训练和测试数据，数据划分按照train：test = 8：2进行划分；
+3.特征选择，通过对每个特征与目标变量之间的统计关系进行评估来选取最重要的特征，本实验选择最重要的100个特征，选择结果如下。
+4.数据标准化，使用SVM进行分类；
+5.预测和打印分类报告；
+
+
+结果：
+选中的特征名称: ['original_shape_Maximum2DDiameterColumn', 'original_shape_MajorAxisLength', 'original_shape_Elongation', 'original_firstorder_MeanAbsoluteDeviation', 'original_firstorder_RobustMeanAbsoluteDeviation', 'original_firstorder_StandardDeviation', 'original_firstorder_Variance', 'original_glcm_ClusterTendency', 'original_glcm_DifferenceAverage', 'original_glcm_DifferenceEntropy', 'original_glcm_Idm', 'original_glcm_JointEntropy', 'original_glcm_SumSquares', 'original_gldm_GrayLevelVariance', 'original_gldm_SmallDependenceEmphasis', 'original_glrlm_ShortRunHighGrayLevelEmphasis', 'original_glszm_ZonePercentage', 'wavelet-LLH_firstorder_Mean', 'wavelet-LLH_firstorder_RootMeanSquared', 'wavelet-LLH_firstorder_StandardDeviation', 'wavelet-LLH_glcm_DifferenceEntropy', 'wavelet-LLH_glcm_JointEntropy', 'wavelet-LLH_glcm_SumEntropy', 'wavelet-LLH_gldm_DependenceEntropy', 'wavelet-LLH_gldm_DependenceNonUniformityNormalized', 'wavelet-LLH_glrlm_RunEntropy', 'wavelet-LHL_firstorder_Entropy', 'wavelet-LHL_firstorder_10Percentile', 'wavelet-LHL_firstorder_90Percentile', 'wavelet-LHL_firstorder_InterquartileRange', 'wavelet-LHL_firstorder_MeanAbsoluteDeviation', 'wavelet-LHL_firstorder_RobustMeanAbsoluteDeviation', 'wavelet-LHL_firstorder_StandardDeviation', 'wavelet-LHL_firstorder_Uniformity', 'wavelet-LHL_glcm_DifferenceAverage', 'wavelet-LHL_glcm_DifferenceEntropy', 'wavelet-LHL_glcm_Id', 'wavelet-LHL_glcm_Idm', 'wavelet-LHL_glcm_JointEnergy', 'wavelet-LHL_glcm_JointEntropy', 'wavelet-LHL_glcm_SumEntropy', 'wavelet-LHL_gldm_DependenceEntropy', 'wavelet-LHL_gldm_SmallDependenceEmphasis', 'wavelet-LHL_glrlm_GrayLevelNonUniformityNormalized', 'wavelet-LHL_glrlm_RunEntropy', 'wavelet-LHL_glrlm_RunLengthNonUniformityNormalized', 'wavelet-LHL_glrlm_RunPercentage', 'wavelet-LHL_glrlm_ShortRunEmphasis', 'wavelet-LHL_glszm_SizeZoneNonUniformity', 'wavelet-LHL_glszm_ZonePercentage', 'wavelet-LHH_gldm_DependenceEntropy', 'wavelet-HLL_firstorder_Entropy', 'wavelet-HLL_firstorder_10Percentile', 'wavelet-HLL_firstorder_90Percentile', 'wavelet-HLL_firstorder_InterquartileRange', 'wavelet-HLL_firstorder_MeanAbsoluteDeviation', 'wavelet-HLL_firstorder_RobustMeanAbsoluteDeviation', 'wavelet-HLL_firstorder_Uniformity', 'wavelet-HLL_glcm_DifferenceEntropy', 'wavelet-HLL_glcm_Idm', 'wavelet-HLL_glcm_JointEnergy', 'wavelet-HLL_glcm_JointEntropy', 'wavelet-HLL_glcm_SumEntropy', 'wavelet-HLL_gldm_DependenceEntropy', 'wavelet-HLL_gldm_SmallDependenceEmphasis', 'wavelet-HLL_glrlm_GrayLevelNonUniformityNormalized', 'wavelet-HLL_glrlm_RunEntropy', 'wavelet-HLL_glrlm_RunLengthNonUniformityNormalized', 'wavelet-HLL_glrlm_ShortRunEmphasis', 'wavelet-HLL_glszm_ZonePercentage', 'wavelet-HHL_firstorder_10Percentile', 'wavelet-HHL_firstorder_90Percentile', 'wavelet-HHL_firstorder_MeanAbsoluteDeviation', 'wavelet-HHL_firstorder_RobustMeanAbsoluteDeviation', 'wavelet-HHL_glrlm_RunEntropy', 'wavelet-HHL_glszm_GrayLevelNonUniformity', 'wavelet-HHH_gldm_DependenceEntropy', 'wavelet-HHH_glszm_SizeZoneNonUniformityNormalized', 'wavelet-HHH_glszm_ZoneEntropy', 'wavelet-LLL_firstorder_MeanAbsoluteDeviation', 'wavelet-LLL_firstorder_RobustMeanAbsoluteDeviation', 'wavelet-LLL_firstorder_StandardDeviation', 'wavelet-LLL_firstorder_Variance', 'wavelet-LLL_glcm_Contrast', 'wavelet-LLL_glcm_DifferenceAverage', 'wavelet-LLL_glcm_DifferenceEntropy', 'wavelet-LLL_glcm_Id', 'wavelet-LLL_glcm_Idm', 'wavelet-LLL_glcm_Idmn', 'wavelet-LLL_glcm_Idn', 'wavelet-LLL_glcm_Imc1', 'wavelet-LLL_glcm_JointEntropy', 'wavelet-LLL_glcm_SumSquares', 'wavelet-LLL_gldm_GrayLevelVariance', 'wavelet-LLL_gldm_SmallDependenceEmphasis', 'wavelet-LLL_glrlm_RunLengthNonUniformityNormalized', 'wavelet-LLL_glrlm_ShortRunEmphasis', 'wavelet-LLL_glrlm_ShortRunHighGrayLevelEmphasis', 'wavelet-LLL_glszm_ZonePercentage', 'wavelet-LLL_ngtdm_Complexity']
+[LibSVM].............*..............*
+optimization finished, #iter = 18145
+obj = -57.402275, rho = -0.596097
+nSV = 100, nBSV = 51
+Total nSV = 100
+              precision    recall  f1-score   support
+
+      benign       0.97      0.99      0.98       103
+   malignant       0.98      0.95      0.97        60
+
+    accuracy                           0.98       163
+   macro avg       0.98      0.97      0.97       163
+weighted avg       0.98      0.98      0.98       163
