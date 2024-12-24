@@ -12,21 +12,21 @@ from segment_util import get_iou, get_f1, add_weighted, combine_image
 
 
 def test():
-    data_dir = '/mnt/sdb/caoxu/dataset/十院肾囊肿/市一外部验证-ori/'
-    save_dir = '/mnt/sdb/caoxu/dataset/十院肾囊肿/市一外部验证-pred/'
-    os.makedirs(save_dir, exist_ok=True)
+    data_dir = '20241129-中山肾脏外部测试数据/复旦大学附属中山医院已完成勾图新-ori/'
+    save_dir = '20241129-中山肾脏外部测试数据/20241129-中山肾脏外部测试数据-segment/'
     '模型加载'
-    model = torch.load('mass-segment/20240910-十院肾囊肿-囊肿分割-efficientnet-b7-0.8656.pt')
+    model = torch.load('20230810-unet-segment-efficientnet-b7-0.6606.pth')
     model.eval()
     torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
     '模型预测'
     iou_list, dice_list = [], []
-    for root, dirs, files in os.walk(data_dir):
-        for f in files:
-            if not f.endswith('json') and os.path.exists(os.path.join(root.replace('ori', 'cancer-mask'), f)):
-                print(os.path.join(root, f))
-                image_ori = cv_read(os.path.join(root, f))
-                gt_mask = cv_read(os.path.join(root.replace('ori', 'cancer-mask'), f))
+    for p in tqdm(os.listdir(data_dir)):
+        os.makedirs(os.path.join(save_dir, p), exist_ok=True)
+        for f in os.listdir(os.path.join(data_dir, p)):
+            if not f.endswith('json'):
+                image_ori = cv_read(os.path.join(data_dir, p, f))
+                mask_name = os.path.splitext(f)[0] + '.png'
+                gt_mask = cv_read(os.path.join(data_dir.replace('ori', 'mask'), p, mask_name))
                 [orig_h, orig_w, _] = image_ori.shape
                 image = cv2.resize(image_ori, (512, 512), interpolation=cv2.INTER_NEAREST)
                 image = image / 255.0
@@ -51,7 +51,7 @@ def test():
                 dice = np.round(dice, 4)
                 iou_list.append(iou)
                 dice_list.append(dice)
-                save_full_path = os.path.join(save_dir, f)
+                save_full_path = os.path.join(save_dir, p, f)
                 img_gt = add_weighted(image_ori, gt_mask.astype('uint8'), 'BG')
                 img_pred = add_weighted(image_ori, pr_mask.astype('uint8'), 'GR')
                 img_gt_pred = combine_image(img_gt, img_pred)

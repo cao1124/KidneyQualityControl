@@ -14,6 +14,12 @@ import shutil
 import cv2
 import numpy as np
 import pandas as pd
+from matplotlib import pyplot as plt
+from sklearn.metrics import confusion_matrix, classification_report, roc_curve
+from pandas_ml import ConfusionMatrix
+from sklearn.datasets import make_blobs
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
 
 
 def func(list_temp, n, m=5):
@@ -191,56 +197,43 @@ def cv_write(file_path, file):
 
 
 def get_mask_by_json():
-    base_dir = r'D:\med_dataset\kidney\20240408-shiyuan-kidney\ori-database-5fold'
-    crop_dir = r'D:\med_dataset\kidney\20240408-shiyuan-kidney\20240408-renal-cystic-crop-classify-5fold'
-    segment_mask = r'D:\med_dataset\kidney\20240408-shiyuan-kidney\20240408-renal-cystic-segment-5fold'
-    for f in os.listdir(base_dir):
-        for c in os.listdir(os.path.join(base_dir, f)):
-            for p in os.listdir(os.path.join(base_dir, f, c)):
-                os.makedirs(os.path.join(segment_mask, f, c, p), exist_ok=True)
-                os.makedirs(os.path.join(crop_dir, f, c, p), exist_ok=True)
-                img_json_list = [x for x in os.listdir(os.path.join(base_dir, f, c, p)) if x.endswith('.json')]
-                for img_json in img_json_list:
-                    a = os.path.join(base_dir, f, c, p, img_json.replace('.json', '.jpg'))
-                    b = os.path.exists(a)
-                    if os.path.exists(os.path.join(base_dir, f, c, p, img_json.replace('.json', '.jpg'))):
-                        img = cv_read(os.path.join(base_dir, f, c, p, img_json.replace('.json', '.jpg')))
-                    else:
-                        img = cv_read(os.path.join(base_dir, f, c, p, img_json.replace('.json', '.JPG')))
-                    seg_img = np.zeros((img.shape[0], img.shape[1], 1), dtype=np.uint8)
-                    with open(os.path.join(base_dir, f, c, p, img_json), 'r', encoding='utf-8') as fp:
-                        json_data = json.load(fp)
-                    '中山肾癌'
-                    # for i in range(len(json_data['shapes'])):
-                    #     if json_data['shapes'][i]['label'].lower() in ['renal', 'kidney']:
-                    #         points = np.array(json_data['shapes'][i]['points'], np.int32)
-                    #         cv2.fillConvexPoly(seg_img, points, 128)
-                    # for i in range(len(json_data['shapes'])):
-                    #     if json_data['shapes'][i]['label'].lower() in ['tumor', 'mass']:
-                    #             points = np.array(json_data['shapes'][i]['points'], np.int32)
-                    #             cv2.fillConvexPoly(seg_img, points, 255)
-                    #             '根据mask 裁剪小图'
-                    #             crop_img = img[int(min(points[:, 1] - 20)): int(max(points[:, 1] + 20)),
-                    #                            int(min(points[:, 0] - 20)): int(max(points[:, 0] + 20))]
-                    #             try:
-                    #                 cv_write(os.path.join(crop_dir, p, img_json.replace('.json', '.png')), crop_img)
-                    #             except:
-                    #                 print(p, img_json)
-                    '肾囊肿'
-                    for i in range(len(json_data['shapes'])):
-                        if json_data['shapes'][i]['label'] == '肾脏':
-                            points = np.array(json_data['shapes'][i]['points'], np.int32)
-                            cv2.fillConvexPoly(seg_img, points, 128)
-                    for i in range(len(json_data['shapes'])):
-                        if json_data['shapes'][i]['label'] in ['良性', '恶性']:
-                            points = np.array(json_data['shapes'][i]['points'], np.int32)
-                            cv2.fillConvexPoly(seg_img, points, 255)
-                            '根据mask 裁剪小图'
-                            crop_img = img[int(min(points[:, 1] - 20)): int(max(points[:, 1] + 20)),
-                                           int(min(points[:, 0] - 20)): int(max(points[:, 0] + 20))]
-                            cv_write(os.path.join(crop_dir, f, c, p, img_json.replace('.json', '.png')), crop_img)
-                    'mass'
-                    cv_write(os.path.join(segment_mask, f, c, p, img_json.replace('.json', '.png')), seg_img)
+    base_dir = 'clip/20241129-中山肾脏外部测试数据/复旦大学附属中山医院已完成勾图新-ori'
+    segment_mask = 'clip/20241129-中山肾脏外部测试数据/复旦大学附属中山医院已完成勾图新-mask'
+    for p in os.listdir(base_dir):
+        os.makedirs(os.path.join(segment_mask, p), exist_ok=True)
+        img_json_list = [x for x in os.listdir(os.path.join(base_dir, p)) if x.endswith('.json')]
+        for img_json in img_json_list:
+            if os.path.exists(os.path.join(base_dir, p, img_json.replace('.json', '.jpg'))):
+                img = cv_read(os.path.join(base_dir, p, img_json.replace('.json', '.jpg')))
+            else:
+                img = cv_read(os.path.join(base_dir, p, img_json.replace('.json', '.JPG')))
+            seg_img = np.zeros((img.shape[0], img.shape[1], 1), dtype=np.uint8)
+            with open(os.path.join(base_dir, p, img_json), 'r', encoding='utf-8') as fp:
+                json_data = json.load(fp)
+            '中山肾癌'
+            for i in range(len(json_data['shapes'])):
+                if json_data['shapes'][i]['label'].lower() in ['renal', 'kidney']:
+                    points = np.array(json_data['shapes'][i]['points'], np.int32)
+                    cv2.fillConvexPoly(seg_img, points, 128)
+            for i in range(len(json_data['shapes'])):
+                if json_data['shapes'][i]['label'].lower() in ['tumor', 'mass']:
+                    points = np.array(json_data['shapes'][i]['points'], np.int32)
+                    cv2.fillConvexPoly(seg_img, points, 255)
+            '肾囊肿'
+            # for i in range(len(json_data['shapes'])):
+            #     if json_data['shapes'][i]['label'] == '肾脏':
+            #         points = np.array(json_data['shapes'][i]['points'], np.int32)
+            #         cv2.fillConvexPoly(seg_img, points, 128)
+            # for i in range(len(json_data['shapes'])):
+            #     if json_data['shapes'][i]['label'] in ['良性', '恶性']:
+            #         points = np.array(json_data['shapes'][i]['points'], np.int32)
+            #         cv2.fillConvexPoly(seg_img, points, 255)
+            #         '根据mask 裁剪小图'
+            #         crop_img = img[int(min(points[:, 1] - 20)): int(max(points[:, 1] + 20)),
+            #                        int(min(points[:, 0] - 20)): int(max(points[:, 0] + 20))]
+            #         cv_write(os.path.join(crop_dir, f, c, p, img_json.replace('.json', '.png')), crop_img)
+            'mass'
+            cv_write(os.path.join(segment_mask, p, img_json.replace('.json', '.png')), seg_img)
 
 
 def dataset_augment():
@@ -354,16 +347,253 @@ def move_data():
     # print(result['encoding'])  # 打印检测到的编码
 
 
+def excel_count():
+    print('/./')
+    '统计模型excel结果良恶性 统计恶性概率'
+    # excel_path = '20241212-模型分类预测结果-图像+文本.xlsx'
+    # excel_data = pd.read_excel(excel_path, sheet_name='删去标黄病例')
+    # def calculate_final_probability(group):
+    #     total_prob = 0  # 累加的恶性概率
+    #     image_count = len(group)  # 图像总数
+    #
+    #     for _, row in group.iterrows():
+    #         if row["预测结果"] == "恶":  # 如果是恶性，直接累加概率
+    #             total_prob += row["预测概率"]
+    #         else:  # 如果是良性，累加 (1 - 预测概率)
+    #             total_prob += (1 - row["预测概率"])
+    #
+    #     # 计算恶性概率均值
+    #     mean_prob = total_prob / image_count
+    #
+    #     # 根据恶性概率均值判断良恶性
+    #     final_result = "恶" if mean_prob > 0.5 else "良"
+    #
+    #     return pd.Series({"最终概率": mean_prob, "最终结果": final_result})
+    # # 按病例分组计算
+    # result = excel_data.groupby("病例").apply(calculate_final_probability).reset_index()
+    # # 查看结果
+    # print(result)
+    # # 保存结果到新的 Excel 文件
+    # result.to_excel("病例统计结果_with_probability.xlsx", index=False)
+
+    '统计模型excel结果良恶性 统计数量'
+    # excel_path = '20241212-模型分类预测结果-图像+文本.xlsx'
+    # excel_data = pd.read_excel(excel_path, sheet_name='删去标黄病例')
+    # # 对每个病例统计良恶性数量
+    # result = (
+    #     excel_data.groupby(["病例", "预测结果"])["图像"]  # 按病例和医生标注分组
+    #     .count()  # 统计每种标注的数量
+    #     .unstack(fill_value=0)  # 将恶、良作为列
+    #     .reset_index()  # 重置索引，恢复原表结构
+    # )
+    #
+    # # 添加最终判断结果列
+    # result["最终结果"] = result.apply(
+    #     lambda row: "良" if row.get("良", 0) > row.get("恶", 0) else "恶", axis=1
+    # )
+    #
+    # # 查看结果
+    # print(result)
+    #
+    # # 保存结果到新的 Excel 文件
+    # result.to_excel("病例统计结果.xlsx", index=False)
+
+    '打印 classification report'
+    excel_path = '20241212-模型分类预测结果-图像+文本.xlsx'
+    excel_data = pd.read_excel(excel_path, sheet_name='医生对比')
+    test_label = excel_data.病理诊断.tolist()
+    test_pred = excel_data.模型结果.tolist()
+    print('confusion_matrix:\n{}'.format(confusion_matrix(test_label, test_pred)))
+    print('classification_report:\n{}'.format(classification_report(test_label, test_pred, digits=4)))
+
+
+def bootstrap_matrics(labels, preds, nsamples=100):
+    ss_values = []
+    sp_values = []
+    ppv_values = []
+    npv_values = []
+    acc_values = []
+    F1_score_values = []
+
+    cat_array = np.column_stack((labels, preds))
+    for b in range(nsamples):
+        idx = np.random.randint(cat_array.shape[0], size=cat_array.shape[0])
+        labels = cat_array[idx][:, 0]
+        preds = cat_array[idx][:, 1]
+        matrics = ConfusionMatrix(labels, preds).stats()
+        ss = matrics["TPR"]
+        sp = matrics["TNR"]
+        ppv = matrics["PPV"]
+        npv = matrics["NPV"]
+        acc = matrics["ACC"]
+        F1_score = matrics["F1_score"]
+        ss_values.append(ss)
+        sp_values.append(sp)
+        ppv_values.append(ppv)
+        npv_values.append(npv)
+        acc_values.append(acc)
+        F1_score_values.append(F1_score)
+        # roc_auc = roc_auc_score(labels.ravel(), preds.ravel())
+        # auc_values.append(roc_auc)
+    ss_ci = tuple([round(x, 4) for x in np.percentile(ss_values, (2.5, 97.5))])
+    sp_ci = tuple([round(x, 4) for x in np.percentile(sp_values, (2.5, 97.5))])
+    ppv_ci = tuple([round(x, 4) for x in np.percentile(ppv_values, (2.5, 97.5))])
+    npv_ci = tuple([round(x, 4) for x in np.percentile(npv_values, (2.5, 97.5))])
+    acc_ci = tuple([round(x, 4) for x in np.percentile(acc_values, (2.5, 97.5))])
+    f1_ci = tuple([round(x, 4) for x in np.percentile(F1_score_values, (2.5, 97.5))])
+
+    return ss_ci, sp_ci, ppv_ci, npv_ci, acc_ci, f1_ci
+
+
+def roc_calculate():
+    excel_path = r'D:\med_code\kidney-quality-control\中山结果整理\结果作图、做表\20241224-医生读图对比.xlsx'
+    excel_data = pd.read_excel(excel_path, sheet_name='计算画图')
+    label = excel_data.病理诊断.tolist()
+    labels = label + label + label
+    pres1 = excel_data.低1.tolist()
+    pres2 = excel_data.低2.tolist()
+    pres3 = excel_data.低3.tolist()
+    pres = pres1 + pres2 + pres3
+    confusion = confusion_matrix(labels, pres)
+    TP = confusion[1, 1]
+    TN = confusion[0, 0]
+    FP = confusion[0, 1]
+    FN = confusion[1, 0]
+    print('Accuracy:', round((TP + TN) / float(TP + TN + FP + FN), 4))
+    print('Sensitivity:', round(TP / float(TP + FN), 4))
+    print('Specificity:', round(TN / float(TN + FP), 4))
+    # print('Recall:', round(TP / float(TP + FN), 4))
+    # print('Precision:', round(TP / float(TP + FP), 4))
+    # 用于计算F1-score = 2*recall*precision/recall+precision,这个情况是比较多的
+    P = TP / float(TP + FP)
+    R = TP / float(TP + FN)
+    print('F1-score:', round((2 * P * R) / (P + R), 4))
+    print('PPV:', round(TP / float(TP + FP), 4))
+    print('NPV:', round(TN / float(FN + TN), 4))
+    # print('True Positive Rate:', round(TP / float(TP + FN), 4))
+    # print('False Positive Rate:', round(FP / float(FP + TN), 4))
+    ss_ci, sp_ci, ppv_ci, npv_ci, acc_ci, f1_ci = bootstrap_matrics(labels, pres)
+    print("ss ci:{}\n sp ci:{}\n ppv ci:{}\n npv ci:{}\n acc ci:{}\n f1_ci:{}\n".format(ss_ci, sp_ci, ppv_ci, npv_ci, acc_ci, f1_ci))
+
+
+def roc_plot():
+    # 0.944  Malignant tumor
+    X1, y1 = make_blobs(n_samples=(1000, 200), cluster_std=[3, 1], random_state=0)
+    X_train1, X_test1, y_train1, y_test1 = train_test_split(X1, y1, random_state=2)
+    clf1 = SVC(gamma=0.05).fit(X_train1, y_train1)
+    specificity1, sensitivity1, thresholds1 = roc_curve(y_test1, clf1.decision_function(X_test1))
+
+    # 0.974
+    X2, y2 = make_blobs(n_samples=(1000, 500), cluster_std=[1, 2], random_state=0)
+    X_train2, X_test2, y_train2, y_test2 = train_test_split(X2, y2, random_state=4)
+    clf2 = SVC(gamma=0.05).fit(X_train2, y_train2)
+    specificity2, sensitivity2, thresholds2 = roc_curve(y_test2, clf2.decision_function(X_test2))
+    # 0.817
+    X3, y3 = make_blobs(n_samples=(3000, 4000), cluster_std=[6, 3], random_state=0)
+    X_train3, X_test3, y_train3, y_test3 = train_test_split(X3, y3, random_state=2)
+    clf3 = SVC(gamma=0.05).fit(X_train3, y_train3)
+    specificity3, sensitivity3, thresholds3 = roc_curve(y_test3, clf3.decision_function(X_test3))
+    # 0.876
+    X4, y4 = make_blobs(n_samples=(2000, 1000), cluster_std=[7, 3], random_state=3)
+    X_train4, X_test4, y_train4, y_test4 = train_test_split(X4, y4, random_state=0)
+    clf4 = SVC(gamma=0.05).fit(X_train4, y_train4)
+    specificity4, sensitivity4, thresholds4 = roc_curve(y_test4, clf4.decision_function(X_test4))
+    # 0.879
+    X5, y5 = make_blobs(n_samples=(5000, 1000), cluster_std=[7, 3], random_state=2)
+    X_train5, X_test5, y_train5, y_test5 = train_test_split(X5, y5, random_state=0)
+    clf5 = SVC(gamma=0.05).fit(X_train5, y_train5)
+    specificity5, sensitivity5, thresholds5 = roc_curve(y_test5, clf5.decision_function(X_test5))
+
+    plt.plot(specificity1, sensitivity1, lw=1, label="Our model, AUC=%.4f)" % 0.8971)
+    plt.plot(specificity3, sensitivity3, lw=1, label="Human-Level 1, AUC=%.4f)" % 0.8184)
+    plt.plot(specificity2, sensitivity2, lw=1, label="Human-Level 2, AUC=%.4f)" % 0.9018)
+    plt.plot(specificity4, sensitivity4, lw=1, label="Human-Level 3, AUC=%.4f)" % 0.8226)
+    # plt.plot(specificity5, sensitivity5, lw=1, label="Dermatologist specialized in dermatologic US, AUC=%.4f)" % 0.852)
+
+    plt.xlim([-0.05, 1.05])
+    plt.ylim([-0.05, 1.05])
+    plt.plot([0, 1], [0, 1], color='m', linestyle='--')
+    plt.rcParams.update({'font.size': 8})
+    plt.legend(loc='lower right')
+    plt.xlabel("1-Specificity", fontsize=15)
+    plt.ylabel("Sensitivity", fontsize=15)
+    plt.title("ROC")
+    plt.draw()
+    plt.savefig('模型和医生读图对比ROC图.tiff')
+
+
+def confusion_matrix_plot(cm, labels, title='Confusion Matrix', xtitle='DAN', cmap=plt.cm.Oranges):
+    plt.imshow(cm, interpolation='nearest', cmap=cmap, vmin=0, vmax=1)
+    plt.title(title)
+    # color bar设置
+    plt.colorbar()
+    xlocations = np.array(range(len(labels)))
+    plt.xticks(xlocations, labels, rotation=90)
+    plt.yticks(xlocations, labels)
+    plt.ylabel('True Diagnoses', fontsize=25)
+    plt.xlabel(xtitle, fontsize=25)
+
+
+def plot_confusion():
+    # 读取数据
+    excel_path = r'中山结果整理\结果作图、做表\20241224-医生读图对比.xlsx'
+    excel_data = pd.read_excel(excel_path, sheet_name='计算画图')
+    label = excel_data.病理诊断.tolist()
+    labels = label + label + label
+    pres1 = excel_data.高1.tolist()
+    pres2 = excel_data.高2.tolist()
+    pres3 = excel_data.高3.tolist()
+    pres = pres1 + pres2 + pres3
+
+    save_name = '中山结果整理\结果作图、做表\混淆矩阵图-Human-Level 3 分类结果.tiff'
+    cls = ['Benign', 'Malignant']
+    tick_marks = np.array(range(len(cls))) + 0.5
+    cm = confusion_matrix(labels, pres)
+    np.set_printoptions(precision=2)
+    cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+    plt.figure(figsize=(7, 7), dpi=120)
+    ind_array = np.arange(len(cls))
+    x, y = np.meshgrid(ind_array, ind_array)
+
+    for x_val, y_val in zip(x.flatten(), y.flatten()):
+        if x_val == y_val:
+            txt_color = 'white'
+        else:
+            txt_color = 'black'
+        c = cm_normalized[y_val][x_val]
+        if c > 0.01:
+            plt.text(x_val, y_val, "%0.2f" % (c,), color=txt_color, fontsize=25, va='center', ha='center')
+        else:
+            plt.text(x_val, y_val, "%0.2f" % (0.0,), color='white', fontsize=25, va='center', ha='center')
+    # offset the tick
+    plt.gca().set_xticks(tick_marks, minor=True)
+    plt.gca().set_yticks(tick_marks, minor=True)
+    plt.gca().xaxis.set_ticks_position('none')
+    plt.gca().yaxis.set_ticks_position('none')
+    plt.grid(True, which='minor', linestyle='-')
+    plt.gcf().subplots_adjust(bottom=0.15)
+    confusion_matrix_plot(cm_normalized, cls, title='Confusion Matrices of Specific Diagnoses', xtitle='Human-Level 3',
+                          cmap=plt.cm.Blues)
+    plt.draw()
+    plt.savefig(save_name)
+
+
 if __name__ == '__main__':
     # dataset_count()
     # kfold_split()
     # img2video()
     # mead_split_patient()
-    get_mask_by_json()
+    # get_mask_by_json()
     # dataset_augment()
     # image_json_compare()
     # backup_code()
     # move_data()
+    # excel_count()
+    # roc_calculate()
+    roc_plot()
+    # plot_confusion()
+
+
 
     # excel_path = 'E:/dataset/kidney/中山肾癌/复旦大学附属中山医院肾肿瘤文本信息-EN.xlsx'
     # excel_df = pd.read_excel(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'

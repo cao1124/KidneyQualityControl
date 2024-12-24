@@ -14,8 +14,8 @@ kfold-index
 mass_log
 mass_model
 *.png
-#*.txt
-# *.txt.gz
+*.txt
+*.txt.gz
 dist
 kidney-small-tumor-segment/
 segment_model/
@@ -84,7 +84,7 @@ target/
 .ipynb_checkpoints
 
 # xlsx
-#*.xlsx
+*.xlsx
 
 # pyenv
 .python-version
@@ -126,3 +126,7 @@ datasets/
 .vscode/
 .idea/
 __MACOSX/
+
+# 模型文件
+*.pt
+*.pth
