@@ -8,6 +8,7 @@
 clip model提取 img_feature和text_feature，concatenate后送入resnet分类
 """
 import os
+os.environ['CUDA_VISIBLE_DEVICES'] = "6"
 from sklearn.utils import shuffle
 import matplotlib
 import numpy as np
@@ -22,26 +23,9 @@ from torch import nn, optim
 import pandas as pd
 from PIL import Image
 import warnings
-
 matplotlib.use('AGG')
 torch.multiprocessing.set_sharing_strategy('file_system')
 warnings.filterwarnings("ignore")
-mass_mean, mass_std = [0.29003, 0.29385, 0.31377], [0.18866, 0.19251, 0.19958]
-image_transforms = {
-    'train': transforms.Compose([
-        transforms.Resize([224, 224]),
-        transforms.RandomHorizontalFlip(p=0.5),
-        transforms.RandomVerticalFlip(p=0.5),
-        transforms.RandomRotation(90),
-        transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5, hue=0.5),
-        transforms.ToTensor(),
-        transforms.Normalize(mass_mean, mass_std)]),
-    'valid': transforms.Compose([
-        transforms.Resize([224, 224]),
-        transforms.ToTensor(),
-        transforms.Normalize(mass_mean, mass_std)
-    ])
-}
 
 
 def func(list_temp, n, m=5):
@@ -70,7 +54,7 @@ class image_caption_dataset(Dataset):
         images = self.preprocess(Image.open(self.images[idx]).convert("RGB"))
         caption = self.caption[idx]
         label = self.label[idx]
-        print(self.images[idx], images.shape, caption, label)
+        # print(self.images[idx], images.shape, caption, label)
         return images, caption, label
 
 
@@ -167,7 +151,7 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
             else:
                 train_list.append(cross)
         # 加载模型  resnet
-        model_classify = models.resnext50_32x4d(pretrained=True)
+        model_classify = models.resnet50(pretrained=True)
         model_classify.fc = nn.Linear(in_features=2048, out_features=2, bias=True)
         # model_classify.conv1 = nn.Conv2d(1024, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
         # 加载模型  densenet
@@ -180,8 +164,7 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
 
         # 损失函数和优化器
         loss_func = nn.CrossEntropyLoss().to(device)
-        optimizer = optim.NAdam(model_classify.parameters(), lr=learning_rate, betas=(0.8, 0.888), eps=1e-08,
-                                weight_decay=2e-4)
+        optimizer = optim.NAdam(model_classify.parameters(), lr=learning_rate, betas=(0.8, 0.888), eps=1e-08, weight_decay=2e-4)
         lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=num_epochs, eta_min=0.005)
 
         # 加载数据集
@@ -303,19 +286,31 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
             print('classification_report:\n{}'.format(classification_report(test_true, test_pred, digits=4)))
 
 
-def main():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "1"
+if __name__ == '__main__':
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    mass_mean, mass_std = [0.29003, 0.29385, 0.31377], [0.18866, 0.19251, 0.19958]
+    image_transforms = {
+        'train': transforms.Compose([
+            transforms.Resize([224, 224]),
+            transforms.RandomHorizontalFlip(p=0.5),
+            transforms.RandomVerticalFlip(p=0.5),
+            transforms.RandomRotation(90),
+            transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5, hue=0.5),
+            transforms.ToTensor(),
+            transforms.Normalize(mass_mean, mass_std)]),
+        'valid': transforms.Compose([
+            transforms.Resize([224, 224]),
+            transforms.ToTensor(),
+            transforms.Normalize(mass_mean, mass_std)
+        ])
+    }
+
     epoch = 500
-    batch_size = 128
-    learning_rate = 1e-3
-    image_path = '/mnt/sdb/caoxu/kidney/复旦中山医院肾肿瘤编号1-841共535例'
-    excel_path = '/mnt/sdb/caoxu/kidney/复旦大学附属中山医院肾肿瘤文本信息-EN.xlsx'
+    batch_size = 100
+    learning_rate = 1e-4
+    image_path = '/data/caoxu/dataset/kidney/复旦中山医院肾肿瘤编号1-841共535例'
+    excel_path = '/data/caoxu/dataset/kidney/复旦大学附属中山医院肾肿瘤文本信息-EN.xlsx'
     excel_df = pd.read_excel(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'
-    save_path = 'res/20240821-clip-resnext50-classify'
+    save_path = 'res/20250107-clip-resnet50-classify'
     os.makedirs(save_path, exist_ok=True)
     train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, device)
-
-
-if __name__ == '__main__':
-    main()

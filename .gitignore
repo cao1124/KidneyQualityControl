@@ -9,6 +9,7 @@ snapshots/*
 # C extensions
 *.so
 *.jpg
+*.tiff
 *out
 kfold-index
 mass_log

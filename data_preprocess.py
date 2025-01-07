@@ -14,12 +14,19 @@ import shutil
 import cv2
 import numpy as np
 import pandas as pd
+import torch
+from PIL import Image
 from matplotlib import pyplot as plt
+from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
 from sklearn.metrics import confusion_matrix, classification_report, roc_curve
-from pandas_ml import ConfusionMatrix
+# from pandas_ml import ConfusionMatrix
 from sklearn.datasets import make_blobs
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
+from pytorch_grad_cam import GradCAM
+from pytorch_grad_cam.utils.image import show_cam_on_image
+from torchvision import transforms
+from tqdm import tqdm
 
 
 def func(list_temp, n, m=5):
@@ -578,6 +585,56 @@ def plot_confusion():
     plt.savefig(save_name)
 
 
+def mean_std_calculate():
+    # 读取Excel文件
+    file_path = r'D:\med_code\kidney-quality-control\中山结果整理\整理数据-修正版本.xlsx'  # 替换为你的Excel文件路径
+    df = pd.read_excel(file_path, sheet_name='train-良修正')
+
+    # 假设Excel中年龄数据的列名为 'Age'，根据需要修改列名
+    # ages = df['最大径线']
+    ages = df['年龄']  # 最大径线  年龄
+
+    # 计算均值和标准差
+    mean_age = ages.mean()
+    std_dev = ages.std()
+
+    # 输出结果
+    print(f"Mean age: {mean_age:.4f}±{std_dev:.4f} [SD]")
+
+
+def draw_grad_cam():
+    device = 'cpu'
+    mean, std = [0.29003, 0.29385, 0.31377], [0.18866, 0.19251, 0.19958]
+    trans = transforms.Compose([transforms.Resize([224, 224]), transforms.ToTensor(), transforms.Normalize(mean, std)])
+    model_dir = r'D:\med_code\kidney-quality-control\classification_model\0830-kidney-cancer-2class-0.9091.pt'
+    model = torch.load(model_dir, map_location=device).eval()
+    target_layers = [model.layer4[-1]]
+    cam = GradCAM(model=model, target_layers=target_layers, use_cuda=False)
+    'draw cam'
+    img_path = r'E:\dataset\肾脏\中山肾癌\20241129-中山肾脏外部测试数据\复旦大学附属中山医院已完成勾图\malignant'
+    out_dir = r'E:\dataset\肾脏\中山肾癌\20241129-中山肾脏外部测试数据\GradCAM-Result-1'
+    for p in tqdm(os.listdir(img_path)):
+        out_path = os.path.join(out_dir, p + '-res')
+        os.makedirs(out_path, exist_ok=True)
+        images = [x for x in os.listdir(os.path.join(img_path, p)) if not x.endswith('.json')]
+        for i in range(len(images)):
+            image_path = os.path.join(img_path, p, images[i])
+            img_ori = Image.open(image_path).convert('RGB')
+            img = trans(img_ori)
+            img = torch.unsqueeze(img, dim=0)
+            targets = [ClassifierOutputTarget(1)]  # 指定查看class_num为1的热力图
+            torch.set_grad_enabled(True)  # required for grad cam
+            grayscale_cam = cam(input_tensor=img, targets=targets)
+            grayscale_cam = grayscale_cam[0, :]
+            if grayscale_cam.shape != img_ori.size:
+                grayscale_cam = cv2.resize(grayscale_cam, img_ori.size)
+            # 如果需要，可以反转颜色
+            grayscale_cam = 1 - grayscale_cam
+            cam_image = show_cam_on_image(np.array(img_ori) / 255, grayscale_cam, use_rgb=True)
+            out_name = image_path.split('\\')[-1]
+            cv_write(os.path.join(out_path, out_name), cam_image)
+
+
 if __name__ == '__main__':
     # dataset_count()
     # kfold_split()
@@ -590,10 +647,18 @@ if __name__ == '__main__':
     # move_data()
     # excel_count()
     # roc_calculate()
-    roc_plot()
+    # roc_plot()
     # plot_confusion()
+    mean_std_calculate()
+    # draw_grad_cam()
 
-
+    # from scipy import stats
+    # file_path = r'D:\med_code\kidney-quality-control\中山结果整理\20241224-结果作图、做表\20241224-医生读图对比.xlsx'
+    # df = pd.read_excel(file_path, sheet_name='计算画图')
+    # model_res = df.模型结果.tolist()
+    # human_res = df.低3.tolist()
+    # r, p = stats.pearsonr(model_res, human_res)    #
+    # print('相关系数r为 = %6.4f，p值为 = %6.4f' % (r, p))
 
     # excel_path = 'E:/dataset/kidney/中山肾癌/复旦大学附属中山医院肾肿瘤文本信息-EN.xlsx'
     # excel_df = pd.read_excel(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'
