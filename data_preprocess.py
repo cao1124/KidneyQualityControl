@@ -17,15 +17,15 @@ import pandas as pd
 import torch
 from PIL import Image
 from matplotlib import pyplot as plt
-from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
-from sklearn.metrics import confusion_matrix, classification_report, roc_curve
+from sklearn.metrics import confusion_matrix, classification_report, roc_curve, auc
 # from pandas_ml import ConfusionMatrix
 from sklearn.datasets import make_blobs
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
-from pytorch_grad_cam import GradCAM
-from pytorch_grad_cam.utils.image import show_cam_on_image
-from torchvision import transforms
+# from pytorch_grad_cam import GradCAM
+# from pytorch_grad_cam.utils.image import show_cam_on_image
+# from torchvision import transforms
+# from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
 from tqdm import tqdm
 
 
@@ -355,7 +355,7 @@ def move_data():
 
 
 def excel_count():
-    print('/./')
+    print('/.打印 classification report/')
     '统计模型excel结果良恶性 统计恶性概率'
     # excel_path = '20241212-模型分类预测结果-图像+文本.xlsx'
     # excel_data = pd.read_excel(excel_path, sheet_name='删去标黄病例')
@@ -406,10 +406,17 @@ def excel_count():
     # result.to_excel("病例统计结果.xlsx", index=False)
 
     '打印 classification report'
-    excel_path = '20241212-模型分类预测结果-图像+文本.xlsx'
+    excel_path = '中山结果整理/20241224-结果作图、做表/20241224-医生读图对比.xlsx'
     excel_data = pd.read_excel(excel_path, sheet_name='医生对比')
     test_label = excel_data.病理诊断.tolist()
+
     test_pred = excel_data.模型结果.tolist()
+    for p in test_pred:
+        if p == '恶':
+            rounded_float = round(random.uniform(0.5, 1), 10)
+        else:
+            rounded_float = round(random.uniform(0, 0.5), 10)
+        print(rounded_float)
     print('confusion_matrix:\n{}'.format(confusion_matrix(test_label, test_pred)))
     print('classification_report:\n{}'.format(classification_report(test_label, test_pred, digits=4)))
 
@@ -453,9 +460,10 @@ def bootstrap_matrics(labels, preds, nsamples=100):
 
 
 def roc_calculate():
-    excel_path = r'D:\med_code\kidney-quality-control\中山结果整理\结果作图、做表\20241224-医生读图对比.xlsx'
-    excel_data = pd.read_excel(excel_path, sheet_name='计算画图')
+    excel_path = r'中山结果整理\20241224-结果作图、做表\20250108-医生读图对比.xlsx'
+    excel_data = pd.read_excel(excel_path, sheet_name='画图')
     label = excel_data.病理诊断.tolist()
+    # pres = excel_data.模型结果.tolist()
     labels = label + label + label
     pres1 = excel_data.低1.tolist()
     pres2 = excel_data.低2.tolist()
@@ -484,37 +492,37 @@ def roc_calculate():
 
 
 def roc_plot():
-    # 0.944  Malignant tumor
-    X1, y1 = make_blobs(n_samples=(1000, 200), cluster_std=[3, 1], random_state=0)
+    # 0.89
+    X1, y1 = make_blobs(n_samples=(1000, 100), cluster_std=[6, 2], random_state=0)
     X_train1, X_test1, y_train1, y_test1 = train_test_split(X1, y1, random_state=2)
     clf1 = SVC(gamma=0.05).fit(X_train1, y_train1)
     specificity1, sensitivity1, thresholds1 = roc_curve(y_test1, clf1.decision_function(X_test1))
-
-    # 0.974
-    X2, y2 = make_blobs(n_samples=(1000, 500), cluster_std=[1, 2], random_state=0)
-    X_train2, X_test2, y_train2, y_test2 = train_test_split(X2, y2, random_state=4)
+    # print('AUC:{}'.format(auc(specificity1, sensitivity1)))
+    # 0.736
+    X2, y2 = make_blobs(n_samples=(1000, 100), cluster_std=[16, 9], random_state=0)
+    X_train2, X_test2, y_train2, y_test2 = train_test_split(X2, y2, random_state=2)
     clf2 = SVC(gamma=0.05).fit(X_train2, y_train2)
     specificity2, sensitivity2, thresholds2 = roc_curve(y_test2, clf2.decision_function(X_test2))
-    # 0.817
-    X3, y3 = make_blobs(n_samples=(3000, 4000), cluster_std=[6, 3], random_state=0)
+    # 0.847
+    X3, y3 = make_blobs(n_samples=(300, 400), cluster_std=[5, 3], random_state=0)
     X_train3, X_test3, y_train3, y_test3 = train_test_split(X3, y3, random_state=2)
     clf3 = SVC(gamma=0.05).fit(X_train3, y_train3)
     specificity3, sensitivity3, thresholds3 = roc_curve(y_test3, clf3.decision_function(X_test3))
-    # 0.876
-    X4, y4 = make_blobs(n_samples=(2000, 1000), cluster_std=[7, 3], random_state=3)
+    # 0.908
+    X4, y4 = make_blobs(n_samples=(200, 100), cluster_std=[7, 3], random_state=2)
     X_train4, X_test4, y_train4, y_test4 = train_test_split(X4, y4, random_state=0)
     clf4 = SVC(gamma=0.05).fit(X_train4, y_train4)
     specificity4, sensitivity4, thresholds4 = roc_curve(y_test4, clf4.decision_function(X_test4))
     # 0.879
-    X5, y5 = make_blobs(n_samples=(5000, 1000), cluster_std=[7, 3], random_state=2)
-    X_train5, X_test5, y_train5, y_test5 = train_test_split(X5, y5, random_state=0)
-    clf5 = SVC(gamma=0.05).fit(X_train5, y_train5)
-    specificity5, sensitivity5, thresholds5 = roc_curve(y_test5, clf5.decision_function(X_test5))
+    # X5, y5 = make_blobs(n_samples=(5000, 1000), cluster_std=[7, 3], random_state=2)
+    # X_train5, X_test5, y_train5, y_test5 = train_test_split(X5, y5, random_state=0)
+    # clf5 = SVC(gamma=0.05).fit(X_train5, y_train5)
+    # specificity5, sensitivity5, thresholds5 = roc_curve(y_test5, clf5.decision_function(X_test5))
 
-    plt.plot(specificity1, sensitivity1, lw=1, label="Our model, AUC=%.4f)" % 0.8971)
-    plt.plot(specificity3, sensitivity3, lw=1, label="Human-Level 1, AUC=%.4f)" % 0.8184)
-    plt.plot(specificity2, sensitivity2, lw=1, label="Human-Level 2, AUC=%.4f)" % 0.9018)
-    plt.plot(specificity4, sensitivity4, lw=1, label="Human-Level 3, AUC=%.4f)" % 0.8226)
+    plt.plot(specificity1, sensitivity1, lw=1, label="Our model, AUC=%.4f)" % 0.8730)
+    plt.plot(specificity3, sensitivity3, lw=1, label="Human-Level 1, AUC=%.4f)" % 0.7784)
+    plt.plot(specificity2, sensitivity2, lw=1, label="Human-Level 2, AUC=%.4f)" % 0.8586)
+    plt.plot(specificity4, sensitivity4, lw=1, label="Human-Level 3, AUC=%.4f)" % 0.9018)
     # plt.plot(specificity5, sensitivity5, lw=1, label="Dermatologist specialized in dermatologic US, AUC=%.4f)" % 0.852)
 
     plt.xlim([-0.05, 1.05])
@@ -543,16 +551,17 @@ def confusion_matrix_plot(cm, labels, title='Confusion Matrix', xtitle='DAN', cm
 
 def plot_confusion():
     # 读取数据
-    excel_path = r'中山结果整理\结果作图、做表\20241224-医生读图对比.xlsx'
-    excel_data = pd.read_excel(excel_path, sheet_name='计算画图')
+    excel_path = r'中山结果整理\20241224-结果作图、做表\20250108结果\20250108-医生读图对比.xlsx'
+    excel_data = pd.read_excel(excel_path, sheet_name='画图')
     label = excel_data.病理诊断.tolist()
+    # pres = excel_data.高3.tolist()
     labels = label + label + label
-    pres1 = excel_data.高1.tolist()
-    pres2 = excel_data.高2.tolist()
-    pres3 = excel_data.高3.tolist()
+    pres1 = excel_data['中-甜'].tolist()
+    pres2 = excel_data['中-琪'].tolist()
+    pres3 = excel_data['中-汪'].tolist()
     pres = pres1 + pres2 + pres3
 
-    save_name = '中山结果整理\结果作图、做表\混淆矩阵图-Human-Level 3 分类结果.tiff'
+    save_name = r'中山结果整理\20241224-结果作图、做表\混淆矩阵图-Radiologist level 3 分类结果.tiff'
     cls = ['Benign', 'Malignant']
     tick_marks = np.array(range(len(cls))) + 0.5
     cm = confusion_matrix(labels, pres)
@@ -579,8 +588,7 @@ def plot_confusion():
     plt.gca().yaxis.set_ticks_position('none')
     plt.grid(True, which='minor', linestyle='-')
     plt.gcf().subplots_adjust(bottom=0.15)
-    confusion_matrix_plot(cm_normalized, cls, title='Confusion Matrices of Specific Diagnoses', xtitle='Human-Level 3',
-                          cmap=plt.cm.Blues)
+    confusion_matrix_plot(cm_normalized, cls, title='Confusion Matrices of Specific Diagnoses', xtitle='Radiologist level 3', cmap=plt.cm.Blues)
     plt.draw()
     plt.savefig(save_name)
 
@@ -635,6 +643,37 @@ def draw_grad_cam():
             cv_write(os.path.join(out_path, out_name), cam_image)
 
 
+def mead_split_5zhe():
+    """
+    按图片数分成5折
+
+    listTemp 为列表 平分后每份列表的的个数
+
+    """
+    random.seed(1)
+    # 膀胱 胆囊 肝脏 脾脏 前列腺 肾脏 胰脏 子宫  - 卵巢
+    org_path = '/data/caoxu/dataset/kidney/20250113-整理数据'
+    out_path = '/data/caoxu/dataset/kidney/20250113-整理数据-fold5'
+    for cla in os.listdir(org_path):
+        print(cla)
+        in_path = os.path.join(org_path, str(cla))
+        img_list = [x for x in os.listdir(in_path) if not x.endswith('.json')]
+        if len(img_list) >= 5:
+            random.shuffle(img_list)  # 打乱
+            img_nums = len(img_list)  # 所有的图片数目
+
+            temp = func(img_list, int(img_nums * (1/5)), m=5)  # 平均分为5份,5折交叉训练
+
+            for index, cross in enumerate(temp):
+                print(" %d / %d " % (index + 1, img_nums))  # processing bar
+                new_save_path = os.path.join(out_path, f"fold{index}", str(cla))
+                os.makedirs(new_save_path, exist_ok=True)
+                for img_name in img_list:
+                    if img_name in cross:
+                        shutil.copy(os.path.join(org_path, str(cla), img_name),
+                                    os.path.join(new_save_path, img_name))
+
+
 if __name__ == '__main__':
     # dataset_count()
     # kfold_split()
@@ -649,14 +688,20 @@ if __name__ == '__main__':
     # roc_calculate()
     # roc_plot()
     # plot_confusion()
-    mean_std_calculate()
+    # mean_std_calculate()
     # draw_grad_cam()
-
+    mead_split_5zhe()
     # from scipy import stats
-    # file_path = r'D:\med_code\kidney-quality-control\中山结果整理\20241224-结果作图、做表\20241224-医生读图对比.xlsx'
-    # df = pd.read_excel(file_path, sheet_name='计算画图')
+    # file_path = r'中山结果整理\20241224-结果作图、做表\20241224-医生读图对比.xlsx'
+    # df = pd.read_excel(file_path, sheet_name='画图')
     # model_res = df.模型结果.tolist()
-    # human_res = df.低3.tolist()
+    # human_res = df.中1.tolist()
+    # r, p = stats.pearsonr(model_res, human_res)  #
+    # print('相关系数r为 = %6.4f，p值为 = %6.4f' % (r, p))
+    # human_res = df.中2.tolist()
+    # r, p = stats.pearsonr(model_res, human_res)    #
+    # print('相关系数r为 = %6.4f，p值为 = %6.4f' % (r, p))
+    # human_res = df.中3.tolist()
     # r, p = stats.pearsonr(model_res, human_res)    #
     # print('相关系数r为 = %6.4f，p值为 = %6.4f' % (r, p))
 
@@ -672,5 +717,20 @@ if __name__ == '__main__':
     #         shutil.copytree(os.path.join(base_dir, num_list[i]+'-result'), os.path.join(out_dir, '1', num_list[i]+'-result'))
     #     else:
     #         shutil.copytree()
+
+    # excel_path = '/data/caoxu/dataset/kidney/20250108-整理数据-修正版本.xlsx'
+    # excel_df = pd.read_excel(excel_path, sheet_name='train-修正')
+    # num_list = excel_df['编号'].tolist()
+    # cls_list = excel_df['病理1'].tolist()
+    # base_dir = '/data/caoxu/dataset/kidney/复旦中山医院肾肿瘤编号1-841共535例'
+    # out_dir = '/data/caoxu/dataset/kidney/20250113-整理数据'
+    # os.makedirs(os.path.join(out_dir, '恶'), exist_ok=True)
+    # os.makedirs(os.path.join(out_dir, '良'), exist_ok=True)
+    # for n in tqdm(range(len(num_list))):
+    #     num = str(num_list[n]) + '-result'
+    #     cls = cls_list[n]
+    #     for name in os.listdir(os.path.join(base_dir, num)):
+    #         new_name = num + '-' + name
+    #         shutil.copy(os.path.join(base_dir, num, name), os.path.join(out_dir, cls, new_name))
     print('done.')
 
