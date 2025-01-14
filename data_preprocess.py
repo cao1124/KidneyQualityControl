@@ -652,8 +652,8 @@ def mead_split_5zhe():
     """
     random.seed(1)
     # 膀胱 胆囊 肝脏 脾脏 前列腺 肾脏 胰脏 子宫  - 卵巢
-    org_path = '/data/caoxu/dataset/kidney/20250113-整理数据'
-    out_path = '/data/caoxu/dataset/kidney/20250113-整理数据-fold5'
+    org_path = '/data/caoxu/dataset/kidney/20250114-整理数据'
+    out_path = '/data/caoxu/dataset/kidney/20250114-整理数据-fold5'
     for cla in os.listdir(org_path):
         print(cla)
         in_path = os.path.join(org_path, str(cla))
@@ -690,7 +690,7 @@ if __name__ == '__main__':
     # plot_confusion()
     # mean_std_calculate()
     # draw_grad_cam()
-    mead_split_5zhe()
+    # mead_split_5zhe()
     # from scipy import stats
     # file_path = r'中山结果整理\20241224-结果作图、做表\20241224-医生读图对比.xlsx'
     # df = pd.read_excel(file_path, sheet_name='画图')
@@ -718,19 +718,21 @@ if __name__ == '__main__':
     #     else:
     #         shutil.copytree()
 
-    # excel_path = '/data/caoxu/dataset/kidney/20250108-整理数据-修正版本.xlsx'
-    # excel_df = pd.read_excel(excel_path, sheet_name='train-修正')
-    # num_list = excel_df['编号'].tolist()
-    # cls_list = excel_df['病理1'].tolist()
-    # base_dir = '/data/caoxu/dataset/kidney/复旦中山医院肾肿瘤编号1-841共535例'
-    # out_dir = '/data/caoxu/dataset/kidney/20250113-整理数据'
-    # os.makedirs(os.path.join(out_dir, '恶'), exist_ok=True)
-    # os.makedirs(os.path.join(out_dir, '良'), exist_ok=True)
-    # for n in tqdm(range(len(num_list))):
-    #     num = str(num_list[n]) + '-result'
-    #     cls = cls_list[n]
-    #     for name in os.listdir(os.path.join(base_dir, num)):
-    #         new_name = num + '-' + name
-    #         shutil.copy(os.path.join(base_dir, num, name), os.path.join(out_dir, cls, new_name))
+    excel_path = '/data/caoxu/dataset/kidney/20250108-整理数据-修正版本.xlsx'
+    excel_df = pd.read_excel(excel_path, sheet_name='train-修正')
+    num_list = excel_df['编号'].tolist()
+    cls_list = excel_df['病理1'].tolist()
+    base_dir = '/data/caoxu/dataset/kidney/复旦中山医院肾肿瘤编号1-841共535例'
+    out_dir = '/data/caoxu/dataset/kidney/20250114-整理数据'
+    os.makedirs(os.path.join(out_dir, '恶'), exist_ok=True)
+    os.makedirs(os.path.join(out_dir, '良'), exist_ok=True)
+    for n in tqdm(range(len(num_list))):
+        num = str(num_list[n]) + '-result'
+        cls = cls_list[n]
+        for name in os.listdir(os.path.join(base_dir, num)):
+            new_name = num + '-' + name
+            shutil.copy(os.path.join(base_dir, num, name), os.path.join(out_dir, cls, new_name))
+
+    mead_split_5zhe()
     print('done.')
 
