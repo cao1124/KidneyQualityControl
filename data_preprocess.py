@@ -674,6 +674,55 @@ def mead_split_5zhe():
                                     os.path.join(new_save_path, img_name))
 
 
+def p_value():
+    from scipy import stats
+    file_path = r'F:\med_project\中山医院-肾脏\paper\论文构思2\中山结果整理\20241224-结果作图、做表\20250108结果\20250108-医生读图对比.xlsx'
+    df = pd.read_excel(file_path, sheet_name='画图')
+    't检验 计算 p value'
+    # model_res = df.模型结果.tolist()
+    # human_res = df.中1.tolist()
+    # r, p = stats.pearsonr(model_res, human_res)  #
+    # print('相关系数r为 = %6.4f，p值为 = %6.4f' % (r, p))
+    # human_res = df.中2.tolist()
+    # r, p = stats.pearsonr(model_res, human_res)    #
+    # print('相关系数r为 = %6.4f，p值为 = %6.4f' % (r, p))
+    # human_res = df.中3.tolist()
+    # r, p = stats.pearsonr(model_res, human_res)    #
+    # print('相关系数r为 = %6.4f，p值为 = %6.4f' % (r, p))
+    'auc的比较采用DeLong检验。'
+    from pyroc import roc
+    doctor_labels = np.array(df["中-汪"].tolist())
+    model_predictions = np.array(df.模型结果.tolist())
+    # doctor_labels = np.array(df["中-甜"].tolist() + df["中-琪"].tolist() + df["中-汪"].tolist())
+    # model_predictions = np.array(df.模型结果.tolist() + df.模型结果.tolist() + df.模型结果.tolist())
+    roc_test_result = roc.test(doctor_labels, model_predictions)
+    p_value_auc = roc_test_result.p_value
+
+    'McNemar检验用于评估accuracy的差异'
+    # from statsmodels.stats.contingency_tables import mcnemar
+    # doctor_labels = np.array(df["中-汪"].tolist())
+    # model_predictions = np.array(df.模型结果.tolist())
+    # # doctor_labels = np.array(df["中-甜"].tolist() + df["中-琪"].tolist() + df["中-汪"].tolist())
+    # # model_predictions = np.array(df.模型结果.tolist() + df.模型结果.tolist() + df.模型结果.tolist())
+    #
+    # # 构建 2x2 的混淆矩阵
+    # # a: 医生和模型都预测为 0 的数量
+    # # b: 医生预测为 0，模型预测为 1 的数量
+    # # c: 医生预测为 1，模型预测为 0 的数量
+    # # d: 医生和模型都预测为 1 的数量
+    # a = sum((doctor_labels == 0) & (model_predictions == 0))
+    # b = sum((doctor_labels == 0) & (model_predictions == 1))
+    # c = sum((doctor_labels == 1) & (model_predictions == 0))
+    # d = sum((doctor_labels == 1) & (model_predictions == 1))
+    #
+    # # 创建 2x2 的矩阵
+    # table = np.array([[a, b], [c, d]])
+    #
+    # # 进行 McNemar's Test
+    # result = mcnemar(table, exact=True)  # exact=True 使用精确的计算方法（适用于较小样本）
+    # print(f'McNemar test p-value: {result.pvalue}')
+
+
 if __name__ == '__main__':
     # dataset_count()
     # kfold_split()
@@ -691,19 +740,7 @@ if __name__ == '__main__':
     # mean_std_calculate()
     # draw_grad_cam()
     # mead_split_5zhe()
-    # from scipy import stats
-    # file_path = r'中山结果整理\20241224-结果作图、做表\20241224-医生读图对比.xlsx'
-    # df = pd.read_excel(file_path, sheet_name='画图')
-    # model_res = df.模型结果.tolist()
-    # human_res = df.中1.tolist()
-    # r, p = stats.pearsonr(model_res, human_res)  #
-    # print('相关系数r为 = %6.4f，p值为 = %6.4f' % (r, p))
-    # human_res = df.中2.tolist()
-    # r, p = stats.pearsonr(model_res, human_res)    #
-    # print('相关系数r为 = %6.4f，p值为 = %6.4f' % (r, p))
-    # human_res = df.中3.tolist()
-    # r, p = stats.pearsonr(model_res, human_res)    #
-    # print('相关系数r为 = %6.4f，p值为 = %6.4f' % (r, p))
+    p_value()
 
     # excel_path = 'E:/dataset/kidney/中山肾癌/复旦大学附属中山医院肾肿瘤文本信息-EN.xlsx'
     # excel_df = pd.read_excel(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'
@@ -718,21 +755,20 @@ if __name__ == '__main__':
     #     else:
     #         shutil.copytree()
 
-    excel_path = '/data/caoxu/dataset/kidney/20250108-整理数据-修正版本.xlsx'
-    excel_df = pd.read_excel(excel_path, sheet_name='train-修正')
-    num_list = excel_df['编号'].tolist()
-    cls_list = excel_df['病理1'].tolist()
-    base_dir = '/data/caoxu/dataset/kidney/复旦中山医院肾肿瘤编号1-841共535例'
-    out_dir = '/data/caoxu/dataset/kidney/20250114-整理数据'
-    os.makedirs(os.path.join(out_dir, '恶'), exist_ok=True)
-    os.makedirs(os.path.join(out_dir, '良'), exist_ok=True)
-    for n in tqdm(range(len(num_list))):
-        num = str(num_list[n]) + '-result'
-        cls = cls_list[n]
-        for name in os.listdir(os.path.join(base_dir, num)):
-            new_name = num + '-' + name
-            shutil.copy(os.path.join(base_dir, num, name), os.path.join(out_dir, cls, new_name))
+    # excel_path = '/data/caoxu/dataset/kidney/20250108-整理数据-修正版本.xlsx'
+    # excel_df = pd.read_excel(excel_path, sheet_name='train-修正')
+    # num_list = excel_df['编号'].tolist()
+    # cls_list = excel_df['病理1'].tolist()
+    # base_dir = '/data/caoxu/dataset/kidney/复旦中山医院肾肿瘤编号1-841共535例'
+    # out_dir = '/data/caoxu/dataset/kidney/20250114-整理数据'
+    # os.makedirs(os.path.join(out_dir, '恶'), exist_ok=True)
+    # os.makedirs(os.path.join(out_dir, '良'), exist_ok=True)
+    # for n in tqdm(range(len(num_list))):
+    #     num = str(num_list[n]) + '-result'
+    #     cls = cls_list[n]
+    #     for name in os.listdir(os.path.join(base_dir, num)):
+    #         new_name = num + '-' + name
+    #         shutil.copy(os.path.join(base_dir, num, name), os.path.join(out_dir, cls, new_name))
 
-    mead_split_5zhe()
     print('done.')
 
