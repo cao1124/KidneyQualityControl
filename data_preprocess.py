@@ -18,7 +18,7 @@ import torch
 from PIL import Image
 from matplotlib import pyplot as plt
 from sklearn.metrics import confusion_matrix, classification_report, roc_curve, auc
-# from pandas_ml import ConfusionMatrix
+from pandas_ml import ConfusionMatrix
 from sklearn.datasets import make_blobs
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
@@ -27,6 +27,8 @@ from sklearn.svm import SVC
 # from torchvision import transforms
 # from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
 from tqdm import tqdm
+import warnings
+warnings.filterwarnings("ignore")
 
 
 def func(list_temp, n, m=5):
@@ -428,7 +430,7 @@ def bootstrap_matrics(labels, preds, nsamples=100):
     npv_values = []
     acc_values = []
     F1_score_values = []
-
+    # auc_values = []
     cat_array = np.column_stack((labels, preds))
     for b in range(nsamples):
         idx = np.random.randint(cat_array.shape[0], size=cat_array.shape[0])
@@ -455,20 +457,21 @@ def bootstrap_matrics(labels, preds, nsamples=100):
     npv_ci = tuple([round(x, 4) for x in np.percentile(npv_values, (2.5, 97.5))])
     acc_ci = tuple([round(x, 4) for x in np.percentile(acc_values, (2.5, 97.5))])
     f1_ci = tuple([round(x, 4) for x in np.percentile(F1_score_values, (2.5, 97.5))])
+    # auc_ci = tuple([round(x, 4) for x in np.percentile(auc_values, (2.5, 97.5))])
+    auc_ci = 0
+    return ss_ci, sp_ci, ppv_ci, npv_ci, acc_ci, f1_ci, auc_ci
 
-    return ss_ci, sp_ci, ppv_ci, npv_ci, acc_ci, f1_ci
 
-
-def roc_calculate():
-    excel_path = r'中山结果整理\20241224-结果作图、做表\20250108-医生读图对比.xlsx'
-    excel_data = pd.read_excel(excel_path, sheet_name='画图')
-    label = excel_data.病理诊断.tolist()
-    # pres = excel_data.模型结果.tolist()
-    labels = label + label + label
-    pres1 = excel_data.低1.tolist()
-    pres2 = excel_data.低2.tolist()
-    pres3 = excel_data.低3.tolist()
-    pres = pres1 + pres2 + pres3
+def roc_95ci():
+    excel_path = r'C:\Users\Administrator\Desktop\结果-20250205.xlsx'
+    excel_data = pd.read_excel(excel_path)
+    labels = excel_data.label.tolist()
+    pres = excel_data.造影.tolist()
+    # labels = label + label + label
+    # pres1 = excel_data.低1.tolist()
+    # pres2 = excel_data.低2.tolist()
+    # pres3 = excel_data.低3.tolist()
+    # pres = pres1 + pres2 + pres3
     confusion = confusion_matrix(labels, pres)
     TP = confusion[1, 1]
     TN = confusion[0, 0]
@@ -487,8 +490,8 @@ def roc_calculate():
     print('NPV:', round(TN / float(FN + TN), 4))
     # print('True Positive Rate:', round(TP / float(TP + FN), 4))
     # print('False Positive Rate:', round(FP / float(FP + TN), 4))
-    ss_ci, sp_ci, ppv_ci, npv_ci, acc_ci, f1_ci = bootstrap_matrics(labels, pres)
-    print("ss ci:{}\n sp ci:{}\n ppv ci:{}\n npv ci:{}\n acc ci:{}\n f1_ci:{}\n".format(ss_ci, sp_ci, ppv_ci, npv_ci, acc_ci, f1_ci))
+    ss_ci, sp_ci, ppv_ci, npv_ci, acc_ci, f1_ci, auc_ci = bootstrap_matrics(labels, pres)
+    print("ss ci:{}\n sp ci:{}\n ppv ci:{}\n npv ci:{}\n acc ci:{}\n f1_ci:{}\n auc_ci:{}\n".format(ss_ci, sp_ci, ppv_ci, npv_ci, acc_ci, f1_ci, auc_ci))
 
 
 def roc_plot():
@@ -679,24 +682,24 @@ def p_value():
     file_path = r'F:\med_project\中山医院-肾脏\paper\论文构思2\中山结果整理\20241224-结果作图、做表\20250108结果\20250108-医生读图对比.xlsx'
     df = pd.read_excel(file_path, sheet_name='画图')
     't检验 计算 p value'
-    # model_res = df.模型结果.tolist()
-    # human_res = df.中1.tolist()
-    # r, p = stats.pearsonr(model_res, human_res)  #
-    # print('相关系数r为 = %6.4f，p值为 = %6.4f' % (r, p))
-    # human_res = df.中2.tolist()
-    # r, p = stats.pearsonr(model_res, human_res)    #
-    # print('相关系数r为 = %6.4f，p值为 = %6.4f' % (r, p))
-    # human_res = df.中3.tolist()
-    # r, p = stats.pearsonr(model_res, human_res)    #
-    # print('相关系数r为 = %6.4f，p值为 = %6.4f' % (r, p))
+    model_res = df.模型结果.tolist()
+    human_res = df.中1.tolist()
+    r, p = stats.pearsonr(model_res, human_res)  #
+    print('相关系数r为 = %6.4f，p值为 = %6.4f' % (r, p))
+    human_res = df.中2.tolist()
+    r, p = stats.pearsonr(model_res, human_res)    #
+    print('相关系数r为 = %6.4f，p值为 = %6.4f' % (r, p))
+    human_res = df.中3.tolist()
+    r, p = stats.pearsonr(model_res, human_res)    #
+    print('相关系数r为 = %6.4f，p值为 = %6.4f' % (r, p))
     'auc的比较采用DeLong检验。'
-    from pyroc import roc
-    doctor_labels = np.array(df["中-汪"].tolist())
-    model_predictions = np.array(df.模型结果.tolist())
-    # doctor_labels = np.array(df["中-甜"].tolist() + df["中-琪"].tolist() + df["中-汪"].tolist())
-    # model_predictions = np.array(df.模型结果.tolist() + df.模型结果.tolist() + df.模型结果.tolist())
-    roc_test_result = roc.test(doctor_labels, model_predictions)
-    p_value_auc = roc_test_result.p_value
+    # from pyroc import roc
+    # doctor_labels = np.array(df["中-汪"].tolist())
+    # model_predictions = np.array(df.模型结果.tolist())
+    # # doctor_labels = np.array(df["中-甜"].tolist() + df["中-琪"].tolist() + df["中-汪"].tolist())
+    # # model_predictions = np.array(df.模型结果.tolist() + df.模型结果.tolist() + df.模型结果.tolist())
+    # roc_test_result = roc.test(doctor_labels, model_predictions)
+    # p_value_auc = roc_test_result.p_value
 
     'McNemar检验用于评估accuracy的差异'
     # from statsmodels.stats.contingency_tables import mcnemar
@@ -734,7 +737,7 @@ if __name__ == '__main__':
     # backup_code()
     # move_data()
     # excel_count()
-    # roc_calculate()
+    # roc_95ci()
     # roc_plot()
     # plot_confusion()
     # mean_std_calculate()
@@ -769,6 +772,5 @@ if __name__ == '__main__':
     #     for name in os.listdir(os.path.join(base_dir, num)):
     #         new_name = num + '-' + name
     #         shutil.copy(os.path.join(base_dir, num, name), os.path.join(out_dir, cls, new_name))
-
     print('done.')
 
