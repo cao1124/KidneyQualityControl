@@ -84,19 +84,22 @@ def roc_95ci():
 
 def p_value():
     from scipy import stats
-    file_path = r'C:\Users\Administrator\Desktop\结果-20250205.xlsx'
-    df = pd.read_excel(file_path)
+    file_path = '20250205-中山反馈结果.xlsx'
+    df = pd.read_excel(file_path, sheet_name='预测结果汇总')
     't检验 计算 p value'
-    model_res = df.融合.tolist()
-    human_res = df.高医生1.tolist()
+    # model_res = df.低医生3.tolist()
+    # human_res = df.高医生1.tolist()
+    human_res = df.高医生3.tolist() + df.高医生3.tolist() + df.高医生3.tolist()
+    model_res = df.低医生1.tolist() + df.低医生2.tolist() + df.低医生3.tolist()
+    # human_res = df.高医生1.tolist() + df.高医生2.tolist() + df.高医生3.tolist()
     r, p = stats.pearsonr(model_res, human_res)  #
     print('相关系数r为 = %6.4f，p值为 = %6.4f' % (r, p))
-    human_res = df.高医生2.tolist()
-    r, p = stats.pearsonr(model_res, human_res)    #
-    print('相关系数r为 = %6.4f，p值为 = %6.4f' % (r, p))
-    human_res = df.高医生3.tolist()
-    r, p = stats.pearsonr(model_res, human_res)    #
-    print('相关系数r为 = %6.4f，p值为 = %6.4f' % (r, p))
+    # human_res = df.高医生2.tolist()
+    # r, p = stats.pearsonr(model_res, human_res)    #
+    # print('相关系数r为 = %6.4f，p值为 = %6.4f' % (r, p))
+    # human_res = df.高医生3.tolist()
+    # r, p = stats.pearsonr(model_res, human_res)    #
+    # print('相关系数r为 = %6.4f，p值为 = %6.4f' % (r, p))
     'auc的比较采用DeLong检验。'
     # from pyroc import roc
     # doctor_labels = np.array(df["中-汪"].tolist())
@@ -108,8 +111,10 @@ def p_value():
 
     'McNemar检验用于评估accuracy的差异'
     from statsmodels.stats.contingency_tables import mcnemar
-    doctor_labels = np.array(df["高医生3"].tolist())
-    model_predictions = np.array(df.融合.tolist())
+    doctor_labels = np.array(model_res)
+    model_predictions = np.array(human_res)
+    # doctor_labels = np.array(df["高医生3"].tolist())
+    # model_predictions = np.array(df.融合.tolist())
     # doctor_labels = np.array(df["中-甜"].tolist() + df["中-琪"].tolist() + df["中-汪"].tolist())
     # model_predictions = np.array(df.模型结果.tolist() + df.模型结果.tolist() + df.模型结果.tolist())
 
