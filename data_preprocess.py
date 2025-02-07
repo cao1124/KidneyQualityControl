@@ -457,29 +457,31 @@ def bootstrap_matrics(labels, preds, nsamples=100):
     npv_ci = tuple([round(x, 4) for x in np.percentile(npv_values, (2.5, 97.5))])
     acc_ci = tuple([round(x, 4) for x in np.percentile(acc_values, (2.5, 97.5))])
     f1_ci = tuple([round(x, 4) for x in np.percentile(F1_score_values, (2.5, 97.5))])
-    # auc_ci = tuple([round(x, 4) for x in np.percentile(auc_values, (2.5, 97.5))])
-    auc_ci = 0
-    return ss_ci, sp_ci, ppv_ci, npv_ci, acc_ci, f1_ci, auc_ci
+
+    return ss_ci, sp_ci, ppv_ci, npv_ci, acc_ci, f1_ci
 
 
 def roc_95ci():
-    excel_path = r'C:\Users\Administrator\Desktop\结果-20250205.xlsx'
+    excel_path = '20250205-中山反馈结果.xlsx'
     excel_data = pd.read_excel(excel_path)
     labels = excel_data.label.tolist()
-    pres = excel_data.造影.tolist()
+    pres = excel_data.高医生3.tolist()
     # labels = label + label + label
-    # pres1 = excel_data.低1.tolist()
-    # pres2 = excel_data.低2.tolist()
-    # pres3 = excel_data.低3.tolist()
+    # pres1 = excel_data.高医生1.tolist()
+    # pres2 = excel_data.高医生2.tolist()
+    # pres3 = excel_data.高医生3.tolist()
     # pres = pres1 + pres2 + pres3
     confusion = confusion_matrix(labels, pres)
     TP = confusion[1, 1]
     TN = confusion[0, 0]
     FP = confusion[0, 1]
     FN = confusion[1, 0]
-    print('Accuracy:', round((TP + TN) / float(TP + TN + FP + FN), 4))
     print('Sensitivity:', round(TP / float(TP + FN), 4))
     print('Specificity:', round(TN / float(TN + FP), 4))
+    print('Accuracy:', round((TP + TN) / float(TP + TN + FP + FN), 4))
+    fpr, tpr, thresholds = roc_curve(labels, pres)  # 计算ROC曲线的FPR和TPR
+    roc_auc = auc(fpr, tpr)
+    print('AUC:', roc_auc)
     # print('Recall:', round(TP / float(TP + FN), 4))
     # print('Precision:', round(TP / float(TP + FP), 4))
     # 用于计算F1-score = 2*recall*precision/recall+precision,这个情况是比较多的
@@ -490,8 +492,8 @@ def roc_95ci():
     print('NPV:', round(TN / float(FN + TN), 4))
     # print('True Positive Rate:', round(TP / float(TP + FN), 4))
     # print('False Positive Rate:', round(FP / float(FP + TN), 4))
-    ss_ci, sp_ci, ppv_ci, npv_ci, acc_ci, f1_ci, auc_ci = bootstrap_matrics(labels, pres)
-    print("ss ci:{}\n sp ci:{}\n ppv ci:{}\n npv ci:{}\n acc ci:{}\n f1_ci:{}\n auc_ci:{}\n".format(ss_ci, sp_ci, ppv_ci, npv_ci, acc_ci, f1_ci, auc_ci))
+    ss_ci, sp_ci, ppv_ci, npv_ci, acc_ci, f1_ci = bootstrap_matrics(labels, pres)
+    print("ss ci:{}\n sp ci:{}\n ppv ci:{}\n npv ci:{}\n acc ci:{}\n f1_ci:{}\n".format(ss_ci, sp_ci, ppv_ci, npv_ci, acc_ci, f1_ci))
 
 
 def roc_plot():
