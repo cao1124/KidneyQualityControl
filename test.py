@@ -84,16 +84,20 @@ def roc_95ci():
 
 def p_value():
     from scipy import stats
-    file_path = '20250205-中山反馈结果.xlsx'
+    file_path = '中山肾脏论文相关/20250208-中山反馈结果.xlsx'
     df = pd.read_excel(file_path, sheet_name='预测结果汇总')
+    true_labels = df.label.tolist() + df.label.tolist() + df.label.tolist()
     't检验 计算 p value'
     # model_res = df.低医生3.tolist()
     # human_res = df.高医生1.tolist()
-    human_res = df.高医生3.tolist() + df.高医生3.tolist() + df.高医生3.tolist()
-    model_res = df.低医生1.tolist() + df.低医生2.tolist() + df.低医生3.tolist()
+    # model_res = df.灰阶.tolist() + df.灰阶.tolist() + df.灰阶.tolist()
+    # model_res = df.造影.tolist() + df.造影.tolist() + df.造影.tolist()
+    model_res = df.融合.tolist() + df.融合.tolist() + df.融合.tolist()
+    # model_res = df.低医生1.tolist() + df.低医生2.tolist() + df.低医生3.tolist()
     # human_res = df.高医生1.tolist() + df.高医生2.tolist() + df.高医生3.tolist()
+    human_res = df.低医生1.tolist() + df.低医生2.tolist() + df.低医生3.tolist()
     r, p = stats.pearsonr(model_res, human_res)  #
-    print('相关系数r为 = %6.4f，p值为 = %6.4f' % (r, p))
+    print('t检验： 相关系数r为 = %6.4f，p值为 = %6.4f' % (r, p))
     # human_res = df.高医生2.tolist()
     # r, p = stats.pearsonr(model_res, human_res)    #
     # print('相关系数r为 = %6.4f，p值为 = %6.4f' % (r, p))
@@ -101,14 +105,34 @@ def p_value():
     # r, p = stats.pearsonr(model_res, human_res)    #
     # print('相关系数r为 = %6.4f，p值为 = %6.4f' % (r, p))
     'auc的比较采用DeLong检验。'
-    # from pyroc import roc
-    # doctor_labels = np.array(df["中-汪"].tolist())
-    # model_predictions = np.array(df.模型结果.tolist())
-    # # doctor_labels = np.array(df["中-甜"].tolist() + df["中-琪"].tolist() + df["中-汪"].tolist())
-    # # model_predictions = np.array(df.模型结果.tolist() + df.模型结果.tolist() + df.模型结果.tolist())
-    # roc_test_result = roc.test(doctor_labels, model_predictions)
-    # p_value_auc = roc_test_result.p_value
-
+    # # from pyroc import roc
+    # # doctor_labels = np.array(human_res)
+    # # model_predictions = np.array(model_res)
+    # # # doctor_labels = np.array(df["中-甜"].tolist() + df["中-琪"].tolist() + df["中-汪"].tolist())
+    # # # model_predictions = np.array(df.模型结果.tolist() + df.模型结果.tolist() + df.模型结果.tolist())
+    # # roc_test_result = roc.test(doctor_labels, model_predictions)
+    # # p_value_auc = roc_test_result.p_value
+    # # print('DeLong检验:, ', p_value_auc)
+    # from sklearn.metrics import roc_auc_score
+    # from scipy.stats import norm
+    #
+    # def delong_test(y_true, y_pred1, y_pred2):
+    #     auc1 = roc_auc_score(y_true, y_pred1)
+    #     auc2 = roc_auc_score(y_true, y_pred2)
+    #
+    #     n1 = np.sum(y_true == 1)
+    #     n2 = np.sum(y_true == 0)
+    #
+    #     var = (auc1 * (1 - auc1) + (n1 - 1) * (auc1 / (2 - auc1) - auc1 ** 2) +
+    #            (n2 - 1) * (2 * auc1 ** 2 / (1 + auc1) - auc1 ** 2)) / (n1 * n2)
+    #
+    #     z = (auc1 - auc2) / np.sqrt(var)
+    #     p_value = 2 * (1 - norm.cdf(abs(z)))
+    #
+    #     return p_value
+    # 计算 p-value
+    # p_value_auc = delong_test(true_labels, model_res, human_res)
+    # print('DeLong检验:, ', p_value_auc)
     'McNemar检验用于评估accuracy的差异'
     from statsmodels.stats.contingency_tables import mcnemar
     doctor_labels = np.array(model_res)
@@ -127,13 +151,11 @@ def p_value():
     b = sum((doctor_labels == 0) & (model_predictions == 1))
     c = sum((doctor_labels == 1) & (model_predictions == 0))
     d = sum((doctor_labels == 1) & (model_predictions == 1))
-
     # 创建 2x2 的矩阵
     table = np.array([[a, b], [c, d]])
-
     # 进行 McNemar's Test
     result = mcnemar(table, exact=True)  # exact=True 使用精确的计算方法（适用于较小样本）
-    print(f'McNemar test p-value: {result.pvalue}')
+    print(f'McNemar 检验: {result.pvalue}')
 
 
 if __name__ == '__main__':
