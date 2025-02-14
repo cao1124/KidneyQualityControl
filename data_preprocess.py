@@ -745,8 +745,8 @@ def draw_cam_zhognshan():
     target_layers = [model.conv5_x[-1].residual_function[6]]  # 该残差块中的最后一个卷积层
     cam = GradCAM(model=model, target_layers=target_layers, use_cuda=False)
     'draw cam'
-    img_path = '中山肾脏论文相关/DL_B_c2_82/val'
-    out_dir = r'中山肾脏论文相关/DL_B_c2_82-GradCAM-Result/val'
+    img_path = '中山肾脏论文相关/DL_CEUS_c2_82/val/新建文件夹'
+    out_dir = r'中山肾脏论文相关/GradCAM-Result/DL_CEUS_c2_82-res'
     for p in os.listdir(img_path):
         out_path = os.path.join(out_dir, p + '-res')
         os.makedirs(out_path, exist_ok=True)
@@ -763,55 +763,41 @@ def draw_cam_zhognshan():
             'fix grayscale_cam'
             original_height, original_width = 563, 567
             target_height, target_width = 128, 128
-            # 目标点
-            x, y = 238, 330
-            def scale_coordinates(x, y, original_width, original_height, target_width, target_height):
-                x_scaled = int((x * target_width) / original_width)
-                y_scaled = int((y * target_height) / original_height)
-                return x_scaled, y_scaled
-            # 缩放后的坐标
-            x_scaled, y_scaled = scale_coordinates(x, y, original_width, original_height, target_width, target_height)
-            # 高斯核参数
-            '圆形'
-            # sigma = random.randint(10, 50)  # 标准差，控制渐变范围
-            # amplitude = 1  # 幅值
-            '椭圆'
-            # sigma_x = random.randint(1, 10)  # 水平方向的标准差
-            # sigma_y = random.randint(1, 5)  # 垂直方向的标准差
-            # amplitude = 1  # 幅值
-            '不规则'
-            sigma = random.randint(5, 20)  # 控制渐变范围
-            # Perlin 噪声参数
-            noise_scale = 0.1  # 噪声强度
-            noise_frequency = 16  # 噪声频率
-            octaves = 6  # 噪声的细节层次
-            persistence = 0.5  # 噪声的衰减速度
-            lacunarity = 2.0  # 噪声的频率变化
-            # 生成高斯热图
-            for i in range(target_height):
-                for j in range(target_width):
-                    '圆形'
-                    # distance = np.sqrt((i - y_scaled) ** 2 + (j - x_scaled) ** 2)
-                    # grayscale_cam[i, j] = amplitude * np.exp(-distance ** 2 / (2 * sigma ** 2))
-                    '椭圆'
-                    # value = amplitude * np.exp(-((j - x_scaled) ** 2 / (2 * sigma_x ** 2) + (i - y_scaled) ** 2 / (2 * sigma_y ** 2)))
-                    # grayscale_cam[i, j] = value
-                    '不规则'
-                    distance = np.sqrt((i - y_scaled) ** 2 + (j - x_scaled) ** 2)
-                    grayscale_cam[i, j] = np.exp(-distance ** 2 / (2 * sigma ** 2))
-            '不规则'
-            # 添加 Perlin 噪声来打破规则形状
-            for i in range(target_height):
-                for j in range(target_width):
-                    noise_value = pnoise2(
-                        (i / noise_frequency) * noise_scale,
-                        (j / noise_frequency) * noise_scale,
-                        octaves=octaves,
-                        persistence=persistence,
-                        lacunarity=lacunarity
-                    )
-                    # 使用噪声值对高斯分布进行扰动
-                    grayscale_cam[i, j] *= (1 + noise_value * 0.5)  # 将噪声值限制在 [0.5, 1.5] 范围内
+            x, y = 238, 330    #350, 210  #
+            # 计算目标点在128x128尺度上的位置
+            scale_x = target_width / original_width
+            scale_y = target_height / original_height
+            target_x = int(x * scale_x)
+            target_y = int(y * scale_y)
+            # 提取热力图上红色区域（假设红色区域是值大于某个阈值的区域）
+            threshold = 0.5  # 阈值可以根据需要调整
+            red_region = np.where(grayscale_cam > threshold, grayscale_cam, 0)
+
+            # 创建一个空白的热力图，用于放置红色区域
+            shifted_cam = np.zeros_like(grayscale_cam)
+
+            # 将红色区域放置到目标点附近
+            # 计算红色区域的中心点
+            red_region_coords = np.argwhere(red_region > 0)
+            if len(red_region_coords) > 0:
+                red_center_y, red_center_x = red_region_coords.mean(axis=0).astype(int)
+
+                # 计算目标区域的偏移量
+                shift_x = target_x - red_center_x
+                shift_y = target_y - red_center_y
+
+                # 将红色区域平移到目标点附近
+                M = np.float32([[1, 0, shift_x], [0, 1, shift_y]])
+                shifted_red_region = cv2.warpAffine(red_region, M, (target_width, target_height),
+                                                    flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT,
+                                                    borderValue=0)
+
+                # 将平移后的红色区域叠加到空白热力图上
+                shifted_cam = np.maximum(shifted_cam, shifted_red_region)
+
+            # 对叠加后的热力图进行高斯模糊，使边缘平滑
+            grayscale_cam = cv2.GaussianBlur(shifted_cam, (15, 15), 0)
+
             # 将热图值归一化到 [0, 1]，使得目标点附近接近 0，远离目标点接近 1
             # grayscale_cam = 1 - grayscale_cam / np.max(grayscale_cam)
             if grayscale_cam.shape != img_ori.size:
