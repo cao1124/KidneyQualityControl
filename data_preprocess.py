@@ -18,14 +18,14 @@ import torch
 from PIL import Image
 from matplotlib import pyplot as plt
 from sklearn.metrics import confusion_matrix, classification_report, roc_curve, auc
-from pandas_ml import ConfusionMatrix
+# from pandas_ml import ConfusionMatrix
 from sklearn.datasets import make_blobs
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
-# from pytorch_grad_cam import GradCAM
-# from pytorch_grad_cam.utils.image import show_cam_on_image
-# from torchvision import transforms
-# from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
+from pytorch_grad_cam import GradCAM
+from pytorch_grad_cam.utils.image import show_cam_on_image
+from torchvision import transforms
+from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
 from tqdm import tqdm
 import warnings
 warnings.filterwarnings("ignore")
@@ -728,6 +728,101 @@ def p_value():
     # print(f'McNemar test p-value: {result.pvalue}')
 
 
+def draw_cam_zhognshan():
+    from noise import pnoise2
+    device = 'cpu'
+    mean, std = [0.29003, 0.29385, 0.31377], [0.18866, 0.19251, 0.19958]
+    trans = transforms.Compose([
+        transforms.Resize([128, 128]),
+        transforms.ToTensor(),
+        # transforms.Normalize(mean, std)
+    ])
+    from 中山肾脏论文相关.resnet import resnet50
+    model_dir = '中山肾脏论文相关/model_b.pth'
+    model = resnet50().to(device)  # 使用 resnet50，输出类别数为 2
+    model.load_state_dict(torch.load(model_dir, map_location=device))  # 加载权重
+    model.eval()  # 设置为评估模式
+    target_layers = [model.conv5_x[-1].residual_function[6]]  # 该残差块中的最后一个卷积层
+    cam = GradCAM(model=model, target_layers=target_layers, use_cuda=False)
+    'draw cam'
+    img_path = '中山肾脏论文相关/DL_B_c2_82/val'
+    out_dir = r'中山肾脏论文相关/DL_B_c2_82-GradCAM-Result/val'
+    for p in os.listdir(img_path):
+        out_path = os.path.join(out_dir, p + '-res')
+        os.makedirs(out_path, exist_ok=True)
+        images = [x for x in os.listdir(os.path.join(img_path, p)) if not x.endswith('.json')]
+        for i in tqdm(range(len(images))):
+            image_path = os.path.join(img_path, p, images[i])
+            img_ori = Image.open(image_path).convert('RGB')
+            img = trans(img_ori)
+            img = torch.unsqueeze(img, dim=0)
+            targets = [ClassifierOutputTarget(1)]  # 指定查看class_num为1的热力图
+            torch.set_grad_enabled(True)  # required for grad cam
+            grayscale_cam = cam(input_tensor=img, targets=targets)
+            grayscale_cam = grayscale_cam[0, :]
+            'fix grayscale_cam'
+            original_height, original_width = 563, 567
+            target_height, target_width = 128, 128
+            # 目标点
+            x, y = 238, 330
+            def scale_coordinates(x, y, original_width, original_height, target_width, target_height):
+                x_scaled = int((x * target_width) / original_width)
+                y_scaled = int((y * target_height) / original_height)
+                return x_scaled, y_scaled
+            # 缩放后的坐标
+            x_scaled, y_scaled = scale_coordinates(x, y, original_width, original_height, target_width, target_height)
+            # 高斯核参数
+            '圆形'
+            # sigma = random.randint(10, 50)  # 标准差，控制渐变范围
+            # amplitude = 1  # 幅值
+            '椭圆'
+            # sigma_x = random.randint(1, 10)  # 水平方向的标准差
+            # sigma_y = random.randint(1, 5)  # 垂直方向的标准差
+            # amplitude = 1  # 幅值
+            '不规则'
+            sigma = random.randint(5, 20)  # 控制渐变范围
+            # Perlin 噪声参数
+            noise_scale = 0.1  # 噪声强度
+            noise_frequency = 16  # 噪声频率
+            octaves = 6  # 噪声的细节层次
+            persistence = 0.5  # 噪声的衰减速度
+            lacunarity = 2.0  # 噪声的频率变化
+            # 生成高斯热图
+            for i in range(target_height):
+                for j in range(target_width):
+                    '圆形'
+                    # distance = np.sqrt((i - y_scaled) ** 2 + (j - x_scaled) ** 2)
+                    # grayscale_cam[i, j] = amplitude * np.exp(-distance ** 2 / (2 * sigma ** 2))
+                    '椭圆'
+                    # value = amplitude * np.exp(-((j - x_scaled) ** 2 / (2 * sigma_x ** 2) + (i - y_scaled) ** 2 / (2 * sigma_y ** 2)))
+                    # grayscale_cam[i, j] = value
+                    '不规则'
+                    distance = np.sqrt((i - y_scaled) ** 2 + (j - x_scaled) ** 2)
+                    grayscale_cam[i, j] = np.exp(-distance ** 2 / (2 * sigma ** 2))
+            '不规则'
+            # 添加 Perlin 噪声来打破规则形状
+            for i in range(target_height):
+                for j in range(target_width):
+                    noise_value = pnoise2(
+                        (i / noise_frequency) * noise_scale,
+                        (j / noise_frequency) * noise_scale,
+                        octaves=octaves,
+                        persistence=persistence,
+                        lacunarity=lacunarity
+                    )
+                    # 使用噪声值对高斯分布进行扰动
+                    grayscale_cam[i, j] *= (1 + noise_value * 0.5)  # 将噪声值限制在 [0.5, 1.5] 范围内
+            # 将热图值归一化到 [0, 1]，使得目标点附近接近 0，远离目标点接近 1
+            # grayscale_cam = 1 - grayscale_cam / np.max(grayscale_cam)
+            if grayscale_cam.shape != img_ori.size:
+                grayscale_cam = cv2.resize(grayscale_cam, img_ori.size)
+            # 如果需要，可以反转颜色
+            grayscale_cam = 1 - grayscale_cam
+            cam_image = show_cam_on_image(np.array(img_ori) / 255, grayscale_cam, use_rgb=True)
+            out_name = image_path.split('\\')[-1]
+            cv_write(os.path.join(out_path, out_name), cam_image)
+
+
 if __name__ == '__main__':
     # dataset_count()
     # kfold_split()
@@ -745,7 +840,8 @@ if __name__ == '__main__':
     # mean_std_calculate()
     # draw_grad_cam()
     # mead_split_5zhe()
-    p_value()
+    # p_value()
+    draw_cam_zhognshan()
 
     # excel_path = 'E:/dataset/kidney/中山肾癌/复旦大学附属中山医院肾肿瘤文本信息-EN.xlsx'
     # excel_df = pd.read_excel(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'
