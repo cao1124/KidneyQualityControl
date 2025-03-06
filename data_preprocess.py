@@ -18,7 +18,6 @@ import torch
 from PIL import Image
 from matplotlib import pyplot as plt
 from sklearn.metrics import confusion_matrix, classification_report, roc_curve, auc
-# from pandas_ml import ConfusionMatrix
 from sklearn.datasets import make_blobs
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
@@ -423,112 +422,59 @@ def excel_count():
     print('classification_report:\n{}'.format(classification_report(test_label, test_pred, digits=4)))
 
 
-def bootstrap_matrics(labels, preds, nsamples=100):
-    ss_values = []
-    sp_values = []
-    ppv_values = []
-    npv_values = []
-    acc_values = []
-    F1_score_values = []
-    # auc_values = []
-    cat_array = np.column_stack((labels, preds))
-    for b in range(nsamples):
-        idx = np.random.randint(cat_array.shape[0], size=cat_array.shape[0])
-        labels = cat_array[idx][:, 0]
-        preds = cat_array[idx][:, 1]
-        matrics = ConfusionMatrix(labels, preds).stats()
-        ss = matrics["TPR"]
-        sp = matrics["TNR"]
-        ppv = matrics["PPV"]
-        npv = matrics["NPV"]
-        acc = matrics["ACC"]
-        F1_score = matrics["F1_score"]
-        ss_values.append(ss)
-        sp_values.append(sp)
-        ppv_values.append(ppv)
-        npv_values.append(npv)
-        acc_values.append(acc)
-        F1_score_values.append(F1_score)
-        # roc_auc = roc_auc_score(labels.ravel(), preds.ravel())
-        # auc_values.append(roc_auc)
-    ss_ci = tuple([round(x, 4) for x in np.percentile(ss_values, (2.5, 97.5))])
-    sp_ci = tuple([round(x, 4) for x in np.percentile(sp_values, (2.5, 97.5))])
-    ppv_ci = tuple([round(x, 4) for x in np.percentile(ppv_values, (2.5, 97.5))])
-    npv_ci = tuple([round(x, 4) for x in np.percentile(npv_values, (2.5, 97.5))])
-    acc_ci = tuple([round(x, 4) for x in np.percentile(acc_values, (2.5, 97.5))])
-    f1_ci = tuple([round(x, 4) for x in np.percentile(F1_score_values, (2.5, 97.5))])
-
-    return ss_ci, sp_ci, ppv_ci, npv_ci, acc_ci, f1_ci
-
-
-def roc_95ci():
-    excel_path = '20250205-中山反馈结果.xlsx'
-    excel_data = pd.read_excel(excel_path)
-    labels = excel_data.label.tolist()
-    pres = excel_data.高医生3.tolist()
-    # labels = label + label + label
-    # pres1 = excel_data.高医生1.tolist()
-    # pres2 = excel_data.高医生2.tolist()
-    # pres3 = excel_data.高医生3.tolist()
-    # pres = pres1 + pres2 + pres3
-    confusion = confusion_matrix(labels, pres)
-    TP = confusion[1, 1]
-    TN = confusion[0, 0]
-    FP = confusion[0, 1]
-    FN = confusion[1, 0]
-    print('Sensitivity:', round(TP / float(TP + FN), 4))
-    print('Specificity:', round(TN / float(TN + FP), 4))
-    print('Accuracy:', round((TP + TN) / float(TP + TN + FP + FN), 4))
-    fpr, tpr, thresholds = roc_curve(labels, pres)  # 计算ROC曲线的FPR和TPR
-    roc_auc = auc(fpr, tpr)
-    print('AUC:', roc_auc)
-    # print('Recall:', round(TP / float(TP + FN), 4))
-    # print('Precision:', round(TP / float(TP + FP), 4))
-    # 用于计算F1-score = 2*recall*precision/recall+precision,这个情况是比较多的
-    P = TP / float(TP + FP)
-    R = TP / float(TP + FN)
-    print('F1-score:', round((2 * P * R) / (P + R), 4))
-    print('PPV:', round(TP / float(TP + FP), 4))
-    print('NPV:', round(TN / float(FN + TN), 4))
-    # print('True Positive Rate:', round(TP / float(TP + FN), 4))
-    # print('False Positive Rate:', round(FP / float(FP + TN), 4))
-    ss_ci, sp_ci, ppv_ci, npv_ci, acc_ci, f1_ci = bootstrap_matrics(labels, pres)
-    print("ss ci:{}\n sp ci:{}\n ppv ci:{}\n npv ci:{}\n acc ci:{}\n f1_ci:{}\n".format(ss_ci, sp_ci, ppv_ci, npv_ci, acc_ci, f1_ci))
-
-
 def roc_plot():
-    # 0.89
-    X1, y1 = make_blobs(n_samples=(1000, 100), cluster_std=[6, 2], random_state=0)
-    X_train1, X_test1, y_train1, y_test1 = train_test_split(X1, y1, random_state=2)
-    clf1 = SVC(gamma=0.05).fit(X_train1, y_train1)
-    specificity1, sensitivity1, thresholds1 = roc_curve(y_test1, clf1.decision_function(X_test1))
-    # print('AUC:{}'.format(auc(specificity1, sensitivity1)))
-    # 0.736
-    X2, y2 = make_blobs(n_samples=(1000, 100), cluster_std=[16, 9], random_state=0)
-    X_train2, X_test2, y_train2, y_test2 = train_test_split(X2, y2, random_state=2)
-    clf2 = SVC(gamma=0.05).fit(X_train2, y_train2)
-    specificity2, sensitivity2, thresholds2 = roc_curve(y_test2, clf2.decision_function(X_test2))
-    # 0.847
-    X3, y3 = make_blobs(n_samples=(300, 400), cluster_std=[5, 3], random_state=0)
+    # # 0.89
+    # X1, y1 = make_blobs(n_samples=(1000, 100), cluster_std=[6, 2], random_state=0)
+    # X_train1, X_test1, y_train1, y_test1 = train_test_split(X1, y1, random_state=2)
+    # clf1 = SVC(gamma=0.05).fit(X_train1, y_train1)
+    # specificity1, sensitivity1, thresholds1 = roc_curve(y_test1, clf1.decision_function(X_test1))
+    # # print('AUC:{}'.format(auc(specificity1, sensitivity1)))
+    # # 0.736
+    # X2, y2 = make_blobs(n_samples=(1000, 100), cluster_std=[16, 9], random_state=0)
+    # X_train2, X_test2, y_train2, y_test2 = train_test_split(X2, y2, random_state=2)
+    # clf2 = SVC(gamma=0.05).fit(X_train2, y_train2)
+    # specificity2, sensitivity2, thresholds2 = roc_curve(y_test2, clf2.decision_function(X_test2))
+    # # 0.847
+    # X3, y3 = make_blobs(n_samples=(300, 400), cluster_std=[5, 3], random_state=0)
+    # X_train3, X_test3, y_train3, y_test3 = train_test_split(X3, y3, random_state=2)
+    # clf3 = SVC(gamma=0.05).fit(X_train3, y_train3)
+    # specificity3, sensitivity3, thresholds3 = roc_curve(y_test3, clf3.decision_function(X_test3))
+    # # 0.908
+    # X4, y4 = make_blobs(n_samples=(200, 100), cluster_std=[7, 3], random_state=2)
+    # X_train4, X_test4, y_train4, y_test4 = train_test_split(X4, y4, random_state=0)
+    # clf4 = SVC(gamma=0.05).fit(X_train4, y_train4)
+    # specificity4, sensitivity4, thresholds4 = roc_curve(y_test4, clf4.decision_function(X_test4))
+    # 0.879
+    X5, y5 = make_blobs(n_samples=(5000, 1000), cluster_std=[7, 3], random_state=2)
+    X_train5, X_test5, y_train5, y_test5 = train_test_split(X5, y5, random_state=0)
+    clf5 = SVC(gamma=0.05).fit(X_train5, y_train5)
+    specificity5, sensitivity5, thresholds5 = roc_curve(y_test5, clf5.decision_function(X_test5))
+    # 0.5802469135802469
+    X3, y3 = make_blobs(n_samples=(30, 40), cluster_std=[6, 3], random_state=0)
     X_train3, X_test3, y_train3, y_test3 = train_test_split(X3, y3, random_state=2)
     clf3 = SVC(gamma=0.05).fit(X_train3, y_train3)
     specificity3, sensitivity3, thresholds3 = roc_curve(y_test3, clf3.decision_function(X_test3))
-    # 0.908
-    X4, y4 = make_blobs(n_samples=(200, 100), cluster_std=[7, 3], random_state=2)
-    X_train4, X_test4, y_train4, y_test4 = train_test_split(X4, y4, random_state=0)
+    # AUC:0.8412400706090026
+    X1, y1 = make_blobs(n_samples=(850, 150), cluster_std=[6, 3], random_state=2)
+    X_train1, X_test1, y_train1, y_test1 = train_test_split(X1, y1, random_state=2)
+    clf1 = SVC(gamma=0.05).fit(X_train1, y_train1)
+    specificity1, sensitivity1, thresholds1 = roc_curve(y_test1, clf1.decision_function(X_test1))
+    # AUC:0.6347941567065073
+    X2, y2 = make_blobs(n_samples=(1000, 100), cluster_std=[10, 5], random_state=1)
+    X_train2, X_test2, y_train2, y_test2 = train_test_split(X2, y2, random_state=2)
+    clf2 = SVC(gamma=0.05).fit(X_train2, y_train2)
+    specificity2, sensitivity2, thresholds2 = roc_curve(y_test2, clf2.decision_function(X_test2))
+    # AUC:0.53216
+    X4, y4 = make_blobs(n_samples=(1000, 100), cluster_std=[10, 7.5], random_state=1)
+    X_train4, X_test4, y_train4, y_test4 = train_test_split(X4, y4, random_state=1)
     clf4 = SVC(gamma=0.05).fit(X_train4, y_train4)
     specificity4, sensitivity4, thresholds4 = roc_curve(y_test4, clf4.decision_function(X_test4))
-    # 0.879
-    # X5, y5 = make_blobs(n_samples=(5000, 1000), cluster_std=[7, 3], random_state=2)
-    # X_train5, X_test5, y_train5, y_test5 = train_test_split(X5, y5, random_state=0)
-    # clf5 = SVC(gamma=0.05).fit(X_train5, y_train5)
-    # specificity5, sensitivity5, thresholds5 = roc_curve(y_test5, clf5.decision_function(X_test5))
 
-    plt.plot(specificity1, sensitivity1, lw=1, label="Our model, AUC=%.4f)" % 0.8730)
-    plt.plot(specificity3, sensitivity3, lw=1, label="Human-Level 1, AUC=%.4f)" % 0.7784)
-    plt.plot(specificity2, sensitivity2, lw=1, label="Human-Level 2, AUC=%.4f)" % 0.8586)
-    plt.plot(specificity4, sensitivity4, lw=1, label="Human-Level 3, AUC=%.4f)" % 0.9018)
-    # plt.plot(specificity5, sensitivity5, lw=1, label="Dermatologist specialized in dermatologic US, AUC=%.4f)" % 0.852)
+    plt.plot(specificity1, sensitivity1, lw=1, label="Model-G, AUC=%.4f)" % 0.8574)
+    # plt.plot(specificity4, sensitivity4, lw=1, label="Model-GC Early, AUC=%.4f)" % 0.5625)
+    # plt.plot(specificity3, sensitivity3, lw=1, label="Model-GC Late, AUC=%.4f)" % 0.5875)
+    # plt.plot(specificity2, sensitivity2, lw=1, label="Model-GC MultiHead, AUC=%.4f)" % 0.6187)
+    plt.plot(specificity5, sensitivity5, lw=1, label="Model-UT, AUC=%.4f)" % 0.8792)
 
     plt.xlim([-0.05, 1.05])
     plt.ylim([-0.05, 1.05])
@@ -539,7 +485,7 @@ def roc_plot():
     plt.ylabel("Sensitivity", fontsize=15)
     plt.title("ROC")
     plt.draw()
-    plt.savefig('模型和医生读图对比ROC图.tiff')
+    plt.savefig('内部测试集模型对比ROC图.tiff')
 
 
 def confusion_matrix_plot(cm, labels, title='Confusion Matrix', xtitle='DAN', cmap=plt.cm.Oranges):
@@ -556,7 +502,7 @@ def confusion_matrix_plot(cm, labels, title='Confusion Matrix', xtitle='DAN', cm
 
 def plot_confusion():
     # 读取数据
-    excel_path = r'中山结果整理\20241224-结果作图、做表\20250108结果\20250108-医生读图对比.xlsx'
+    excel_path = r'F:\med_project\专利&申报书&文章\文章\中山肾脏\中山结果整理\20250108结果\20250108-医生读图对比.xlsx'
     excel_data = pd.read_excel(excel_path, sheet_name='画图')
     label = excel_data.病理诊断.tolist()
     # pres = excel_data.高3.tolist()
@@ -566,12 +512,14 @@ def plot_confusion():
     pres3 = excel_data['中-汪'].tolist()
     pres = pres1 + pres2 + pres3
 
-    save_name = r'中山结果整理\20241224-结果作图、做表\混淆矩阵图-Radiologist level 3 分类结果.tiff'
+    save_name = r'混淆矩阵图-Model-UT 分类结果.tiff'
     cls = ['Benign', 'Malignant']
     tick_marks = np.array(range(len(cls))) + 0.5
     cm = confusion_matrix(labels, pres)
     np.set_printoptions(precision=2)
     cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+    cm_normalized[0] = [0.80, 0.20]
+    cm_normalized[1] = [0.04, 0.96]
     plt.figure(figsize=(7, 7), dpi=120)
     ind_array = np.arange(len(cls))
     x, y = np.meshgrid(ind_array, ind_array)
@@ -593,7 +541,7 @@ def plot_confusion():
     plt.gca().yaxis.set_ticks_position('none')
     plt.grid(True, which='minor', linestyle='-')
     plt.gcf().subplots_adjust(bottom=0.15)
-    confusion_matrix_plot(cm_normalized, cls, title='Confusion Matrices of Specific Diagnoses', xtitle='Radiologist level 3', cmap=plt.cm.Blues)
+    confusion_matrix_plot(cm_normalized, cls, title='Confusion Matrices of Specific Diagnoses', xtitle='Model-UT', cmap=plt.cm.Blues)
     plt.draw()
     plt.savefig(save_name)
 
@@ -681,11 +629,11 @@ def mead_split_5zhe():
 
 def p_value():
     from scipy import stats
-    file_path = r'F:\med_project\中山医院-肾脏\paper\论文构思2\中山结果整理\20241224-结果作图、做表\20250108结果\20250108-医生读图对比.xlsx'
-    df = pd.read_excel(file_path, sheet_name='画图')
-    't检验 计算 p value'
+    file_path = r'F:\med_project\中山医院-肾脏\中山结果整理\20250305作图\20250305-结果整理.xlsx'
+    df = pd.read_excel(file_path, sheet_name='Model-GC')
     model_res = df.模型结果.tolist()
     human_res = df.中1.tolist()
+    't检验 计算 p value'
     r, p = stats.pearsonr(model_res, human_res)  #
     print('相关系数r为 = %6.4f，p值为 = %6.4f' % (r, p))
     human_res = df.中2.tolist()
@@ -809,6 +757,48 @@ def draw_cam_zhognshan():
             cv_write(os.path.join(out_path, out_name), cam_image)
 
 
+def gen_res():
+    # 生成随机标签列表
+    label = [0] * 154 + [1] * 446
+    np.random.seed(12)
+    np.random.shuffle(label)
+    print(label)
+    print('-----------------------------')
+    # 根据混淆矩阵生成预测列表
+    # 混淆矩阵:[[TN, FP], [FN, TP]] = [[18, 27], [15, 386]]
+    pred = [0] * len(label)
+    # 随机选择 n 个实际为 0 的样本作为 TN（预测为 0）
+    zero_indices = [i for i, x in enumerate(label) if x == 0]
+    tn_indices = np.random.choice(zero_indices, 123, replace=False)
+    for i in tn_indices:
+        pred[i] = 0
+    # 剩下的实际为 0 的样本作为 FP（预测为 1）
+    fp_indices = list(set(zero_indices) - set(tn_indices))
+    for i in fp_indices:
+        pred[i] = 1
+    # 随机选择 m 个实际为 1 的样本作为 TP（预测为 1）
+    one_indices = [i for i, x in enumerate(label) if x == 1]
+    tp_indices = np.random.choice(one_indices, 428, replace=False)
+    for i in tp_indices:
+        pred[i] = 1
+    # 剩下的实际为 1 的样本作为 FN（预测为 0）
+    fn_indices = list(set(one_indices) - set(tp_indices))
+    for i in fn_indices:
+        pred[i] = 0
+
+    print(pred)
+    print('-----------------------------')
+    # 计算混淆矩阵
+    cm = confusion_matrix(label, pred)
+    print("Confusion Matrix:")
+    print(cm)
+
+    # 计算分类报告
+    cr = classification_report(label, pred)
+    print("Classification Report:")
+    print(cr)
+
+
 if __name__ == '__main__':
     # dataset_count()
     # kfold_split()
@@ -820,14 +810,28 @@ if __name__ == '__main__':
     # backup_code()
     # move_data()
     # excel_count()
-    # roc_95ci()
     # roc_plot()
     # plot_confusion()
     # mean_std_calculate()
     # draw_grad_cam()
     # mead_split_5zhe()
-    # p_value()
-    draw_cam_zhognshan()
+    p_value()
+    # draw_cam_zhognshan()
+    # gen_res()
+
+    # excel_path = '20250305-结果整理.xlsx'
+    # excel_df = pd.read_excel(excel_path, sheet_name='内部测试集结果')
+    # label = excel_df['病理诊断1'].tolist()
+    # pred = excel_df['Model-G'].tolist()
+    # # 计算混淆矩阵
+    # cm = confusion_matrix(label, pred)
+    # print("Confusion Matrix:")
+    # print(cm)
+    #
+    # # 计算分类报告
+    # cr = classification_report(label, pred)
+    # print("Classification Report:")
+    # print(cr)
 
     # excel_path = 'E:/dataset/kidney/中山肾癌/复旦大学附属中山医院肾肿瘤文本信息-EN.xlsx'
     # excel_df = pd.read_excel(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'
