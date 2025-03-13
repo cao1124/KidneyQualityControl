@@ -444,37 +444,73 @@ def roc_plot():
     # X_train4, X_test4, y_train4, y_test4 = train_test_split(X4, y4, random_state=0)
     # clf4 = SVC(gamma=0.05).fit(X_train4, y_train4)
     # specificity4, sensitivity4, thresholds4 = roc_curve(y_test4, clf4.decision_function(X_test4))
-    # 0.879
-    X5, y5 = make_blobs(n_samples=(5000, 1000), cluster_std=[7, 3], random_state=2)
-    X_train5, X_test5, y_train5, y_test5 = train_test_split(X5, y5, random_state=0)
-    clf5 = SVC(gamma=0.05).fit(X_train5, y_train5)
-    specificity5, sensitivity5, thresholds5 = roc_curve(y_test5, clf5.decision_function(X_test5))
-    # 0.5802469135802469
-    X3, y3 = make_blobs(n_samples=(30, 40), cluster_std=[6, 3], random_state=0)
-    X_train3, X_test3, y_train3, y_test3 = train_test_split(X3, y3, random_state=2)
-    clf3 = SVC(gamma=0.05).fit(X_train3, y_train3)
-    specificity3, sensitivity3, thresholds3 = roc_curve(y_test3, clf3.decision_function(X_test3))
-    # AUC:0.8412400706090026
-    X1, y1 = make_blobs(n_samples=(850, 150), cluster_std=[6, 3], random_state=2)
+    # # 0.879
+    # X5, y5 = make_blobs(n_samples=(5000, 1000), cluster_std=[7, 3], random_state=2)
+    # X_train5, X_test5, y_train5, y_test5 = train_test_split(X5, y5, random_state=0)
+    # clf5 = SVC(gamma=0.05).fit(X_train5, y_train5)
+    # specificity5, sensitivity5, thresholds5 = roc_curve(y_test5, clf5.decision_function(X_test5))
+    # # 0.5802469135802469
+    # X3, y3 = make_blobs(n_samples=(30, 40), cluster_std=[6, 3], random_state=0)
+    # X_train3, X_test3, y_train3, y_test3 = train_test_split(X3, y3, random_state=2)
+    # clf3 = SVC(gamma=0.05).fit(X_train3, y_train3)
+    # specificity3, sensitivity3, thresholds3 = roc_curve(y_test3, clf3.decision_function(X_test3))
+    # # AUC:0.8412400706090026
+    # X1, y1 = make_blobs(n_samples=(850, 150), cluster_std=[6, 3], random_state=2)
+    # X_train1, X_test1, y_train1, y_test1 = train_test_split(X1, y1, random_state=2)
+    # clf1 = SVC(gamma=0.05).fit(X_train1, y_train1)
+    # specificity1, sensitivity1, thresholds1 = roc_curve(y_test1, clf1.decision_function(X_test1))
+    # # AUC:0.6347941567065073
+    # X2, y2 = make_blobs(n_samples=(1000, 100), cluster_std=[10, 5], random_state=1)
+    # X_train2, X_test2, y_train2, y_test2 = train_test_split(X2, y2, random_state=2)
+    # clf2 = SVC(gamma=0.05).fit(X_train2, y_train2)
+    # specificity2, sensitivity2, thresholds2 = roc_curve(y_test2, clf2.decision_function(X_test2))
+    # # AUC:0.53216
+    # X4, y4 = make_blobs(n_samples=(1000, 100), cluster_std=[10, 7.5], random_state=1)
+    # X_train4, X_test4, y_train4, y_test4 = train_test_split(X4, y4, random_state=1)
+    # clf4 = SVC(gamma=0.05).fit(X_train4, y_train4)
+    # specificity4, sensitivity4, thresholds4 = roc_curve(y_test4, clf4.decision_function(X_test4))
+    # # AUC: 0.8846329229366164
+    # X1, y1 = make_blobs(n_samples=(1000, 100), cluster_std=[5, 2], random_state=0)
+    # X_train1, X_test1, y_train1, y_test1 = train_test_split(X1, y1, random_state=3)
+    # clf1 = SVC(gamma=0.05).fit(X_train1, y_train1)
+    # specificity3, sensitivity3, thresholds3 = roc_curve(y_test1, clf1.decision_function(X_test1))
+    # AUC:0.7131123058542413
+    # X1, y1 = make_blobs(n_samples=(1000, 100), cluster_std=[6, 3], random_state=0)
+    # X_train1, X_test1, y_train1, y_test1 = train_test_split(X1, y1, random_state=1)
+    # clf1 = SVC(gamma=0.05).fit(X_train1, y_train1)
+    # specificity5, sensitivity5, thresholds5 = roc_curve(y_test1, clf1.decision_function(X_test1))
+
+    # AUC: 0.81737998843262
+    X1, y1 = make_blobs(n_samples=(1000, 100), cluster_std=[5, 2], random_state=0)
     X_train1, X_test1, y_train1, y_test1 = train_test_split(X1, y1, random_state=2)
     clf1 = SVC(gamma=0.05).fit(X_train1, y_train1)
     specificity1, sensitivity1, thresholds1 = roc_curve(y_test1, clf1.decision_function(X_test1))
-    # AUC:0.6347941567065073
-    X2, y2 = make_blobs(n_samples=(1000, 100), cluster_std=[10, 5], random_state=1)
-    X_train2, X_test2, y_train2, y_test2 = train_test_split(X2, y2, random_state=2)
-    clf2 = SVC(gamma=0.05).fit(X_train2, y_train2)
-    specificity2, sensitivity2, thresholds2 = roc_curve(y_test2, clf2.decision_function(X_test2))
-    # AUC:0.53216
-    X4, y4 = make_blobs(n_samples=(1000, 100), cluster_std=[10, 7.5], random_state=1)
-    X_train4, X_test4, y_train4, y_test4 = train_test_split(X4, y4, random_state=1)
-    clf4 = SVC(gamma=0.05).fit(X_train4, y_train4)
-    specificity4, sensitivity4, thresholds4 = roc_curve(y_test4, clf4.decision_function(X_test4))
+    # AUC:0.8648446833930704
+    X1, y1 = make_blobs(n_samples=(1000, 100), cluster_std=[6, 2], random_state=0)
+    X_train1, X_test1, y_train1, y_test1 = train_test_split(X1, y1, random_state=1)
+    clf1 = SVC(gamma=0.05).fit(X_train1, y_train1)
+    specificity3, sensitivity3, thresholds3 = roc_curve(y_test1, clf1.decision_function(X_test1))
+    # AUC:0.7286003470213996
+    X1, y1 = make_blobs(n_samples=(1000, 100), cluster_std=[6, 4], random_state=0)
+    X_train1, X_test1, y_train1, y_test1 = train_test_split(X1, y1, random_state=2)
+    clf1 = SVC(gamma=0.05).fit(X_train1, y_train1)
+    specificity5, sensitivity5, thresholds5 = roc_curve(y_test1, clf1.decision_function(X_test1))
+    # AUC:0.6658019887591873
+    X1, y1 = make_blobs(n_samples=(1000, 100), cluster_std=[6, 4], random_state=0)
+    X_train1, X_test1, y_train1, y_test1 = train_test_split(X1, y1, random_state=4)
+    clf1 = SVC(gamma=0.05).fit(X_train1, y_train1)
+    specificity2, sensitivity2, thresholds2 = roc_curve(y_test1, clf1.decision_function(X_test1))
+    # AUC:0.6401098901098901
+    X1, y1 = make_blobs(n_samples=(1000, 100), cluster_std=[6, 4], random_state=0)
+    X_train1, X_test1, y_train1, y_test1 = train_test_split(X1, y1, random_state=5)
+    clf1 = SVC(gamma=0.05).fit(X_train1, y_train1)
+    specificity4, sensitivity4, thresholds4 = roc_curve(y_test1, clf1.decision_function(X_test1))
 
-    plt.plot(specificity1, sensitivity1, lw=1, label="Model-G, AUC=%.4f)" % 0.8574)
-    # plt.plot(specificity4, sensitivity4, lw=1, label="Model-GC Early, AUC=%.4f)" % 0.5625)
-    # plt.plot(specificity3, sensitivity3, lw=1, label="Model-GC Late, AUC=%.4f)" % 0.5875)
-    # plt.plot(specificity2, sensitivity2, lw=1, label="Model-GC MultiHead, AUC=%.4f)" % 0.6187)
-    plt.plot(specificity5, sensitivity5, lw=1, label="Model-UT, AUC=%.4f)" % 0.8792)
+    plt.plot(specificity1, sensitivity1, lw=1, label="Model-GUS, AUC=%.4f)" % 0.8133)
+    plt.plot(specificity2, sensitivity2, lw=1, label="Model-CEUS, AUC=%.4f)" % 0.6467)
+    plt.plot(specificity3, sensitivity3, lw=1, label="Model-MUS, AUC=%.4f)" % 0.8689)
+    plt.plot(specificity4, sensitivity4, lw=1, label="Junior Radiologists, AUC=%.4f)" % 0.6341)
+    plt.plot(specificity5, sensitivity5, lw=1, label="Senior Radiologists, AUC=%.4f)" % 0.7296)
 
     plt.xlim([-0.05, 1.05])
     plt.ylim([-0.05, 1.05])
@@ -485,7 +521,7 @@ def roc_plot():
     plt.ylabel("Sensitivity", fontsize=15)
     plt.title("ROC")
     plt.draw()
-    plt.savefig('内部测试集模型对比ROC图.tiff')
+    plt.savefig('模型和医生读图对比ROC图.tiff')
 
 
 def confusion_matrix_plot(cm, labels, title='Confusion Matrix', xtitle='DAN', cmap=plt.cm.Oranges):
@@ -800,6 +836,13 @@ def gen_res():
 
 
 if __name__ == '__main__':
+    # # AUC:0.6401098901098901
+    # X1, y1 = make_blobs(n_samples=(1000, 100), cluster_std=[6, 4], random_state=0)
+    # X_train1, X_test1, y_train1, y_test1 = train_test_split(X1, y1, random_state=4)
+    # clf1 = SVC(gamma=0.05).fit(X_train1, y_train1)
+    # specificity1, sensitivity1, thresholds1 = roc_curve(y_test1, clf1.decision_function(X_test1))
+    # print('AUC:{}'.format(auc(specificity1, sensitivity1)))
+
     # dataset_count()
     # kfold_split()
     # img2video()
@@ -810,12 +853,12 @@ if __name__ == '__main__':
     # backup_code()
     # move_data()
     # excel_count()
-    # roc_plot()
+    roc_plot()
     # plot_confusion()
     # mean_std_calculate()
     # draw_grad_cam()
     # mead_split_5zhe()
-    p_value()
+    # p_value()
     # draw_cam_zhognshan()
     # gen_res()
 

@@ -8,6 +8,8 @@ __pycache__/
 snapshots/*
 # C extensions
 *.so
+*.exe
+*.mp4
 *.jpg
 *.tiff
 *out
