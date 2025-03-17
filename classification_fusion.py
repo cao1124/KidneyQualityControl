@@ -182,15 +182,15 @@ def train(data_dir, num_epochs, bs, pt_dir, category_num, model_name, device, lr
 
 
 def classification():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "7"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "2"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model_name = 'resnet18'
-    data_dir = '/media/user/Disk1/caoxu/dataset/kidney/zhongshan/20240318-kidney-blood-fusion-classify-5fold/'
+    model_name = 'resnet50'
+    data_dir = '/home/ai999/project/kidney-quality-control/单灰阶单CDFI整理-5fold/'
     category_num = 2
     bs = 128
     lr = 0.01
     num_epochs = 500
-    data = 'classification-model/20240319-kidney-blood-EarlyCatFusionModel-classify-'
+    data = 'classification-model/20250317-kidney-blood-EarlyCatFusionModel-classify-'
     save_path = data + str(category_num) + 'class-' + model_name + '-bs' + str(bs) + '-lr' + str(lr) + '/'
     pt_dir = 'classification_model/' + save_path
     if not os.path.exists(pt_dir):

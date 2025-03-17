@@ -107,15 +107,16 @@ class ClassificationDataset(Dataset):
         self.labels = []
         for img_fold in self.img_path:
             for cla in os.listdir(img_fold):
-                # for p in os.listdir(os.path.join(img_fold, cla)):
-                    # for img_name in os.listdir(os.path.join(img_fold, cla, p)):
-                for img_name in [x for x in os.listdir(os.path.join(img_fold, cla)) if not x.endswith('.json')]:
-                    self.img_name.append(os.path.join(img_fold, cla, img_name))
-                    # self.labels.append(int(cla))
-                    if cla == '良':
-                        self.labels.append(0)
-                    else:
-                        self.labels.append(1)
+                for p in os.listdir(os.path.join(img_fold, cla)):
+                    for img_name in os.listdir(os.path.join(img_fold, cla, p)):
+                    # for img_name in [x for x in os.listdir(os.path.join(img_fold, cla)) if not x.endswith('.json')]:
+                        if '灰阶' in img_name:
+                            self.img_name.append(os.path.join(img_fold, cla, p, img_name))
+                            # self.labels.append(int(cla))
+                            if cla == '良':
+                                self.labels.append(0)
+                            else:
+                                self.labels.append(1)
         self.length = len(self.labels)
 
     def __getitem__(self, index):
@@ -162,10 +163,16 @@ class FusionDataset(Dataset):
             for img_fold in self.img_path:
                 for cla in os.listdir(img_fold):
                     for p in os.listdir(os.path.join(img_fold, cla)):
-                        img_name = os.listdir(os.path.join(img_fold, cla, p))
-                        self.gray_img.append(os.path.join(img_fold, cla, p, img_name[0]))
-                        self.blood_img.append(os.path.join(img_fold, cla, p, img_name[1]))
-                        self.labels.append(int(cla))
+                        img_list = os.listdir(os.path.join(img_fold, cla, p))
+                        for img_name in img_list:
+                            if '灰阶' in img_name:
+                                self.gray_img.append(os.path.join(img_fold, cla, p, img_name))
+                            elif '血流' in img_name:
+                                self.blood_img.append(os.path.join(img_fold, cla, p, img_name))
+                                if cla == '良':
+                                    self.labels.append(0)
+                                else:
+                                    self.labels.append(1)
         self.length = len(self.labels)
 
     def __getitem__(self, index):
@@ -495,7 +502,7 @@ def prepare_model(category_num, model_name, lr, num_epochs, device, weights, bs=
         model.layer7 = nn.Linear(in_features=2048, out_features=category_num, bias=True)
 
     'fusion'
-    # model = EarlyCatFusionModel(model)
+    model = EarlyCatFusionModel(model)
     # model = LateCatFusionModel(model, category_num)
     # model = MultiHeadAttentionResnet(model, num_heads=8, num_classes_per_head=category_num)
 

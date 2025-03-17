@@ -20,7 +20,7 @@ from clip_train import load_pretrian_model
 
 def clip_classify():
     # Load CLIP model and processor
-    os.environ['CUDA_VISIBLE_DEVICES'] = "7"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "2"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     # clip_model, processor = load_pretrian_model('20240422-clip-classify-ViT-B32-model.pt', device)
     model_clip, _ = load_pretrian_model('ViT-B/32', device)
@@ -47,8 +47,9 @@ def clip_classify():
 
         # Perform classification
         with torch.no_grad():
-            img_feature, text_feature = model_clip(image_input, text_input)
-            img_with_text = torch.cat((img_feature, text_feature), dim=1).float()
+            gray_img_feature, text_feature = model_clip(image_input, text_input)
+            blood_img_feature, text_feature = model_clip(image_input, text_input)
+            img_with_text = torch.cat((gray_img_feature, blood_img_feature, text_feature), dim=1).float()
             img_with_text = img_with_text.view(img_with_text.size(0), -1, 1, 1)
             # 使用一个全连接层将特征映射到一个更高维度的空间
             img_with_text_mapped = fc_layer(img_with_text.view(-1, 1024)).view(1, 3, 224, 224)
@@ -99,7 +100,7 @@ def clip_classify():
                                          f"on the {located} kidney, in the {part}.")
     columns = ['图像输入', '文本输入', '预测结果', '医生标签']
     data = []
-    excel_file = r'20241129-clip预测结果.xlsx'
+    excel_file = r'20250317-clip预测结果.xlsx'
     for i in range(len(df['image'])):
         image_path = df['image'][i]
         text = df['caption'][i]

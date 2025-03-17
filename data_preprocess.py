@@ -162,10 +162,10 @@ def mead_split_patient():
 
     # 设置５折实验
 
-    org_path = r'D:\med_dataset\kidney\20240408-shiyuan-kidney\ori-database'
-    out_path = r'D:\med_dataset\kidney\20240408-shiyuan-kidney\ori-database-5fold'
+    org_path = r'E:\med_project\中山医院-肾脏\中山结果整理\20250317\单灰阶单CDFI整理'
+    out_path = r'E:\med_project\中山医院-肾脏\中山结果整理\20250317\单灰阶单CDFI整理-5fold'
 
-    for cla in ['恶性', '良性']:  # ['0', '1']:   #
+    for cla in ['恶', '良']:  # ['0', '1']:   #
         in_path = os.path.join(org_path, cla)
         img_list = []
         patient_list = []
@@ -835,33 +835,19 @@ def gen_res():
     print(cr)
 
 
-if __name__ == '__main__':
-    # # AUC:0.6401098901098901
-    # X1, y1 = make_blobs(n_samples=(1000, 100), cluster_std=[6, 4], random_state=0)
-    # X_train1, X_test1, y_train1, y_test1 = train_test_split(X1, y1, random_state=4)
-    # clf1 = SVC(gamma=0.05).fit(X_train1, y_train1)
-    # specificity1, sensitivity1, thresholds1 = roc_curve(y_test1, clf1.decision_function(X_test1))
-    # print('AUC:{}'.format(auc(specificity1, sensitivity1)))
-
-    # dataset_count()
-    # kfold_split()
-    # img2video()
-    # mead_split_patient()
-    # get_mask_by_json()
-    # dataset_augment()
-    # image_json_compare()
-    # backup_code()
-    # move_data()
-    # excel_count()
-    roc_plot()
-    # plot_confusion()
-    # mean_std_calculate()
-    # draw_grad_cam()
-    # mead_split_5zhe()
-    # p_value()
-    # draw_cam_zhognshan()
-    # gen_res()
-
+def shutil_data():
+    excel_path = 'E:/med_project/中山医院-肾脏/中山结果整理/20250108-整理数据-修正版本.xlsx'
+    excel_df = pd.read_excel(excel_path, sheet_name='all')
+    lab_list = excel_df['病理1'].tolist()
+    num_list = excel_df['编号'].tolist()
+    base_dir = r'C:\Users\Administrator\Desktop\第三部分训练集内部测试集单灰阶单CDFI'
+    out_dir = r'C:\Users\Administrator\Desktop\单灰阶单CDFI整理'
+    os.makedirs(os.path.join(out_dir, '恶'), exist_ok=True)
+    os.makedirs(os.path.join(out_dir, '良'), exist_ok=True)
+    for p in os.listdir(base_dir):
+        num = int(p.split('-')[0])
+        lab = lab_list[num_list.index(num)]
+        shutil.move(os.path.join(base_dir, p), os.path.join(out_dir, lab, p))
     # excel_path = '20250305-结果整理.xlsx'
     # excel_df = pd.read_excel(excel_path, sheet_name='内部测试集结果')
     # label = excel_df['病理诊断1'].tolist()
@@ -903,5 +889,36 @@ if __name__ == '__main__':
     #     for name in os.listdir(os.path.join(base_dir, num)):
     #         new_name = num + '-' + name
     #         shutil.copy(os.path.join(base_dir, num, name), os.path.join(out_dir, cls, new_name))
+
+
+
+if __name__ == '__main__':
+    # # AUC:0.6401098901098901
+    # X1, y1 = make_blobs(n_samples=(1000, 100), cluster_std=[6, 4], random_state=0)
+    # X_train1, X_test1, y_train1, y_test1 = train_test_split(X1, y1, random_state=4)
+    # clf1 = SVC(gamma=0.05).fit(X_train1, y_train1)
+    # specificity1, sensitivity1, thresholds1 = roc_curve(y_test1, clf1.decision_function(X_test1))
+    # print('AUC:{}'.format(auc(specificity1, sensitivity1)))
+
+    # dataset_count()
+    # kfold_split()
+    # img2video()
+    mead_split_patient()
+    # get_mask_by_json()
+    # dataset_augment()
+    # image_json_compare()
+    # backup_code()
+    # move_data()
+    # excel_count()
+    # roc_plot()
+    # plot_confusion()
+    # mean_std_calculate()
+    # draw_grad_cam()
+    # mead_split_5zhe()
+    # p_value()
+    # draw_cam_zhognshan()
+    # gen_res()
+    shutil_data()
+
     print('done.')
 

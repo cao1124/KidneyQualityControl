@@ -251,17 +251,17 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
 
 
 def main():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "7"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "2"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     epoch = 500
     batch_size = 128
     learning_rate = 1e-3
-    image_path = '/media/user/Disk1/caoxu/dataset/kidney/zhongshan/20240312-kidney-5fold'
+    image_path = '/home/ai999/project/kidney-quality-control/单灰阶单CDFI整理-5fold'
     # 'E:/med_dataset/kidney_dataset/kidney-zhongshan/20240312-kidney-5fold'
     excel_path = '复旦中山医院肾肿瘤病理编号1-600共508例.csv'
     excel_df = pd.read_csv(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'
-    save_path = 'res/20240515-clip-cnn-resnet50-classify'
+    save_path = 'res/20250317-clip-cnn-resnet50-classify'
     os.makedirs(save_path, exist_ok=True)
     train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, device)
 
