@@ -72,11 +72,11 @@ def delong_roc_test(ground_truth, predictions_one, predictions_two):
 
 
 def p_value():
-    file_path = r'F:\med_project\中山医院-肾脏\中山结果整理\20250305作图\20250305-结果整理.xlsx'
-    df = pd.read_excel(file_path, sheet_name='内部测试集结果Model-G')
-    model_res = np.array(df['Model-G'].tolist())
-    human_res = np.array(df['Model-UT'].tolist())
-    true_labels = np.array(df.病理诊断1.tolist())
+    file_path = 'E:/med_project/中山医院-肾脏/中山结果整理/20250317/20250318-结果整理.xlsx'
+    df = pd.read_excel(file_path, sheet_name='结果')
+    model_res = np.array(df['Model-GC Multihead'].tolist())
+    human_res = np.array(df['Model-UT 3模态融合'].tolist())  # Model-GC Early  Late  Multihead   Model-UT 3模态融合
+    true_labels = np.array(df['Label'].tolist())
 
     't检验 计算 p value'
     t_stat, p_val_t = ttest_rel(model_res, human_res)

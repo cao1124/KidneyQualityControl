@@ -53,16 +53,16 @@ def bootstrap_matrics(labels, preds, nsamples=100):
 
 
 def roc_95ci():
-    excel_path = 'E:/med_project/中山医院-肾脏/中山结果整理/20250305作图/实验结果-20250307-new.xlsx'
-    excel_data = pd.read_excel(excel_path, sheet_name='Sheet2')
-    labels = excel_data['Label'].tolist() + excel_data['Label'].tolist() + excel_data['Label'].tolist()
-    # pres = excel_data['MUS'].tolist() + excel_data['MUS'].tolist()
+    excel_path = 'E:/med_project/中山医院-肾脏/中山结果整理/20250317/20250318-结果整理.xlsx'
+    excel_data = pd.read_excel(excel_path, sheet_name='结果')
+    labels = excel_data['Label'].tolist()
+    pres = excel_data['Model-UT 3模态融合'].tolist()
 
     # labels = label + label + label
-    pres1 = excel_data.低医生1.tolist()
-    pres2 = excel_data.低医生2.tolist()
-    pres3 = excel_data.低医生3.tolist()
-    pres = pres1 + pres2 + pres3
+    # pres1 = excel_data.低医生1.tolist()
+    # pres2 = excel_data.低医生2.tolist()
+    # pres3 = excel_data.低医生3.tolist()
+    # pres = pres1 + pres2 + pres3
     confusion = confusion_matrix(labels, pres)
     TP = confusion[1, 1]
     TN = confusion[0, 0]
