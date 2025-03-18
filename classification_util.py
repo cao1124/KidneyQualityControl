@@ -250,7 +250,7 @@ class LateCatFusionModel(nn.Module):
     def __init__(self, net, num_class):
         super(LateCatFusionModel, self).__init__()
         self.net = net
-        self.fc = nn.Linear(in_features=1024, out_features=num_class, bias=True)
+        self.fc = nn.Linear(in_features=4096, out_features=num_class, bias=True)
         # resnet18-1024 resnet50-4096
 
     def forward(self, x1, x2):
@@ -421,10 +421,10 @@ class MultiHeadAttention(nn.Module):
 
 
 class MultiHeadAttentionResnet(nn.Module):
-    def __init__(self, net, num_heads, num_classes_per_head):
+    def __init__(self, net, num_heads, category_num):
         super(MultiHeadAttentionResnet, self).__init__()
         self.num_heads = num_heads
-        self.num_classes_per_head = num_classes_per_head
+        self.num_classes_per_head = category_num
         # Load pre-trained ResNet
         resnet = net
         # Exclude the last two layers (pooling and fully connected)
@@ -434,9 +434,9 @@ class MultiHeadAttentionResnet(nn.Module):
         self.attention = MultiHeadAttention(n_head=num_heads, d_k_=49, d_v_=49, d_k=256, d_v=128, d_o=128)
 
         # Define the multi-head classification layer
-        self.classifier = nn.ModuleList([nn.Linear(1024, num_classes_per_head) for _ in range(num_heads)])
+        self.classifier = nn.ModuleList([nn.Linear(1024, category_num) for _ in range(num_heads)])
         # 每个头的输出维度
-        self.fc = nn.Linear(num_heads * 128, num_classes_per_head)
+        self.fc = nn.Linear(num_heads * 512, category_num)
 
     def forward(self, x1, x2):
         # Concatenate the two input images along the channel dimension
@@ -502,9 +502,9 @@ def prepare_model(category_num, model_name, lr, num_epochs, device, weights, bs=
         model.layer7 = nn.Linear(in_features=2048, out_features=category_num, bias=True)
 
     'fusion'
-    model = EarlyCatFusionModel(model)
+    # model = EarlyCatFusionModel(model)
     # model = LateCatFusionModel(model, category_num)
-    # model = MultiHeadAttentionResnet(model, num_heads=8, num_classes_per_head=category_num)
+    model = MultiHeadAttentionResnet(model, num_heads=8, category_num=category_num)
 
     # 多GPU
     if torch.cuda.device_count() > 1:

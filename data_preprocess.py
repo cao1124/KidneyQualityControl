@@ -891,6 +891,24 @@ def shutil_data():
     #         shutil.copy(os.path.join(base_dir, num, name), os.path.join(out_dir, cls, new_name))
 
 
+def cm_report():
+    from sklearn.metrics import classification_report, confusion_matrix
+
+    # 给定的混淆矩阵
+    conf_matrix = [[22, 5], [7, 76]]
+
+    # 提取真正例 (TP), 假正例 (FP), 假反例 (FN), 真反例 (TN)
+    TN, FP = conf_matrix[0]
+    FN, TP = conf_matrix[1]
+
+    # 计算 precision, recall, f1-score, support
+    target_names = ['0', '1']
+    y_true = [0] * (TN + FP) + [1] * (FN + TP)
+    y_pred = [0] * TN + [1] * FP + [0] * FN + [1] * TP
+
+    # 打印分类报告
+    print(classification_report(y_true, y_pred, target_names=target_names, digits=4))
+
 
 if __name__ == '__main__':
     # # AUC:0.6401098901098901
@@ -903,7 +921,7 @@ if __name__ == '__main__':
     # dataset_count()
     # kfold_split()
     # img2video()
-    mead_split_patient()
+    # mead_split_patient()
     # get_mask_by_json()
     # dataset_augment()
     # image_json_compare()
@@ -918,7 +936,7 @@ if __name__ == '__main__':
     # p_value()
     # draw_cam_zhognshan()
     # gen_res()
-    shutil_data()
-
+    # shutil_data()
+    cm_report()
     print('done.')
 
