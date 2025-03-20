@@ -8,7 +8,7 @@
 clip model提取 img_feature和text_feature，concatenate后送入resnet分类
 """
 import os
-os.environ['CUDA_VISIBLE_DEVICES'] = "3"
+os.environ['CUDA_VISIBLE_DEVICES'] = "0"
 import matplotlib
 import numpy as np
 from sklearn.metrics import confusion_matrix, classification_report
@@ -75,26 +75,26 @@ def load_data(data_path, excel_df, batch_size, preprocess):
                             df['label'].append(0)
                         else:
                             df['label'].append(1)
-                        description = excel_df.iloc[idx][2]
-                        if excel_df.iloc[idx][4] == '女':
+                        description = excel_df.iloc[idx][1]
+                        if excel_df.iloc[idx][3] == '女':
                             sex = 'woman'
                         else:
                             sex = 'man'
-                        year = int(excel_df.iloc[idx][5])
+                        year = int(excel_df.iloc[idx][4])
                         # resect = int(excel_df.iloc[idx][6])
-                        loc = int(excel_df.iloc[idx][6])
-                        if loc == 0:
+                        loc = excel_df.iloc[idx][5]
+                        if loc == '左':
                             located = 'left kidney'
                         else:
                             located = 'right kidney'
-                        pa = int(excel_df.iloc[idx][7])
-                        if pa == 0:
+                        pa = excel_df.iloc[idx][6]
+                        if pa == '上':
                             part = 'upper kidney location'
-                        elif pa == 1:
+                        elif pa == '中':
                             part = 'middle kidney location'
                         else:
                             part = 'lower kidney location'
-                        maximum = int(excel_df.iloc[idx][8])
+                        maximum = int(excel_df.iloc[idx][7])
                         df['caption'].append(f"A photo of a kidney cancer image showing a tumor with {description} in "
                                              f"a {year}-year-old {sex}, with a maximum diameter of {maximum} mm, located "
                                              f"on the {located} kidney, in the {part}.")
@@ -328,9 +328,9 @@ if __name__ == '__main__':
     epoch = 500
     batch_size = 1
     learning_rate = 1e-4
-    image_path = '/home/ai999/project/kidney-quality-control/单灰阶单CDFI整理-5fold'
-    excel_path = '/data/caoxu/dataset/kidney/复旦大学附属中山医院肾肿瘤文本信息-EN.xlsx'
+    image_path = '/home/ai999/project/kidney-quality-control/外部测试集82单灰阶-单CDFI-5fold'
+    excel_path = '/data/caoxu/kidney-quality-control/clip/20241129-中山肾脏外部测试数据/复旦大学附属中山医院肾肿瘤新增文本-EN.xlsx'
     excel_df = pd.read_excel(excel_path)  # encoding='utf-8' engine='openpyxl'
-    save_path = 'res/20250317-clip-resnet50-classify'
+    save_path = 'res/20250319-clip-外部测试集82单灰阶-classify-'
     os.makedirs(save_path, exist_ok=True)
     train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, device)

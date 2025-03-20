@@ -53,10 +53,10 @@ def bootstrap_matrics(labels, preds, nsamples=100):
 
 
 def roc_95ci():
-    excel_path = 'E:/med_project/中山医院-肾脏/中山结果整理/20250317/20250318-结果整理.xlsx'
-    excel_data = pd.read_excel(excel_path, sheet_name='结果')
+    excel_path = 'E:/med_project/中山医院-肾脏/中山结果整理/20250317/20250320-结果整理.xlsx'
+    excel_data = pd.read_excel(excel_path, sheet_name='域外测试结果')
     labels = excel_data['Label'].tolist()
-    pres = excel_data['Model-UT 3模态融合'].tolist()
+    pres = excel_data['中-甜'].tolist()
 
     # labels = label + label + label
     # pres1 = excel_data.低医生1.tolist()
