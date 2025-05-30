@@ -5,7 +5,7 @@
 @File    : clip_train.py
 @Author  : cao xu
 @Time    : 2024/4/19 13:54
-clip model提取 img_feature和text_feature，concatenate后送入resnet分类
+clip-resnet model提取 img_feature和text_feature，concatenate后送入resnet分类
 """
 import os
 os.environ['CUDA_VISIBLE_DEVICES'] = "0"
@@ -329,8 +329,8 @@ if __name__ == '__main__':
     batch_size = 1
     learning_rate = 1e-4
     image_path = '/home/ai999/project/kidney-quality-control/外部测试集82单灰阶-单CDFI-5fold'
-    excel_path = '/data/caoxu/kidney-quality-control/clip/20241129-中山肾脏外部测试数据/复旦大学附属中山医院肾肿瘤新增文本-EN.xlsx'
+    excel_path = '/data/caoxu/kidney-quality-control/clip-resnet/20241129-中山肾脏外部测试数据/复旦大学附属中山医院肾肿瘤新增文本-EN.xlsx'
     excel_df = pd.read_excel(excel_path)  # encoding='utf-8' engine='openpyxl'
-    save_path = 'res/20250319-clip-外部测试集82单灰阶-classify-'
+    save_path = 'res/20250319-clip-resnet-外部测试集82单灰阶-classify-'
     os.makedirs(save_path, exist_ok=True)
     train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, device)

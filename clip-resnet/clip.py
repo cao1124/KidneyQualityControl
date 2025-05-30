@@ -92,7 +92,7 @@ def load(name: str, device: Union[str, torch.device] = "cuda" if torch.cuda.is_a
     Parameters
     ----------
     name : str
-        A model name listed by `clip.available_models()`, or the path to a model checkpoint containing the state_dict
+        A model name listed by `clip-resnet.available_models()`, or the path to a model checkpoint containing the state_dict
 
     device : Union[str, torch.device]
         The device to put the loaded model
@@ -101,7 +101,7 @@ def load(name: str, device: Union[str, torch.device] = "cuda" if torch.cuda.is_a
         Whether to load the optimized JIT model or more hackable non-JIT model (default).
 
     download_root: str
-        path to download the model files; by default, it uses "~/.cache/clip"
+        path to download the model files; by default, it uses "~/.cache/clip-resnet"
 
     Returns
     -------
@@ -112,7 +112,7 @@ def load(name: str, device: Union[str, torch.device] = "cuda" if torch.cuda.is_a
         A torchvision transform that converts a PIL image into a tensor that the returned model can take as its input
     """
     if name in _MODELS:
-        model_path = _download(_MODELS[name], download_root or os.path.expanduser("~/.cache/clip"))
+        model_path = _download(_MODELS[name], download_root or os.path.expanduser("~/.cache/clip-resnet"))
     elif os.path.isfile(name):
         model_path = name
     else:

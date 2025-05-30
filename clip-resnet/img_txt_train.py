@@ -5,7 +5,7 @@
 @File    : clip_train.py
 @Author  : cao xu
 @Time    : 2024/4/19 13:54
-clip model提取 text_feature，图像送入resnet提取img_feature, 在resnet分类的全连接层concatenate后分类
+mlp model提取 text_feature，图像送入resnet提取img_feature, 在resnet分类的全连接层concatenate后分类
 """
 import matplotlib
 import numpy as np
@@ -22,6 +22,7 @@ from PIL import Image
 import os
 import warnings
 
+from networks import FusionModel
 
 matplotlib.use('AGG')
 torch.multiprocessing.set_sharing_strategy('file_system')
@@ -47,22 +48,27 @@ image_transforms = {
 class image_caption_dataset(Dataset):
     def __init__(self, df, preprocess):
         self.images = df["image"]
-        self.caption = df["caption"]
+        self.sex = df["sex"]
+        self.year = df["year"]
+        # self.caption = df["caption"]
         self.label = df["label"]
         self.preprocess = preprocess
 
     def __len__(self):
-        return len(self.caption)
+        return len(self.label)
 
     def __getitem__(self, idx):
         images = self.preprocess(Image.open(self.images[idx]).convert("RGB"))
-        caption = self.caption[idx]
-        label = self.label[idx]
-        return images, caption, label
+        sex = torch.tensor(self.sex[idx], dtype=torch.long)
+        year = torch.tensor(self.year[idx], dtype=torch.long)
+        # caption = self.caption[idx]
+        label = torch.tensor(self.label[idx], dtype=torch.long)
+        return images, sex, year, label
 
 
 def load_data(image_path, excel_df, batch_size, preprocess):
-    df = {'image': [], 'caption': [], 'label': []}
+    # df = {'image': [], 'caption': [], 'label': []}
+    df = {'image': [], 'sex': [], 'year': [], 'label': []}
     num_list = excel_df.iloc[:, 0].tolist()
     for f in image_path:
         for c in os.listdir(f):
@@ -81,21 +87,27 @@ def load_data(image_path, excel_df, batch_size, preprocess):
                     # df['caption'].append(
                     #     "a photo of {} kidney cancer image in a {}-year-old {}.".format(cla, year, sex))
                     if excel_df.iloc[idx][3] == '女':
-                        sex = 'woman'
+                        sex = [0, 1]     # 'woman'
                     else:
-                        sex = 'man'
+                        sex = [1, 0]     # 'man'
                     year = int(excel_df.iloc[idx][4])
-                    df['caption'].append("A photo of a {}-year-old {} with kidney cancer.".format(year, sex))
+                    if 0 < year <= 11:      # 儿童
+                        year = [1, 0, 0, 0, 0]
+                    elif 11 < year <= 18:   # 少年
+                        year = [0, 1, 0, 0, 0]
+                    elif 18 < year <= 35:   # 青年
+                        year = [0, 0, 1, 0, 0]
+                    elif 35 < year <= 59:   # 中年
+                        year = [0, 0, 0, 1, 0]
+                    elif 59 < year:         # 老年
+                        year = [0, 0, 0, 0, 1]
+                    df['sex'].append(sex)
+                    df['year'].append(year)
+                    # df['caption'].append("A photo of a {}-year-old {} with kidney cancer.".format(year, sex))
 
     dataset = image_caption_dataset(df, preprocess)
     train_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, drop_last=True, num_workers=4)
     return train_dataloader, len(dataset.images)
-
-
-def convert_models_to_fp32(model):
-    for p in model.parameters():
-        p.data = p.data.float()
-        p.grad.data = p.grad.data.float()
 
 
 def load_pretrian_model(model_path, device):
@@ -107,12 +119,12 @@ def load_pretrian_model(model_path, device):
     return model, preprocess
 
 
-class ClipCNNModel(nn.Module):
+class MLPCNNModel(nn.Module):
     def __init__(self, net):
-        super(ClipCNNModel, self).__init__()
+        super(MLPCNNModel, self).__init__()
         net.fc = nn.Sequential()
         self.net = net
-        self.fc = nn.Linear(in_features=2560, out_features=2, bias=True)
+        self.fc = nn.Linear(in_features=2058, out_features=2, bias=True)
 
     def forward(self, x1, x2):
         x1 = self.net(x1)
@@ -121,9 +133,22 @@ class ClipCNNModel(nn.Module):
         return x
 
 
+class MLP(nn.Module):
+    def __init__(self):
+        super(MLP, self).__init__()
+        self.model = nn.Sequential(
+            nn.Linear(77, 30),
+            nn.ReLU(),
+            nn.Linear(30, 10),
+            nn.ReLU()
+        )
+
+    def forward(self, x):
+        output = self.model(x)
+        return output
+
+
 def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path, device):
-    # 加载CLIP模型
-    model_clip, _ = load_pretrian_model('ViT-B/32', device)  # ViT-B/32
     for i in range(4):
         print('五折交叉验证 第{}次实验:'.format(i))
         # 数据划分
@@ -133,16 +158,20 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
         train_path = [os.path.join(image_path, x) for x in fold_list if x != fold_list[3 - i]]
 
         # 加载模型  resnet
-        model = models.resnet50(pretrained=True)
-        model = ClipCNNModel(model)
+        # model = models.resnet50(pretrained=True)
+        # model = MLPCNNModel(model)
+        # # MLP模型
+        # mlp_model = MLP().to(device)
+        custom_model = FusionModel(num_classes_img=2)
 
         if torch.cuda.device_count() > 1:
-            model = nn.DataParallel(model)
-        model.to(device)
+            model = nn.DataParallel(custom_model)
+        custom_model.to(device)
 
         # 损失函数和优化器
         loss_func = nn.CrossEntropyLoss().to(device)
-        optimizer = optim.Adam(model.parameters(), lr=learning_rate, betas=(0.8, 0.888), eps=1e-08, weight_decay=2e-4)
+        # optimizer = optim.Adam(model.parameters(), lr=learning_rate, betas=(0.8, 0.888), eps=1e-08, weight_decay=2e-4)
+        optimizer = optim.SGD(custom_model.parameters(), lr=learning_rate, weight_decay=2e-4, momentum=0.9, nesterov=True)
         lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=num_epochs, eta_min=0.005)
 
         # 加载数据集
@@ -158,16 +187,23 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
             train_loss, valid_loss, num_correct = 0.0, 0.0, 0
 
             'train'
-            model.train()
+            custom_model.train()
             torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
             for step, batch in enumerate(train_dataloader):
-                img = batch[0].to(device)
-                text = clip.tokenize(batch[1]).to(device)
-                label = batch[2].to(device)
+                gender_input = torch.randn(1, 2)    # 性别信息输入
+                age_input = torch.randn(1, 5)       # 年龄信息输入
+                img_input = batch[0].to(device)     # 图像输入
+                gender_input = batch[1].to(device)  # 性别信息输入
+                age_input = batch[2].to(device)     # 年龄信息输入
+                label = batch[3].to(device)
 
-                _, text_feature = model_clip(img, text)
-                output = model(img, text_feature)
+                'mlp'
+                # img = batch[0].to(device)
+                # text = clip-resnet.tokenize(batch[1]).to(device)
+                # text_feature = mlp_model(text.to(torch.float32))
+                # output = model(img, text_feature)
 
+                output = custom_model(img_input, age_input, gender_input)
                 loss_step = loss_func(output, label)
                 train_loss += loss_step.item()
                 temp_num_correct = torch.eq(output.argmax(dim=1), label).sum().float().item()
@@ -185,16 +221,21 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
             'validation'
             num_correct = 0
             valid_true, valid_pred = [], []
-            model.eval()
+            custom_model.eval()
             torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
             with torch.no_grad():
                 for step, batch in enumerate(valid_dataloader):
-                    img = batch[0].to(device)
-                    text = clip.tokenize(batch[1]).to(device)
-                    label = batch[2].to(device)
+                    img_input = batch[0].to(device)  # 图像输入
+                    gender_input = batch[1].to(device)  # 性别信息输入
+                    age_input = batch[2].to(device)  # 年龄信息输入
+                    label = batch[3].to(device)
+                    'mlp'
+                    # img = batch[0].to(device)
+                    # text = clip-resnet.tokenize(batch[1]).to(device)
+                    # text_feature = mlp_model(text.to(torch.float32))
+                    # output = model(img, text_feature)
 
-                    _, text_feature = model_clip(img, text)
-                    output = model(img, text_feature)
+                    output = custom_model(img_input, age_input, gender_input)
                     loss_step = loss_func(output, label)
                     valid_loss += loss_step.item()
                     num_correct += torch.eq(output.argmax(dim=1), label).sum().float().item()
@@ -212,7 +253,7 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
                     'classification_report:\n{}'.format(classification_report(valid_true, valid_pred, digits=4)))
                 best_valid_acc = valid_acc
                 best_epoch = epoch + 1
-                torch.save(model, os.path.join(save_path, 'fold' + str(i) + '-best-model.pt'))
+                torch.save(custom_model, os.path.join(save_path, 'fold' + str(i) + '-best-model.pt'))
             print("Epoch: {:03d}, Train Loss: {:.4f}, Acc: {:.4f}, Valid Loss: {:.4f}, Acc:{:.4f}"
                   .format(epoch + 1, train_loss, train_acc, valid_loss, valid_acc))
             print("validation best: {:.4f} at epoch {}".format(best_valid_acc, best_epoch))
@@ -234,13 +275,17 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
         torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
         with torch.no_grad():
             for step, batch in enumerate(test_dataloader):
-                img = batch[0].to(device)
-                text = clip.tokenize(batch[1]).to(device)
-                label = batch[2].to(device)
+                img_input = batch[0].to(device)  # 图像输入
+                gender_input = batch[1].to(device)  # 性别信息输入
+                age_input = batch[2].to(device)  # 年龄信息输入
+                label = batch[3].to(device)
+                'mlp'
+                # img = batch[0].to(device)
+                # text = clip-resnet.tokenize(batch[1]).to(device)
+                # text_feature = mlp_model(text.to(torch.float32))
+                # output = model(img, text_feature)
 
-                _, text_feature = model_clip(img, text)
-                output = model(img, text_feature)
-
+                output = custom_model(img_input, age_input, gender_input)
                 num_correct += torch.eq(output.argmax(dim=1), label).sum().float().item()
                 test_true.extend(label.cpu().numpy())
                 test_pred.extend(output.argmax(dim=1).cpu().numpy())
@@ -251,17 +296,17 @@ def train(num_epochs, batch_size, learning_rate, image_path, excel_df, save_path
 
 
 def main():
-    os.environ['CUDA_VISIBLE_DEVICES'] = "2"
+    os.environ['CUDA_VISIBLE_DEVICES'] = "7"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     epoch = 500
     batch_size = 128
     learning_rate = 1e-3
-    image_path = '/home/ai999/project/kidney-quality-control/单灰阶单CDFI整理-5fold'
-    # 'E:/med_dataset/kidney_dataset/kidney-zhongshan/20240312-kidney-5fold'
+    image_path = '/media/user/Disk1/caoxu/dataset/kidney/zhongshan/20240312-kidney-5fold'
+    # 'F:/med_dataset/kidney_dataset/kidney-zhongshan/20240312-kidney-5fold'
     excel_path = '复旦中山医院肾肿瘤病理编号1-600共508例.csv'
     excel_df = pd.read_csv(excel_path, encoding='utf-8')  # encoding='utf-8' engine='openpyxl'
-    save_path = 'res/20250317-clip-cnn-resnet50-classify'
+    save_path = 'res/20240522-FusionModel-classify'
     os.makedirs(save_path, exist_ok=True)
     train(epoch, batch_size, learning_rate, image_path, excel_df, save_path, device)
 

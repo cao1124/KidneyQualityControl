@@ -25,11 +25,11 @@ def img_classify(img, model, trans, device):
 
 
 def test():
-    data_dir = '/home/ai999/project/kidney-quality-control/clip/20241129-中山肾脏外部测试数据/复旦大学附属中山医院已完成勾图新/'
+    data_dir = '/home/ai999/project/kidney-quality-control/clip-resnet/20241129-中山肾脏外部测试数据/复旦大学附属中山医院已完成勾图新/'
     model = torch.load('classification_model/0830-kidney-cancer-2class-0.9091.pt')
     model.eval()
     torch.cuda.empty_cache()  # 释放缓存分配器当前持有的且未占用的缓存显存
-    excel_path = 'clip/20241129-中山肾脏外部测试数据/最新复旦大学附属中山医院肾肿瘤新增文本2.xlsx'
+    excel_path = 'clip-resnet/20241129-中山肾脏外部测试数据/最新复旦大学附属中山医院肾肿瘤新增文本2.xlsx'
     excel_df = pd.read_excel(excel_path)
     num_list = excel_df.编号.tolist()
     lab_list = excel_df.病理诊断.tolist()

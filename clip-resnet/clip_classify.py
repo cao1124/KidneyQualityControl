@@ -22,7 +22,7 @@ def clip_classify():
     # Load CLIP model and processor
     os.environ['CUDA_VISIBLE_DEVICES'] = "2"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    # clip_model, processor = load_pretrian_model('20240422-clip-classify-ViT-B32-model.pt', device)
+    # clip_model, processor = load_pretrian_model('20240422-clip-resnet-classify-ViT-B32-model.pt', device)
     model_clip, _ = load_pretrian_model('ViT-B/32', device)
     fc_layer = torch.nn.Linear(1024, 3 * 224 * 224).to(device)
     clip_model = torch.load('20240821-clip-resnext50-classify-0.9863.pt')

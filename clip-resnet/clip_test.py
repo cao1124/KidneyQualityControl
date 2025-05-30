@@ -5,7 +5,7 @@
 @File    : clip_train.py
 @Author  : cao xu
 @Time    : 2024/4/19 13:54
-clip model提取 img_feature和text_feature，concatenate后送入resnet分类
+clip-resnet model提取 img_feature和text_feature，concatenate后送入resnet分类
 """
 import os
 os.environ['CUDA_VISIBLE_DEVICES'] = "6"
@@ -131,7 +131,7 @@ def test(image_path, excel_df, device):
     fc_layer = torch.nn.Linear(1024, 3 * 224 * 224).to(device)
     test_dataloader, test_size = load_data(image_path, excel_df, 1, image_transforms['valid'])
     print('test_size:{}'.format(test_size))
-    model_classify = torch.load('20250107-clip-resnet50-classify-0.9183.pt')
+    model_classify = torch.load('20250107-clip-resnet-resnet50-classify-0.9183.pt')
     num_correct = 0
     test_true, test_pred = [], []
     model_classify.eval()

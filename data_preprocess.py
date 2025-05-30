@@ -205,8 +205,8 @@ def cv_write(file_path, file):
 
 
 def get_mask_by_json():
-    base_dir = 'clip/20241129-中山肾脏外部测试数据/复旦大学附属中山医院已完成勾图新-ori'
-    segment_mask = 'clip/20241129-中山肾脏外部测试数据/复旦大学附属中山医院已完成勾图新-mask'
+    base_dir = 'clip-resnet/20241129-中山肾脏外部测试数据/复旦大学附属中山医院已完成勾图新-ori'
+    segment_mask = 'clip-resnet/20241129-中山肾脏外部测试数据/复旦大学附属中山医院已完成勾图新-mask'
     for p in os.listdir(base_dir):
         os.makedirs(os.path.join(segment_mask, p), exist_ok=True)
         img_json_list = [x for x in os.listdir(os.path.join(base_dir, p)) if x.endswith('.json')]
@@ -605,24 +605,25 @@ def confusion_matrix_plot(cm, labels, title='Confusion Matrix', xtitle='DAN', cm
 
 def plot_confusion():
     # 读取数据
-    excel_path = r'F:\med_project\专利&申报书&文章\文章\中山肾脏\中山结果整理\20250108结果\20250108-医生读图对比.xlsx'
-    excel_data = pd.read_excel(excel_path, sheet_name='画图')
-    label = excel_data.病理诊断.tolist()
-    # pres = excel_data.高3.tolist()
-    labels = label + label + label
-    pres1 = excel_data['中-甜'].tolist()
-    pres2 = excel_data['中-琪'].tolist()
-    pres3 = excel_data['中-汪'].tolist()
-    pres = pres1 + pres2 + pres3
+    excel_path = r'E:\med_project\中山医院-肾脏\中山结果整理\20250317\20250320-结果整理.xlsx'
+    excel_data = pd.read_excel(excel_path, sheet_name='域外测试结果')
+    labels = excel_data['Label'].tolist()
+    title = 'Model-UT'      # Model-G Model-GC Early  Late  MultiHead   Model-UT 域内测试结果 域外测试结果
+    pres = excel_data[title].tolist()
+    # labels = label + label + label
+    # pres1 = excel_data['中-甜'].tolist()
+    # pres2 = excel_data['中-琪'].tolist()
+    # pres3 = excel_data['中-汪'].tolist()
+    # pres = pres1 + pres2 + pres3
 
-    save_name = r'混淆矩阵图-Model-UT 分类结果.tiff'
+    save_name = f'混淆矩阵图-{title} 域外测试结果 分类结果.tiff'
     cls = ['Benign', 'Malignant']
     tick_marks = np.array(range(len(cls))) + 0.5
     cm = confusion_matrix(labels, pres)
     np.set_printoptions(precision=2)
     cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-    cm_normalized[0] = [0.80, 0.20]
-    cm_normalized[1] = [0.04, 0.96]
+    # cm_normalized[0] = [0.80, 0.20]
+    # cm_normalized[1] = [0.04, 0.96]
     plt.figure(figsize=(7, 7), dpi=120)
     ind_array = np.arange(len(cls))
     x, y = np.meshgrid(ind_array, ind_array)
@@ -644,7 +645,8 @@ def plot_confusion():
     plt.gca().yaxis.set_ticks_position('none')
     plt.grid(True, which='minor', linestyle='-')
     plt.gcf().subplots_adjust(bottom=0.15)
-    confusion_matrix_plot(cm_normalized, cls, title='Confusion Matrices of Specific Diagnoses', xtitle='Model-UT', cmap=plt.cm.Blues)
+    confusion_matrix_plot(cm_normalized, cls, title='Confusion Matrices of Specific Diagnoses', xtitle=title, cmap=plt.cm.Blues)
+
     plt.draw()
     plt.savefig(save_name)
 
@@ -1012,15 +1014,19 @@ if __name__ == '__main__':
     # backup_code()
     # move_data()
     # excel_count()
-    roc_plot()
+    # roc_plot()
     # plot_confusion()
     # mean_std_calculate()
     # draw_grad_cam()
     # mead_split_5zhe()
     # p_value()
     # draw_cam_zhognshan()
-    # gen_res()
+    gen_res()
     # shutil_data()
     # cm_report()
+
+    base_dir = r'F:\med_dataset\超声质控数据\广东省二质控切面标记\ori_data\广东省二第三批20250411接收\泌尿系'
+    for cls in os.listdir(base_dir):
+        print(cls, len(os.listdir(os.path.join(base_dir, cls))))
     print('done.')
 
