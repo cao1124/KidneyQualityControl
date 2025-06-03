@@ -91,8 +91,8 @@ def train_clip():
     config = ModelConfig()
 
     # 加载数据集
-    excel_path = "病例汇总.xlsx"
-    image_dir = "病例汇总"
+    excel_path = "/home/ai999/project/kidney-quality-control/20250530-病例汇总.xlsx"
+    image_dir = "/home/ai999/project/kidney-quality-control/20250530-病例汇总"
     data_df = pd.read_excel(excel_path)
 
     # 划分数据集 (8:1:1)
