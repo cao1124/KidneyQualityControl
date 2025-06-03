@@ -32,3 +32,7 @@ class ModelConfig:
         self.num_classes = 3  # 根据实际类别修改
         self.learning_rate = 1e-5
         self.batch_size = 32
+
+        # 新增文本处理配置
+        self.context_length = 77  # 文本最大长度
+        self.text_vocab_size = 21128  # 中文BERT词表大小

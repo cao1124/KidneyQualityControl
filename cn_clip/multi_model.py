@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 """
 @Project ：kidney-quality-control 
-@File    ：model.py
+@File    ：multi_model.py
 @IDE     ：PyCharm 
 @Author  ：cao xu
 @Date    ：2025/3/30 上午10:17
@@ -10,7 +10,26 @@
 
 import torch
 import torch.nn as nn
-from cn_clip.clip.model import VisualTransformer, BertConfig, BertModel
+from transformers import BertTokenizer
+from clip.model import VisualTransformer, BertConfig, BertModel
+
+
+class TextProcessor(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+        self.tokenizer = BertTokenizer.from_pretrained("bert-base-chinese")
+        self.context_length = config.context_length
+
+    def forward(self, texts):
+        # 使用BERT tokenizer处理文本
+        inputs = self.tokenizer(
+            texts,
+            padding='max_length',
+            truncation=True,
+            max_length=self.context_length,
+            return_tensors='pt'
+        )
+        return inputs
 
 
 class MultimodalFusionModel(nn.Module):

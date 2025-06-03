@@ -20,8 +20,8 @@ from torch.utils.data.distributed import DistributedSampler
 from torchvision.transforms import Compose, Resize, ToTensor, Normalize, InterpolationMode
 from timm.data import create_transform
 
-from cn_clip.clip import _tokenizer
-from cn_clip.clip import tokenize
+from clip import _tokenizer
+from clip import tokenize
 
 
 def _convert_to_rgb(image):

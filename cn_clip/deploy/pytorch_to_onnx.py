@@ -10,7 +10,7 @@ import torch
 import torch.onnx
 from onnx import load_model, save_model
 from onnxmltools.utils import convert_float_to_float16
-import cn_clip.clip as clip
+import clip as clip
 from clip.utils import _MODELS, _MODEL_INFO, _download, available_models, create_model, image_transform
 
 def parse_args():

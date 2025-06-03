@@ -17,13 +17,13 @@ from torch.cuda.amp import GradScaler
 import sys
 sys.path.append("/mnt/disk1/yangyixin/code/Chinese-CLIP-master")
 
-from cn_clip.clip import load
-from cn_clip.clip.model import convert_weights, convert_state_dict, resize_pos_embed, CLIP
-from cn_clip.training.train import train, evaluate
-from cn_clip.training.data import get_data
-from cn_clip.training.params import parse_args
-from cn_clip.training.logger import setup_primary_logging, setup_worker_logging
-from cn_clip.training.scheduler import cosine_lr
+from clip import load
+from clip.model import convert_weights, convert_state_dict, resize_pos_embed, CLIP
+from training.train import train, evaluate
+from training.data import get_data
+from training.params import parse_args
+from training.logger import setup_primary_logging, setup_worker_logging
+from training.scheduler import cosine_lr
 
 # Used by https://github.com/openai/CLIP/issues/83 but not below.
 # Keeping it incase needed.

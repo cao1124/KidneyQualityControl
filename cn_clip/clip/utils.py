@@ -10,16 +10,8 @@ import torch
 from torchvision.transforms import Compose, ToTensor, Normalize, Resize, InterpolationMode
 from tqdm import tqdm
 
-from cn_clip.clip import _tokenizer
-from cn_clip.clip.model import convert_weights, CLIP, restore_model
-
-import os,sys,io
-library_path = "./././PyEncDec"
-# os.environ['LD_LIBRARY_PATH'] = f"{library_path}:" + os.environ.get('LD_LIBRARY_PATH', '')
-sys.path.append(library_path)
-import ctypes
-ctypes.CDLL('./././PyEncDec/libMedEncDec0.so')
-import PyEncDec as PED
+from clip import _tokenizer
+from clip.model import convert_weights, CLIP, restore_model
 
 __all__ = ["load", "tokenize", "available_models", "image_transform", "load_from_name"]
 
@@ -53,18 +45,6 @@ _MODEL_INFO = {
     },
 }
 
-def model_decryption_cj(encryt_file):
-    # print("decryption file: ", encryt_file)
-    ins = PED.PyEncDec()
-    # print('ins sucess')
-    # print(os.path.abspath(encryt_file))
-    cs = ins.decFile(os.path.abspath(encryt_file))
-    # print('decFile sucess')
-    b = io.BytesIO(cs)
-
-    b.seek(0)
-
-    return b
 
 def _download(url: str, root: str):
     os.makedirs(root, exist_ok=True)
@@ -103,7 +83,6 @@ def available_models() -> List[str]:
 
 def load_from_name(name: str, device: Union[str, torch.device] = "cuda" if torch.cuda.is_available() else "cpu",
                    download_root: str = None, vision_model_name: str = None, text_model_name: str = None, input_resolution: int = None):
-
     if name in _MODELS:
         model_path = _download(_MODELS[name], download_root or os.path.expanduser("~/.cache/clip"))
         model_name, model_input_resolution = _MODEL_INFO[name]['struct'], _MODEL_INFO[name]['input_resolution']
@@ -114,14 +93,9 @@ def load_from_name(name: str, device: Union[str, torch.device] = "cuda" if torch
     else:
         raise RuntimeError(f"Model {name} not found; available models = {available_models()}")
 
-    if name.endswith("model"):    
-        # with open(model_path, 'rb') as opened_file:
-        #     # loading saved checkpoint
-        checkpoint = torch.load(model_decryption_cj(model_path), map_location="cpu")
-    else:
-        with open(model_path, 'rb') as opened_file:
-            # loading saved checkpoint
-            checkpoint = torch.load(opened_file, map_location="cpu")
+    with open(model_path, 'rb') as opened_file:
+        # loading saved checkpoint
+        checkpoint = torch.load(opened_file, map_location="cpu")
 
     model = create_model(model_name, checkpoint)
     if str(device) == "cpu":
@@ -195,12 +169,12 @@ def create_model(model_name, checkpoint=None):
     # Initialize the model.
     vision_model_config_file = Path(
         __file__).parent / f"model_configs/{vision_model.replace('/', '-')}.json"
-    # print('Loading vision model config from', vision_model_config_file)
+    print('Loading vision model config from', vision_model_config_file)
     assert os.path.exists(vision_model_config_file)
 
     text_model_config_file = Path(
         __file__).parent / f"model_configs/{text_model.replace('/', '-')}.json"
-    # print('Loading text model config from', text_model_config_file)
+    print('Loading text model config from', text_model_config_file)
     assert os.path.exists(text_model_config_file)
 
     with open(vision_model_config_file, 'r') as fv, open(text_model_config_file, 'r') as ft:
@@ -209,7 +183,7 @@ def create_model(model_name, checkpoint=None):
             model_info[k] = v
     if isinstance(model_info['vision_layers'], str):
         model_info['vision_layers'] = eval(model_info['vision_layers'])
-    # print('Model info', model_info)
+    print('Model info', model_info)
     model = CLIP(**model_info)
     convert_weights(model)
     if checkpoint:

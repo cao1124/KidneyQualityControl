@@ -13,7 +13,7 @@ import torch.distributed as dist
 import torch.nn.functional as F
 
 from collections import defaultdict
-from cn_clip.clip.model import convert_state_dict
+from clip.model import convert_state_dict
 
 
 def is_master(args):

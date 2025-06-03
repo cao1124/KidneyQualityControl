@@ -15,9 +15,9 @@ import importlib.util
 if importlib.util.find_spec('flash_attn'):
     FlashMHA = importlib.import_module('flash_attn.flash_attention').FlashMHA
 
-from cn_clip.clip import _tokenizer
-from cn_clip.clip.configuration_bert import BertConfig
-from cn_clip.clip.modeling_bert import BertModel
+from clip import _tokenizer
+from clip.configuration_bert import BertConfig
+from clip.modeling_bert import BertModel
 
 
 class Bottleneck(nn.Module):

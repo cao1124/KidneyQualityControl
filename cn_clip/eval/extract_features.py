@@ -12,9 +12,9 @@ import json
 import torch
 from tqdm import tqdm
 
-from cn_clip.clip.model import convert_weights, CLIP
-from cn_clip.training.main import convert_models_to_fp32
-from cn_clip.eval.data import get_eval_img_dataset, get_eval_txt_dataset
+from clip.model import convert_weights, CLIP
+from training.main import convert_models_to_fp32
+from eval.data import get_eval_img_dataset, get_eval_txt_dataset
 
 def parse_args():
     parser = argparse.ArgumentParser()

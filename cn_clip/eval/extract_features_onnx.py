@@ -9,7 +9,7 @@ import json
 import torch
 from tqdm import tqdm
 import onnxruntime
-from cn_clip.eval.data import get_eval_img_dataset, get_eval_txt_dataset
+from eval.data import get_eval_img_dataset, get_eval_txt_dataset
 
 def parse_args():
     parser = argparse.ArgumentParser()

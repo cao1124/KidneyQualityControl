@@ -6,10 +6,10 @@ This script runs to compare the inference speed between Pytorch (CPU/GPU), ONNX 
 import argparse
 import torch
 from PIL import Image
-import cn_clip.clip as clip
-from cn_clip.clip.utils import create_model, _MODEL_INFO, image_transform
-from cn_clip.training.main import convert_models_to_fp32, convert_weights
-from cn_clip.deploy.benchmark_utils import track_infer_time, print_timings
+import clip as clip
+from clip.utils import create_model, _MODEL_INFO, image_transform
+from training.main import convert_models_to_fp32, convert_weights
+from deploy.benchmark_utils import track_infer_time, print_timings
 
 
 def parse_args():
@@ -121,7 +121,7 @@ if __name__ == '__main__':
         del session
 
     if args.tensorrt_image_model and args.device == "cuda":
-        from cn_clip.deploy.tensorrt_utils import TensorRTModel
+        from deploy.tensorrt_utils import TensorRTModel
         print(f'Prepare the TensorRT image model from {args.tensorrt_image_model}')
         trt_model = TensorRTModel(args.tensorrt_image_model)
         for i in range(args.warmup):
@@ -172,7 +172,7 @@ if __name__ == '__main__':
         del session
 
     if args.tensorrt_text_model and args.device == "cuda":
-        from cn_clip.deploy.tensorrt_utils import TensorRTModel
+        from deploy.tensorrt_utils import TensorRTModel
         print(f'Prepare the TensorRT text model from {args.tensorrt_text_model}')        
         trt_model = TensorRTModel(args.tensorrt_text_model)
         for i in range(args.warmup):

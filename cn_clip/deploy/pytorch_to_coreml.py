@@ -9,8 +9,8 @@ from PIL import Image
 import torch
 from torch import nn
 import coremltools as ct
-import cn_clip.clip as clip
-from cn_clip.clip.utils import _MODELS, _MODEL_INFO, _download, available_models, create_model, image_transform
+import clip as clip
+from clip.utils import _MODELS, _MODEL_INFO, _download, available_models, create_model, image_transform
 
 
 class ImageEncoder(nn.Module):

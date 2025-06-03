@@ -13,7 +13,7 @@ from torch.utils.data import Dataset, DataLoader, SubsetRandomSampler
 from torch.utils.data.distributed import DistributedSampler
 from torch.utils.data.sampler import SequentialSampler
 import torchvision.datasets as datasets
-from cn_clip.clip import tokenize
+from clip import tokenize
 
 
 def _convert_to_rgb(image):
