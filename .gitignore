@@ -1,5 +1,8 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+*segment
+get_img_from_video
+2024*
 *.py[cod]
 *$py.class
 *.Identifier
@@ -10,7 +13,6 @@ snapshots/*
 *.so
 *.exe
 *.mp4
-*.jpg
 *.tiff
 *out
 kfold-index
