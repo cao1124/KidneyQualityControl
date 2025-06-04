@@ -1,38 +1,35 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-"""
-@Project ：kidney-quality-control 
-@File    ：config.py
-@IDE     ：PyCharm 
-@Author  ：cao xu
-@Date    ：2025/3/30 上午10:17
-"""
-
-
 class ModelConfig:
     def __init__(self):
         # 图像参数
         self.image_resolution = 224
         self.patch_size = 32
 
-        # 文本参数
-        self.bert_config = "cn_clip/clip/model_configs/bert_base_chinese.json"
+        # ViT-B-16 视觉编码器参数
+        self.vision_width = 768
+        self.vision_layers = 12
+        self.vision_heads = 12
+        self.embed_dim = 128  # 从512改为256，降低显存使用
+
+        # 文本参数 - 使用 RoBERTa 中文模型
+        self.bert_config = "clip/model_configs/RoBERTa-wwm-ext-base-chinese.json"
+        self.pretrained_model_path = "pretrained_weights/clip_cn_vit-b-16.pt"
+        self.text_embed_dim = 128  # 对应text_fc输出维度
 
         # 融合参数
-        self.fusion_dim = 512
-        self.vit_input_size = (224, 224, 64)  # H, W, C
+        self.fusion_dim = 128  # 从512改为256，配合embed_dim
+        self.vit_input_size = (224, 224, 64)
         self.classifier_patch_size = 16
 
         # ViT分类器参数
-        self.classifier_width = 768
-        self.classifier_layers = 12
-        self.classifier_heads = 12
+        self.classifier_width = 384   # 768
+        self.classifier_layers = 6    # 12
+        self.classifier_heads = 6     # 12
 
         # 训练参数
-        self.num_classes = 3  # 根据实际类别修改
-        self.learning_rate = 1e-5
-        self.batch_size = 32
+        self.num_classes = 2
+        self.learning_rate = 1e-3
+        self.batch_size = 2
 
-        # 新增文本处理配置
-        self.context_length = 77  # 文本最大长度
-        self.text_vocab_size = 21128  # 中文BERT词表大小
+        # 文本处理配置
+        self.context_length = 77
+        self.text_vocab_size = 21128

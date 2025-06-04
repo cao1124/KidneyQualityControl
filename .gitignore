@@ -26,6 +26,7 @@ kidney-small-tumor-segment/
 segment_model/
 # Distribution / packaging
 .Python
+*.bin
 env/
 build/
 develop-eggs/

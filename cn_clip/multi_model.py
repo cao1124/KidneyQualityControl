@@ -10,8 +10,9 @@
 
 import torch
 import torch.nn as nn
-from transformers import BertTokenizer
-from clip.model import VisualTransformer, BertConfig, BertModel
+import json
+from transformers import BertTokenizer, BertConfig, BertModel
+from clip.model import VisualTransformer
 
 
 class TextProcessor(nn.Module):
@@ -37,7 +38,7 @@ class MultimodalFusionModel(nn.Module):
         super().__init__()
         self.config = config
 
-        # 图像编码器 (使用ViT代替ResNet50)
+        # 图像编码器
         self.gray_image_encoder = VisualTransformer(
             input_resolution=config.image_resolution,
             patch_size=config.patch_size,
@@ -56,17 +57,37 @@ class MultimodalFusionModel(nn.Module):
             output_dim=config.embed_dim
         )
 
-        # 文本编码器
-        bert_config = BertConfig.from_json_file(config.bert_config)
+        # 文本编码器 - 使用RoBERTa配置
+        # 从JSON文件加载配置
+        with open(config.bert_config, 'r', encoding='utf-8') as f:
+            bert_config_dict = json.load(f)
+
+        # 创建自定义配置对象
+        bert_config = BertConfig(
+            vocab_size=bert_config_dict.get('vocab_size', 21128),
+            hidden_size=bert_config_dict.get('hidden_size', 768),
+            num_hidden_layers=bert_config_dict.get('num_hidden_layers', 12),
+            num_attention_heads=bert_config_dict.get('num_attention_heads', 12),
+            intermediate_size=bert_config_dict.get('intermediate_size', 3072),
+            hidden_act=bert_config_dict.get('hidden_act', 'gelu'),
+            hidden_dropout_prob=bert_config_dict.get('hidden_dropout_prob', 0.1),
+            attention_probs_dropout_prob=bert_config_dict.get('attention_probs_dropout_prob', 0.1),
+            max_position_embeddings=bert_config_dict.get('max_position_embeddings', 514),
+            type_vocab_size=bert_config_dict.get('type_vocab_size', 2),
+            initializer_range=bert_config_dict.get('initializer_range', 0.02),
+            layer_norm_eps=bert_config_dict.get('layer_norm_eps', 1e-5),
+            pad_token_id=bert_config_dict.get('pad_token_id', 0)
+        )
+
         self.text_encoder = BertModel(bert_config, add_pooling_layer=False)
 
         # 特征融合层
-        self.gray_fc = nn.Linear(config.vision_width, config.fusion_dim)
-        self.cdfi_fc = nn.Linear(config.vision_width, config.fusion_dim)
+        self.gray_fc = nn.Linear(config.embed_dim, config.fusion_dim)
+        self.cdfi_fc = nn.Linear(config.embed_dim, config.fusion_dim)
         self.text_fc = nn.Linear(bert_config.hidden_size, config.fusion_dim)
 
         # 融合模块
-        self.fusion_layer1 = nn.Linear(config.fusion_dim, config.fusion_dim)
+        self.fusion_layer1 = nn.Linear(2 * config.fusion_dim, config.fusion_dim)
         self.fusion_layer2 = nn.Linear(2 * config.fusion_dim, config.fusion_dim)
 
         # ViT重构层
@@ -82,7 +103,8 @@ class MultimodalFusionModel(nn.Module):
             width=config.classifier_width,
             layers=config.classifier_layers,
             heads=config.classifier_heads,
-            output_dim=config.num_classes
+            output_dim=config.num_classes,
+            in_channels=config.vit_input_size[2]
         )
 
         # 激活函数
@@ -104,11 +126,9 @@ class MultimodalFusionModel(nn.Module):
 
         # 第一阶段融合: CDFI + 文本
         feature4 = feature2 + feature3  # 逐元素相加
-
         # 第二阶段融合: (CDFI+文本) + 灰阶
         combined = torch.cat((feature4, feature1), dim=1)  # (B, 1024)
         feature5 = self.relu(self.fusion_layer1(combined))  # (B, 512)
-
         # 第三阶段融合: 特征5 + 特征1
         vit_input = torch.cat((feature5, feature1), dim=1)  # (B, 1024)
 
