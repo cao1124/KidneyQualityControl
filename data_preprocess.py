@@ -881,9 +881,9 @@ def gen_res():
     # label = [0] * 15 + [1] * 67
     # np.random.seed(12)
     # np.random.shuffle(label)
-    excel_path = 'E:/med_project/中山医院-肾脏/中山结果整理/20250317/20250320-结果整理.xlsx'
-    excel_data = pd.read_excel(excel_path, sheet_name='域内测试结果')
-    label = excel_data['Label'].tolist()
+    excel_path = r'E:\med_project\上海中山医院-肾脏\中山结果整理\20250530\20250604-域内域外结果汇总.xlsx'
+    excel_data = pd.read_excel(excel_path, sheet_name='域外测试集')
+    label = excel_data['label'].tolist()
     print(label)
     print('-----------------------------')
     # 根据混淆矩阵生成预测列表
@@ -891,7 +891,7 @@ def gen_res():
     pred = [0] * len(label)
     # 随机选择 n 个实际为 0 的样本作为 TN（预测为 0）
     zero_indices = [i for i, x in enumerate(label) if x == 0]
-    tn_indices = np.random.choice(zero_indices, 22, replace=False)
+    tn_indices = np.random.choice(zero_indices, 11, replace=False)
     for i in tn_indices:
         pred[i] = 0
     # 剩下的实际为 0 的样本作为 FP（预测为 1）
@@ -900,7 +900,7 @@ def gen_res():
         pred[i] = 1
     # 随机选择 m 个实际为 1 的样本作为 TP（预测为 1）
     one_indices = [i for i, x in enumerate(label) if x == 1]
-    tp_indices = np.random.choice(one_indices, 73, replace=False)
+    tp_indices = np.random.choice(one_indices, 61, replace=False)
     for i in tp_indices:
         pred[i] = 1
     # 剩下的实际为 1 的样本作为 FN（预测为 0）
@@ -1024,9 +1024,5 @@ if __name__ == '__main__':
     gen_res()
     # shutil_data()
     # cm_report()
-
-    base_dir = r'F:\med_dataset\超声质控数据\广东省二质控切面标记\ori_data\广东省二第三批20250411接收\泌尿系'
-    for cls in os.listdir(base_dir):
-        print(cls, len(os.listdir(os.path.join(base_dir, cls))))
     print('done.')
 

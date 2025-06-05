@@ -27,7 +27,7 @@ class ModelConfig:
 
         # 训练参数
         self.num_classes = 2
-        self.learning_rate = 1e-3
+        self.learning_rate = 1e-4
         self.batch_size = 2
 
         # 文本处理配置

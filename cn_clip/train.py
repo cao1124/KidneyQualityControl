@@ -15,6 +15,8 @@ import torch.nn as nn
 import torch.optim as optim
 from PIL import Image
 from torch.utils.data import Dataset, DataLoader
+from warmup_scheduler import GradualWarmupScheduler
+
 from multi_model import MultimodalFusionModel, TextProcessor
 from config import ModelConfig
 from clip.utils import image_transform
@@ -190,8 +192,13 @@ def train_clip():
     criterion = nn.CrossEntropyLoss()
     # criterion = nn.BCEWithLogitsLoss()
     # optimizer = optim.AdamW(model.parameters(), lr=config.learning_rate, weight_decay=0.01)
-    optimizer = optim.AdamW(model.parameters(), lr=config.learning_rate, weight_decay=0.01, betas=(0.9, 0.999))
-
+    # optimizer = optim.AdamW(model.parameters(), lr=config.learning_rate, weight_decay=0.01, betas=(0.9, 0.999))
+    # optimizer = optim.NAdam(model.parameters(), lr=lr, betas=(0.8, 0.888), eps=1e-08, weight_decay=2e-4)
+    optimizer = optim.SGD(model.parameters(), lr=config.learning_rate, weight_decay=2e-4, momentum=0.9, nesterov=True)
+    # 定义学习率与轮数关系的函数
+    # lr_scheduler = optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=5, T_mult=2)
+    lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=100, eta_min=0.005)
+    scheduler_warmup = GradualWarmupScheduler(optimizer, multiplier=1, total_epoch=10, after_scheduler=lr_scheduler)
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=3)
 
     best_val_loss = float('inf')
@@ -206,7 +213,7 @@ def train_clip():
         for gray_img, cdfi_img, texts, labels in train_loader:
             gray_img = gray_img.cuda()
             cdfi_img = cdfi_img.cuda()
-            labels = labels.cuda()
+            labels = labels.cuda().long()
 
             # 文本处理
             text_input = tokenize_texts(texts, text_processor, config)
@@ -220,7 +227,7 @@ def train_clip():
             # 反向传播
             loss.backward()
             optimizer.step()
-
+            scheduler_warmup.step()
             total_loss += loss.item()
 
         avg_train_loss = total_loss / len(train_loader)
@@ -236,7 +243,7 @@ def train_clip():
             for gray_img, cdfi_img, texts, labels in val_loader:
                 gray_img = gray_img.cuda()
                 cdfi_img = cdfi_img.cuda()
-                labels = labels.cuda()
+                labels = labels.cuda().long()
 
                 text_input = tokenize_texts(texts, text_processor, config)
                 text_input = {k: v.cuda() for k, v in text_input.items()}
@@ -283,7 +290,7 @@ def train_clip():
         for gray_img, cdfi_img, texts, labels in test_loader:
             gray_img = gray_img.cuda()
             cdfi_img = cdfi_img.cuda()
-            labels = labels.cuda()
+            labels = labels.cuda().long()
 
             text_input = tokenize_texts(texts, text_processor, config)
             text_input = {k: v.cuda() for k, v in text_input.items()}
