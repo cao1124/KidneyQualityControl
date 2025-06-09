@@ -279,6 +279,146 @@ class LateCatFusionModel(nn.Module):
         return x
 
 
+# CBAM注意力模块 (通道注意力 + 空间注意力)
+class CBAM(nn.Module):
+    def __init__(self, channels, reduction_ratio=16):
+        super(CBAM, self).__init__()
+        # 通道注意力
+        self.channel_att = nn.Sequential(
+            nn.AdaptiveAvgPool2d(1),
+            nn.Conv2d(channels, channels // reduction_ratio, kernel_size=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(channels // reduction_ratio, channels, kernel_size=1),
+            nn.Sigmoid()
+        )
+
+        # 空间注意力
+        self.spatial_att = nn.Sequential(
+            nn.Conv2d(2, 1, kernel_size=7, padding=3),
+            nn.Sigmoid()
+        )
+
+    def forward(self, x):
+        # 通道注意力
+        channel_att = self.channel_att(x)
+        x_channel = x * channel_att
+
+        # 空间注意力
+        avg_out = torch.mean(x_channel, dim=1, keepdim=True)
+        max_out, _ = torch.max(x_channel, dim=1, keepdim=True)
+        spatial_att = self.spatial_att(torch.cat([avg_out, max_out], dim=1))
+        x_spatial = x_channel * spatial_att
+
+        return x_spatial
+
+
+# 融合模块 (包含注意力机制和特征融合)
+class FusionBlock(nn.Module):
+    def __init__(self, in_channels, out_channels):
+        super(FusionBlock, self).__init__()
+        # 注意力机制
+        self.attention = CBAM(in_channels * 2)
+
+        # 特征融合和压缩
+        self.fusion_conv = nn.Sequential(
+            nn.Conv2d(in_channels * 2, out_channels, kernel_size=1),
+            nn.BatchNorm2d(out_channels),
+            nn.ReLU(inplace=True)
+        )
+
+        # 残差连接适配器
+        self.residual_adapter = nn.Sequential()
+        if in_channels != out_channels:
+            self.residual_adapter = nn.Sequential(
+                nn.Conv2d(in_channels, out_channels, kernel_size=1),
+                nn.BatchNorm2d(out_channels)
+            )
+
+    def forward(self, x1, x2):
+        # 特征拼接
+        x_cat = torch.cat([x1, x2], dim=1)
+
+        # 应用注意力
+        x_att = self.attention(x_cat)
+
+        # 融合特征
+        fused = self.fusion_conv(x_att)
+
+        # 残差连接 (将原始特征x1加入融合结果)
+        residual = self.residual_adapter(x1)
+        out = fused + residual
+
+        return out
+
+
+# 中期融合模型
+class MiddleFusionModel(nn.Module):
+    def __init__(self):
+        super(MiddleFusionModel, self).__init__()
+
+        # 创建两个ResNet50分支 (不包含最后的全连接层)
+        self.gray_branch = self._create_resnet_branch()
+        self.flow_branch = self._create_resnet_branch()
+
+        # 修改第一个卷积层以适应单通道输入
+        self.gray_branch.conv1 = nn.Conv2d(1, 64, kernel_size=7, stride=2, padding=3, bias=False)
+        self.flow_branch.conv1 = nn.Conv2d(1, 64, kernel_size=7, stride=2, padding=3, bias=False)
+
+        # Stage2融合 (在layer2之后)
+        self.stage2_fusion = FusionBlock(512, 512)
+
+        # Stage4融合 (在layer4之后)
+        self.stage4_fusion = FusionBlock(2048, 2048)
+
+        # 分类头
+        self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
+        self.fc = nn.Linear(2048, 1000)  # 假设1000类分类任务
+
+    def _create_resnet_branch(self):
+        """创建ResNet50分支（不包含最后的全连接层）"""
+        model = models.resnet50(pretrained=True)
+        return nn.Sequential(
+            model.conv1,
+            model.bn1,
+            model.relu,
+            model.maxpool,
+            model.layer1,
+            model.layer2,
+            model.layer3,
+            model.layer4
+        )
+
+    def forward(self, gray_img, flow_img):
+        # Stage1: 独立处理
+        gray1 = self.gray_branch[0:5](gray_img)  # 到layer1结束
+        flow1 = self.flow_branch[0:5](flow_img)  # 到layer1结束
+
+        # Stage2: 独立处理
+        gray2 = self.gray_branch[5](gray1)  # layer2
+        flow2 = self.flow_branch[5](flow1)  # layer2
+
+        # Stage2融合
+        fused2 = self.stage2_fusion(gray2, flow2)
+
+        # Stage3: 使用融合特征继续处理
+        gray3 = self.gray_branch[6](fused2)  # layer3
+        flow3 = self.flow_branch[6](fused2)  # layer3
+
+        # Stage4: 独立处理
+        gray4 = self.gray_branch[7](gray3)  # layer4
+        flow4 = self.flow_branch[7](flow3)  # layer4
+
+        # Stage4融合
+        fused4 = self.stage4_fusion(gray4, flow4)
+
+        # 分类
+        x = self.avgpool(fused4)
+        x = torch.flatten(x, 1)
+        x = self.fc(x)
+
+        return x
+
+
 class AttentionFusionModel(nn.Module):
     def __init__(self, net, num_class, modality1_channels, modality2_channels):
         super(AttentionFusionModel, self).__init__()
@@ -504,7 +644,8 @@ def prepare_model(category_num, model_name, lr, num_epochs, device, weights, bs=
     'fusion'
     # model = EarlyCatFusionModel(model)
     # model = LateCatFusionModel(model, category_num)
-    model = MultiHeadAttentionResnet(model, num_heads=8, category_num=category_num)
+    model = MiddleFusionModel(model, category_num)
+    # model = MultiHeadAttentionResnet(model, num_heads=8, category_num=category_num)
 
     # 多GPU
     if torch.cuda.device_count() > 1:

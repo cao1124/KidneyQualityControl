@@ -61,8 +61,8 @@ def generate_data_and_fit(target_sens, target_spec, target_auc, max_iter=1000, t
 def plot_roc():
     print('roc_plot')
     # 读取数据（与confusion_matrix相同的Excel文件）
-    excel_path = r'E:\med_project\上海中山医院-肾脏\中山结果整理\20250530\20250604-域内域外结果汇总.xlsx'
-    df = pd.read_excel(excel_path, sheet_name='roc域外')
+    excel_path = r'E:\med_project\上海中山医院-肾脏\中山结果整理\20250530\域内域外结果汇总.xlsx'
+    df = pd.read_excel(excel_path, sheet_name='roc医生')
     # plt.figure(figsize=(6, 6))
     for idx, row in df.iterrows():
         model_name = row['模型名称']
@@ -83,7 +83,7 @@ def plot_roc():
     plt.legend(loc='lower right')
     # plt.grid()
     plt.draw()
-    plt.savefig(r'E:\med_project\上海中山医院-肾脏\中山结果整理\20250530\图\模型和医生读图对比ROC图-域外测试.tiff')
+    plt.savefig(r'E:\med_project\上海中山医院-肾脏\中山结果整理\20250530\图\模型和医生读图对比ROC图.tiff')
 
 
 def confusion_matrix_plot(cm, labels, title='Confusion Matrix', xtitle='DAN', cmap=plt.cm.Oranges):

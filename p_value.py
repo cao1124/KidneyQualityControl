@@ -72,13 +72,13 @@ def delong_roc_test(ground_truth, predictions_one, predictions_two):
 
 
 def p_value():
-    file_path = 'E:/med_project/中山医院-肾脏/中山结果整理/20250317/20250320-结果整理.xlsx'
-    df = pd.read_excel(file_path, sheet_name='域外测试结果')
-    model_res = np.array(df['中-甜'].tolist()+df['中-琪'].tolist()+df['中-汪'].tolist())
+    file_path = r'E:\med_project\上海中山医院-肾脏\中山结果整理\20250530\域内域外结果汇总.xlsx'
+    df = pd.read_excel(file_path, sheet_name='域内测试集')
+    model_res = np.array(df['Model-G'].tolist())
     # Model-G 高-汤	低-祺	低-晶	高-娟	高-严	低-晨	中-甜	中-琪	中-汪
-    human_res = np.array(df['Model-UT 3模态融合'].tolist()+df['Model-UT 3模态融合'].tolist()+df['Model-UT 3模态融合'].tolist())
+    human_res = np.array(df['Model-GC MultiHead'].tolist())
     # Model-GC Early  Late  Multihead   Model-UT 3模态融合
-    true_labels = np.array(df['Label'].tolist())
+    true_labels = np.array(df['label'].tolist())
 
     't检验 计算 p value'
     t_stat, p_val_t = ttest_rel(model_res, human_res)
@@ -97,9 +97,9 @@ def p_value():
     # 执行McNemar检验
     mcnemar_result = mcnemar(contingency_table, exact=False)
     p_val_mcnemar = mcnemar_result.pvalue
-    print(f"T检验p值: 0.0212")
-    print(f"DeLong检验p值: 0.4597")
-    print(f"McNemar检验p值: 0.0001")
+    print(f"T检验p值: ", np.around(p_val_t, 4))
+    print(f"DeLong检验p值: ", np.around(p_val_delong, 4))
+    print(f"McNemar检验p值: ", np.around(p_val_mcnemar, 4))
 
 
 if __name__ == '__main__':
