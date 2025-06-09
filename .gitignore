@@ -28,6 +28,7 @@ segment_model/
 .Python
 *.bin
 env/
+plot_util
 build/
 develop-eggs/
 dist/
